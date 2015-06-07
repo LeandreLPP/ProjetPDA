@@ -1,5 +1,6 @@
 package datas;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Photo {
@@ -8,6 +9,9 @@ public class Photo {
 	private String auteur;
 	private String pays;
 	private Date date;
+	private long gpsLatitude;
+	private long gpsLongitude;
+	private ArrayList<String> keyWords;
 	private String[] tag;
 	
 	/**
@@ -92,32 +96,66 @@ public class Photo {
 	 * @return the imageURL
 	 */
 	public String getImageURL() {
-		return imageURL;
+		return this.imageURL;
+	}
+	/**
+	 * @return the keyWords
+	 */
+	public ArrayList<String> getKeyWords() {
+		return this.keyWords;
 	}
 	/**
 	 * @return the titre
 	 */
 	public String getTitre() {
-		return titre;
+		return this.titre;
 	}
 	/**
 	 * @return the auteur
 	 */
 	public String getAuteur() {
-		return auteur;
+		return this.auteur;
 	}
 	/**
 	 * @return the pays
 	 */
 	public String getPays() {
-		return pays;
+		return this.pays;
 	}
 	/**
 	 * @return the date
 	 */
 	public Date getDate() {
-		return date;
+		return this.date;
 	}
+	/**
+	 * @return the gpsLatitude
+	 */
+	public long getGpsLatitude() {
+		return this.gpsLatitude;
+	}
+
+	/**
+	 * @return the gpsLongitude
+	 */
+	public long getGpsLongitude() {
+		return this.gpsLongitude;
+	}
+	
+	/**
+	 * @param gpsLatitude the gpsLatitude to set
+	 */
+	public void setGpsLatitude(long gpsLatitude) {
+		this.gpsLatitude = gpsLatitude;
+	}
+
+	/**
+	 * @param gpsLongitude the gpsLongitude to set
+	 */
+	public void setGpsLongitude(long gpsLongitude) {
+		this.gpsLongitude = gpsLongitude;
+	}
+
 	/**
 	 * @param titre the titre to set
 	 */
@@ -141,6 +179,12 @@ public class Photo {
 	 */
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	/**
+	 * @param keyWords the keyWords to set
+	 */
+	public void setKeyWords(ArrayList<String> keyWords) {
+		this.keyWords = keyWords;
 	}
 	
 	
