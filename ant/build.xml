@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PDA" default="compileAll" basedir=".." >
+
+	<!-- Définition des variables -->
+	<property name="src" location="src"/>
+	<property name="lib" location="lib"/>
+	<property name="class" location="build/class"/>
+	<property name="data" location="data"/>
+	<property name="dist" location="build/distrib"/>
+	<property name="doc" location="build/api"/>
+	<property name="work" location="ww"/>  
+  
+	<!-- Définition du chemin d'accès à d'éventuelles librairies -->
+	<path id="lib.classpath">
+	  <fileset dir="${lib}">
+	    <include name="**/*.jar" />
+	  </fileset>
+	</path>
+
+	<!-- Définition du contenu du CLASSPATH -->
+	<path id="myCLASSPATH">
+	  <pathelement location="${class}" />
+	  <pathelement location="${lib}/*.jar" />
+	</path>
+
+	<!-- Suppression des fichiers du répertoire build/class pour forcer une re-compilation complète -->
+	<target name="resetCompileAll" description="deletes all files of directory build/class" >
+	  <delete includeEmptyDirs="true">
+	    <fileset dir="./build/class" includes="**/*"/>
+	  </delete>
+	</target>
+	       	    
+	<!-- Suppression des fichiers du répertoire build/api pour forcer une re-compilation complète de la javaDoc -->
+	<target name="resetJavaDoc" description="deletes all files of directory build/api" >
+	  <delete includeEmptyDirs="true">
+	    <fileset dir="./build/api" includes="**/*"/>
+	  </delete>
+	</target>	       	    
+
+	<!-- Suppression des fichiers du répertoire build/api pour forcer une re-compilation complète de la javaDoc -->
+	<target name="resetAll" depends="resetJavaDoc","resetCompileAll" description="deletes all files of directory build/api" >
+	  <delete includeEmptyDirs="true">
+	    <fileset dir="./build/api" includes="**/*"/>
+	  </delete>
+	</target>
+	
+	<!-- Initialisation : création de certains répertoires (à faire une seule fois !) -->
+	<target name="init" description="creation of directories" >
+	  <tstamp/>
+	  <mkdir dir="${work}"/>
+	  <mkdir dir="${class}"/>
+	  <mkdir dir="${dist}"/>
+	  <mkdir dir="${doc}"/>
+	</target>
+
+	<!-- Compilation de l'entièreté du projet -->
+	<target name="compileAll" description="compiles all the sources" >
+	  <javac destdir="${class}" debug="true" verbose="false" encoding="UTF-8">
+	    <compilerarg value="-Xlint"/>
+	    <classpath refid="myCLASSPATH"/>
+	    <src path="${src}"/>
+	  </javac>
+	</target>
+
+	<!-- Exécution de l'application -->
+	<target name="run" depends="compileAll" description="executes the PDA application" >
+	  <java classname="pda.control.PdaCtrl" fork="true" dir="${work}">
+	    <jvmarg value="-Djava.net.preferIPv4Stack=true"/>
+	    <classpath refid="myCLASSPATH"/>
+	  </java>
+	</target>
+
+	<!-- Fabrication d'une archive exécutable -->
+	<target name="jar" depends="compileAll" description="creates PDA jar" >
+	  <jar destfile="${dist}/pda.jar">
+	    <manifest>
+              <attribute name="Built-By" value="IUT Vannes | M.Cornic, D.Deveaux, C.Guerin, F.Merciol"/>
+	      <attribute name="Created-By" value="IUT Vannes | M.Cornic, D.Deveaux, C.Guerin, F.Merciol"/>
+              <attribute name="Main-Class" value="pda.control.PdaCtrl"/>
+	    </manifest>
+	    <fileset dir="${class}">
+              <include name="pda/**/*.class"/>
+	    </fileset>
+	    <fileset dir="${data}">
+              <include name="**/*.gif"/>
+              <include name="**/*.png"/>
+	    </fileset>
+	  </jar>
+	</target>
+
+	<!-- Génération de la documentation HTML -->
+	<target name="doc" depends="compileAll" description="build javaDoc documentation" >
+	  <javadoc destdir="${doc}" author="true" version="true" use="true" private="true" windowtitle="Test API">
+	    <fileset dir="${src}" defaultexcludes="yes">
+              <exclude name="**/Readme"/>
+              <exclude name="**/*.sh"/>
+              <exclude name="**/*.gif"/>
+              <exclude name="**/*.wav"/>
+              <exclude name="**/TODO"/>
+	    </fileset>
+	    <doctitle><![CDATA[<h1>Test</h1>]]></doctitle>
+	    <bottom><![CDATA[<i>Copyright &#169; 2007 UBS/IUT/Fran&ccedil;ois Merciol. All Rights Reserved.</i>]]></bottom>
+	  </javadoc>
+	</target>
+
+	<!-- Génération de l'archive finale client -->
+	<target name="distrib" depends="jar" description="creates distribution archive" >
+	  <tar tarfile="${dist}/pda.tgz" compression="gzip">
+	    <tarfileset prefix="pda/jar" dir="${dist}">
+	      <include name="pda.jar"/>
+	    </tarfileset>
+	    <tarfileset prefix="pda/" dir=".">
+	      <include name="ant/**"/>
+	      <include name="data/**"/>
+	      <include name="src/**"/>
+	      <include name="lib/**"/>
+	      <include name="ww"/>
+	    </tarfileset>
+	  </tar>
+	</target>
+
+</project>
