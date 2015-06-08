@@ -237,8 +237,8 @@ public class PdaView extends JFrame {
 		layeredPane.add (skin, new Integer(0));
 		layeredPane.add (tabbedPane, new Integer(5));
 		tabbedPane.setSize (SCREENW, SCREENH);
-		System.getProperties().get("user.dir");
-		setSkin (new ImageIcon ("data/img/palm.png"), new Point (SCREENX, SCREENY));
+
+		setSkin (new ImageIcon ("../../img/palm.png"), new Point (SCREENX, SCREENY));
 
 		getContentPane().add(layeredPane, BorderLayout.CENTER);
 

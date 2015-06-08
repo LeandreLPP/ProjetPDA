@@ -27,89 +27,89 @@ import java.util.*;
  */
 public class LaunchCtrl implements IApplication, ActionListener{
 
-	/*
-	 * Private implementation -------------------------------------------------
-	 */
+ 	/*
+     	 * Private implementation -------------------------------------------------
+     	 */
+    
+    	/** application name */
+    	private String name;
+    
+    	/** back link to the PDA that supports this launcher */
+    	private PdaCtrl pda;
 
-	/** application name */
-	private String name;
+    	/** the view of the application */
+    	private LaunchView view;
+    
+    	/** the datas of the application */
+    	private LaunchDatas datas;
 
-	/** back link to the PDA that supports this launcher */
-	private PdaCtrl pda;
-
-	/** the view of the application */
-	private LaunchView view;
-
-	/** the datas of the application */
-	private LaunchDatas datas;
-
-	/*
-	 *  Public ressources -----------------------------------------------------
-	 *
-	 *  Constructors
-	 */
-
-	/** 
+    	/*
+     	 *  Public ressources -----------------------------------------------------
+     	 *
+     	 *  Constructors
+     	 */
+    
+    	/** 
 	 *  LaunchCtrl constructor.
-	 *
-	 *  Initialize applications datas and launch ihm.
-	 */
-	public LaunchCtrl() {
-		datas = new LaunchDatas();
-		view = new LaunchView ( this, datas );
-	} // ----------------------------------------------------------- LaunchCtrl()
+     	 *
+     	 *  Initialize applications datas and launch ihm.
+     	 */
+    	public LaunchCtrl() {
+        	datas = new LaunchDatas();
+        	view = new LaunchView ( this, datas );
+    	} // ----------------------------------------------------------- LaunchCtrl()
 
-	/*
-	 * Public methods
-	 */
-
-	/* 
-	 *  see interface documentation
-	 */
-	public void start(PdaCtrl pda) {
+    	/*
+     	 * Public methods
+     	 */
+    
+    	/* 
+     	 *  see interface documentation
+     	 */
+    	public void start(PdaCtrl pda) {
 		this.pda = pda;
-	} // -------------------------------------------------------------- start()
+    	} // -------------------------------------------------------------- start()
 
-	/* 
-	 *  see interface documentation
-	 */
-	public String getAppliName() {
+    	/* 
+     	 *  see interface documentation
+     	 */
+    	public String getAppliName() {
 		return this.name;
-	} // ------------------------------------------------------- getAppliName()
+    	} // ------------------------------------------------------- getAppliName()
 
-	/* 
-	 *  see interface documentation
-	 */
+    	/* 
+     	 *  see interface documentation
+     	 */
 	public void setAppliName ( String theName ) {
 		this.name = theName;
 	} // ------------------------------------------------------- setAppliName()
 
-	/* 
-	 *  see interface documentation
-	 */
-	public JPanel getAppliPanel() {
-		return view.getPanel();
-	} // ------------------------------------------------------ getAppliPanel()
+    	/* 
+     	 *  see interface documentation
+     	 */
+    	public JPanel getAppliPanel() {
+	 	return view.getPanel();
+    	} // ------------------------------------------------------ getAppliPanel()
 
-	/* 
-	 *  see interface documentation
-	 */
-	public boolean close() {
+    	/* 
+     	 *  see interface documentation
+     	 */
+    	public boolean close() {
 		return true;
-	} // -------------------------------------------------------------- close()
+    	} // -------------------------------------------------------------- close()
 
-	/**
-	 * Callback method, reaction to button pushed.
+    	/**
+     	 * Callback method, reaction to button pushed.
 	 * @param e the event to manage
-	 */
-	public void actionPerformed ( ActionEvent e ) {
+     	 */
+    	public void actionPerformed ( ActionEvent e ) {
 		// Récupération du nom de l'application : c'est une clé d'identification importante !
-		String cmd = e.getActionCommand();
+        	String cmd = e.getActionCommand();
 		System.out.println ( "New instance of application " + cmd );
 		// Construction d'une NOUVELLE instance d'une application correspondant au nom passé en paramètre
-		IApplication appli = datas.getAppliInstance ( cmd );
-		// ICI l'application devient utilisable ET visible dans un NOUVEL ONGLET du PDA
-		pda.addNewAppli ( appli );
-	} // ---------------------------------------------------- actionPerformed()
-
+        	IApplication appli = datas.getAppliInstance ( cmd );
+ 		// ICI l'application devient utilisable ET visible dans un NOUVEL ONGLET du PDA
+        	pda.addNewAppli ( appli );
+    	} // ---------------------------------------------------- actionPerformed()
+    
 } // ----------------------------------------------------------- Class LaunchCtrl

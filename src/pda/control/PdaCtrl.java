@@ -114,11 +114,11 @@ public class PdaCtrl implements ActionListener {
 	 * Removes the current application from ihm AND from the vector that stores the running applications.
 	 */
 	private void closeCurrentAppli() {
-
+		
 		IApplication appli = null;
 		// récupération de l'index de l'application actuellement visible
 		int idx = view.getAppliIndex();
-
+		
 		if ( idx >= 0 ) {
 			appli = datas.getApplication ( idx );
 			// If not null
@@ -146,5 +146,9 @@ public class PdaCtrl implements ActionListener {
 
 		view.quit();
 	} // --------------------------------------------------------------- quit()
+
+	public PdaView getView() {
+		return view;
+	}
 
 } // ------------------------------------------------------------ Class PdaCtrl
