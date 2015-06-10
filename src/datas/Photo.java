@@ -2,13 +2,13 @@ package datas;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import javax.imageio.ImageIO;
 
-public class Photo {
+public class Photo implements Serializable {
+	private static final long serialVersionUID = 0;
 	private String imageURL;
 	private String titre;
 	private String auteur;
@@ -253,5 +253,39 @@ public class Photo {
 	 */
 	public void setKeyWords(ArrayList<String> keyWords) {
 		this.keyWords = keyWords;
+	}
+	
+	// --- Sauver et Charger ---
+	public void sauver(){
+		this.sauver(this.imageURL.split(".")[this.imageURL.split(".").length-2]+".out");
+	}
+	
+	public void sauver(String url){
+		FileOutputStream file;
+		ObjectOutputStream flux;
+		try {
+			file = new FileOutputStream(url); 
+			flux = new ObjectOutputStream(file);
+			flux.writeObject(this);
+			flux.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Photo charger(String url){
+		FileInputStream file;
+		ObjectInputStream flux;
+		Photo ret = null;
+		try {
+			file = new FileInputStream(url);
+			flux = new ObjectInputStream(file);
+			ret = (Photo) flux.readObject();
+			flux.close();
+		} catch (IOException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return ret;
 	}
 }

@@ -1,9 +1,12 @@
 package utilitaires;
 
 import datas.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Tri {
+public abstract class Tri implements Serializable {
+	private static final long serialVersionUID = 0;
 	protected ArrayList<Photo> liste;
 	
 	public Tri (ArrayList<Photo> liste){
