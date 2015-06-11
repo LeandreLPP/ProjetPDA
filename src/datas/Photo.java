@@ -15,7 +15,7 @@ public class Photo implements Serializable {
 	private String pays;
 	private Calendar date;
 	private ArrayList<String> keyWords;
-	private String[] tag;
+	private int[] tag;
 	private BufferedImage img;
 	/* On ignore ces variables pour le moment
 	private long gpsLatitude;
@@ -33,6 +33,7 @@ public class Photo implements Serializable {
 		this.date = Calendar.getInstance();
 		this.keyWords = new ArrayList<String>();
 		this.img = ImageIO.read(new File(this.imageURL));
+		this.tagInvisible();
 		this.generateTag();
 	}
 
@@ -44,8 +45,7 @@ public class Photo implements Serializable {
 		int height = this.img.getHeight();
 		int p1 = this.img.getRGB(0, 0);
 		int p2 = this.img.getRGB(width, height);
-		
-		this.tag = new String[]{""+width,""+height,""+p1,""+p2};
+		this.tag = new int[]{width,height,p1,p2};
 	}
 
 
@@ -61,26 +61,25 @@ public class Photo implements Serializable {
 		int height = imgTest.getHeight();
 		int p1 = imgTest.getRGB(0, 0);
 		int p2 = imgTest.getRGB(width, height);
-		
-		String[] tagTest = new String[]{""+width,""+height,""+p1,""+p2};
+		int[] tagTest = new int[]{width,height,p1,p2};
 		for(int i = 0; i<4;i++){
-			if(!this.tag[i].equals(tagTest[i])){
+			if(this.tag[i] != tagTest[i]){
 				ret = false;
 			}
 		}
 		return ret;
 	}
 
-	/**
+	/*
 	 * Copie l'etat d'une photo dans un nouvel objet photo, excepte l'url qui est passe en parametre
 	 * @param url L'url de la nouvelle photo
 	 * @return Une nouvelle photo, aux attributs identiques a celle-ci.
-	 */
+	 
 	public Photo copier(String url){
 		//TODO
 		Photo ret = null;
 		return ret;
-	}
+	}*/
 
 	/**
 	 * Compare les courbes de couleur des deux photographies.
@@ -123,9 +122,42 @@ public class Photo implements Serializable {
 			}
 		}
 		for (int e : ret){
-			e = (int)e/nbPixels;
+			e = ((int)e/nbPixels)*100;
 		}
 		return ret;
+	}
+	
+	/**
+	 * 
+	 */
+	private void tagInvisible(){
+		int alpha = 0;
+		int r = 0;
+		int g = 0;
+		int b = 0;
+		int width = this.img.getWidth();
+		int height = this.img.getHeight();
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				Color rgb = new Color(this.img.getRGB(row, col));
+				alpha += rgb.getAlpha();
+				r += rgb.getRed();
+				g += rgb.getGreen();
+				b += rgb.getBlue();
+			}
+		}
+		alpha %= 255;
+		r %= 255;
+		g %= 255;
+		b %= 255;
+		Color tag = new Color(alpha,r,g,b);
+		this.img.setRGB(height, width, tag.getRGB());
+		String extension = this.imageURL.split(".")[this.imageURL.split(".").length-1];
+		try {
+			ImageIO.write(this.img, extension, ImageIO.createImageOutputStream(this.imageURL));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
