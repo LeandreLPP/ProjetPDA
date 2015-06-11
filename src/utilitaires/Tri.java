@@ -4,6 +4,7 @@ import datas.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public abstract class Tri implements Serializable {
 	private static final long serialVersionUID = 0;
@@ -29,5 +30,7 @@ public abstract class Tri implements Serializable {
 		this.liste.set(i2, tmp);
 	}
 	
-	abstract boolean compare(int i1, int i2);
+	protected abstract boolean compare(int i1, int i2);
+	
+	public abstract Hashtable<Integer,Object[]> split();
 }

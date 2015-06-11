@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Hashtable;
 
 import utilitaires.*;
 
@@ -63,6 +64,16 @@ public class Collection implements Serializable {
 		}
 	}
 
+	public Collection[] split(){
+		Hashtable<Integer, Object[]> tabDeTab = this.tri.split();
+		Collection[] ret = new Collection[tabDeTab.size()];
+		for(int i : tabDeTab.keySet()){
+			Collection t = new Collection((String)tabDeTab.get(i)[0], (Photo[])tabDeTab.get(i)[1]);
+			ret[i] = t;
+		}
+		return ret;
+	}
+	
 	//---Del---
 	public void delPhoto(Photo p){
 		this.mapPhotos.remove(p.getImageURL());
