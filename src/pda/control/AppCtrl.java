@@ -13,6 +13,7 @@ import pda.view.*;
 
 import javax.swing.*;
 
+import java.awt.BorderLayout;
 import java.awt.event.*;
 
 /**
@@ -108,23 +109,41 @@ public class AppCtrl implements IApplication, ActionListener {
     	if(source.getActionCommand() == "Bouton Galerie"){
     		this.view.afficherGalerie();
     	}
-    	if(source.getActionCommand() == "Bouton Recherche"){
+    	else if(source.getActionCommand() == "Bouton Recherche"){
     		this.view.afficherRecherche();
     	}
-    	if(source.getActionCommand() == "Bouton Options"){
+    	else if(source.getActionCommand() == "Bouton Options"){
     		this.view.afficherOptions();
     	}
-    	if(source.getActionCommand() == "Bouton Gestion"){
+    	else if(source.getActionCommand() == "Bouton Gestion"){
     		this.view.afficherGestion();
     	}
-    	if(source.getActionCommand() == "Bouton Edition"){
+    	else if(source.getActionCommand() == "Bouton Edition"){
     		this.view.afficherEdition();
     	}
-    	if(source.getActionCommand() == "Bouton Diaporama"){
+    	else if(source.getActionCommand() == "Bouton Diaporama"){
     		this.view.afficherDiaporama();
     	}
-    	if(source.getActionCommand() == "Bouton Accueil"){
+    	else if(source.getActionCommand() == "Bouton Accueil"){
     		this.view.afficherMenu();
+    	}
+    	else if(source.getActionCommand() == "Faire Recherche"){
+    		System.out.println("Bouton de recherche");
+    	}
+    	else if(source.getActionCommand() == "Back"){
+    		System.out.println("Bouton Back");
+    		this.view.getPanel().removeAll();
+    		this.view.getPanel().add(this.view.getPanelPrecedent(),BorderLayout.CENTER);
+    		this.view.getPanel().repaint();
+    	}
+    	else if(source.getActionCommand() == "OK Tri"){
+    		System.out.println("Bouton OK Tri");
+    	}
+    	else if(source.getActionCommand() == ""){
+	
+    	}
+    	else if(source.getActionCommand() == ""){
+	
     	}
 	} // ---------------------------------------------------------- actionPerformed()
 

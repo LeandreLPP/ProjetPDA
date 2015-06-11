@@ -32,28 +32,18 @@ public class AppDatas {
 	private String recherche;
 	private String gestion;
 	private String options;
-	private String labelGalerie;
 	
 	private Color galerieColor;
 	private Color rechercheColor;
 	private Color gestionColor;
 	private Color optionsColor;
 
-	public Color getRechercheColor() {
-		return rechercheColor;
-	}
-
-	public Color getGestionColor() {
-		return gestionColor;
-	}
-
-	public Color getOptionsColor() {
-		return optionsColor;
-	}
-
-	public String getLabelGalerie() {
-		return labelGalerie;
-	}
+	private String titreGalerie;
+	private String titreRecherche;
+	private String titreGestion;
+	private String titreOptions;
+	private String titreEdition;
+	private String titreDiaporama;
 
 	/**
 	 * Initialise App datas.
@@ -64,12 +54,42 @@ public class AppDatas {
 		recherche = "Recherche";
 		gestion = "Gestion des photos";
 		options = "Options";
-		labelGalerie = "Coucou c'est la galerie !";
 		
 		galerieColor = new Color(127,230,220);
 		rechercheColor = new Color(240,143,205);
 		gestionColor = new Color(242,195,102);
 		optionsColor = new Color(162,242,102);
+		
+		titreGalerie ="Galerie de photo";
+		titreGestion ="Gestion des photos";
+		titreDiaporama ="Diaporama de photo";
+		titreEdition ="Edition de la photo";
+		titreOptions ="Options";
+		titreRecherche ="Recherche de Photos";
+	}
+
+	public String getTitreGalerie() {
+		return titreGalerie;
+	}
+
+	public String getTitreRecherche() {
+		return titreRecherche;
+	}
+
+	public String getTitreGestion() {
+		return titreGestion;
+	}
+
+	public String getTitreOptions() {
+		return titreOptions;
+	}
+
+	public String getTitreEdition() {
+		return titreEdition;
+	}
+
+	public String getTitreDiaporama() {
+		return titreDiaporama;
 	}
 
 	public Color getGalerieColor() {
@@ -91,7 +111,20 @@ public class AppDatas {
 	public String getOptions() {
 		return options;
 	}
-    
+	
+    public Color getRechercheColor() {
+		return rechercheColor;
+	}
+
+	public Color getGestionColor() {
+		return gestionColor;
+	}
+
+	public Color getOptionsColor() {
+		return optionsColor;
+	}
+
+	
 
     
  

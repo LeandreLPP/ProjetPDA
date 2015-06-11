@@ -16,13 +16,12 @@ import pda.datas.*;
 import javax.swing.*;
 
 /**
- *  The simplest application in the PDA.
+ * 
+ * @author Juliette FRETAY
+ * @author Leandre LE POLLES--POTIN
+ * 
+ * @version 09/06/15
  *
- *  It can be used to construct other applications.
- *
- *  @author F. Merciol, D. Deveaux MAJ J-F. Kamp
- *                      <{francois.merciol|daniel.deveaux}@univ-ubs.fr>
- *  @version $Revision: 2 $
  */
 public class AppView {
 
@@ -37,13 +36,12 @@ public class AppView {
 
 	/** the panel associated to the App application (App runs in this panel) */
 	private JPanel panel;
-	private JPanel menu;
-	private JPanel galerie;
-	private JPanel gestion;
-	private JPanel recherche;
-	private JPanel diaporama;
-	private JPanel edition;
-	private JPanel options;
+	
+	
+	private JPanel panelCourant;
+	private JPanel panelPrecedent;
+	
+	
 	/*
 	 *  Public ressources -----------------------------------------------------
 	 *
@@ -62,6 +60,9 @@ public class AppView {
 		panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		this.afficherMenu();
+		
+		this.panelCourant = new JPanel();
+		this.panelPrecedent = new JPanel();
 
 	} // ------------------------------------------------------------- AppView()
 
@@ -69,9 +70,14 @@ public class AppView {
 	
 	
 	
+	
+	/*
+	 *  Public methods
+	 */
+	
 	public void afficherMenu(){
 		panel.removeAll();
-		menu = new JPanel();
+		JPanel menu = new JPanel();
 		menu.setLayout(new GridLayout(2,2,5,5));
 		
 		JButton boutonGalerie = new JButton("<html><body><center>"+this.engine.getGalerie()+"</center></body></html>");
@@ -98,15 +104,17 @@ public class AppView {
 		boutonOptions.setActionCommand("Bouton Options");
 		menu.add(boutonOptions);
 		
+		this.panelPrecedent = this.panelCourant;
+		this.panelCourant = menu;
 		panel.add(menu,BorderLayout.CENTER);
 	}
 	
 	public void afficherGalerie(){
 		panel.removeAll();
-		galerie = new JPanel();
+		JPanel galerie = new JPanel();
 		galerie.setLayout(new BorderLayout(10,10));
 		
-		JLabel titre = new JLabel("Galerie de photo");
+		JLabel titre = new JLabel(this.engine.getTitreGalerie());
 		titre.setHorizontalAlignment(SwingConstants.CENTER);
 		titre.setFont(new Font("Courrier",5,20));
 		titre.setForeground(Color.ORANGE);
@@ -119,7 +127,10 @@ public class AppView {
 		galerieLigne2.setLayout(new BorderLayout(5,5));
 		galerieLigne2.add(new JLabel("Trier par"),BorderLayout.WEST);
 		galerieLigne2.add(new JComboBox<String>(),BorderLayout.CENTER);
-		galerieLigne2.add(new JButton("OK"),BorderLayout.EAST);
+		JButton ok = new JButton("OK");
+		ok.addActionListener(ctrl);
+		ok.setActionCommand("OK Tri");
+		galerieLigne2.add(ok,BorderLayout.EAST);
 		galerieC.add(galerieLigne2,BorderLayout.NORTH);
 		
 		JScrollPane galerieLigne3 = new JScrollPane();
@@ -131,6 +142,7 @@ public class AppView {
 		layered1.setBorder(BorderFactory.createTitledBorder("Lundi 27 Avril 2015"));
 		ImageIcon image = new ImageIcon("data/bljblm.jpg");
 		JLabel lab = new JLabel(image);
+		lab.setToolTipText("Petit Lapin !");
 		lab.setBounds(10, 20, 100, 100);
 		layered1.add(lab,JLayeredPane.DEFAULT_LAYER);
 		ImageIcon image2 = new ImageIcon("data/bbkim.jpg");
@@ -165,7 +177,10 @@ public class AppView {
 		
 		JPanel galerieLigne9 = new JPanel();
 		galerieLigne9.setLayout(new GridLayout(1,3,20,20));
-		galerieLigne9.add(new JButton("Back"));
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back");
+		galerieLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
 		accueil.setActionCommand("Bouton Accueil");
@@ -174,16 +189,18 @@ public class AppView {
 		galerie.add(galerieLigne9,BorderLayout.SOUTH);
 		galerie.add(galerieC,BorderLayout.CENTER);
 		
+		this.panelPrecedent = this.panelCourant;
+		this.panelCourant = galerie;
 		panel.add(galerie, BorderLayout.CENTER);
 		
 	}
 	
 	public void afficherGestion(){
 		panel.removeAll();
-		gestion = new JPanel();
+		JPanel gestion = new JPanel();
 		gestion.setLayout(new BorderLayout(10,10));
 		
-		JLabel titre = new JLabel("Gestion des photos");
+		JLabel titre = new JLabel(this.engine.getTitreGestion());
 		titre.setHorizontalAlignment(SwingConstants.CENTER);
 		titre.setFont(new Font("Courrier",5,20));
 		titre.setForeground(Color.ORANGE);
@@ -222,15 +239,15 @@ public class AppView {
 		JLayeredPane layered2 = new JLayeredPane();
 		layered2.setPreferredSize(new Dimension(350,150));
 		layered2.setBorder(BorderFactory.createTitledBorder("Photo 2"));
-		layered2.add(new JLabel(new ImageIcon("large(20).jpg")));
+		
 		JLayeredPane layered3 = new JLayeredPane();
 		layered3.setPreferredSize(new Dimension(350,150));
 		layered3.setBorder(BorderFactory.createTitledBorder("Photo 3"));
-		layered3.add(new JLabel(new ImageIcon("large(6).jpg")));
+		
 		JLayeredPane layered4 = new JLayeredPane();
 		layered4.setPreferredSize(new Dimension(350,150));
 		layered4.setBorder(BorderFactory.createTitledBorder("Photo 4"));
-		layered4.add(new JLabel(new ImageIcon("large(12).jpg")));
+		
 		panelg.add(layered1);
 		panelg.add(layered2);
 		panelg.add(layered3);
@@ -250,7 +267,10 @@ public class AppView {
 		
 		JPanel gestionLigne9 = new JPanel();
 		gestionLigne9.setLayout(new GridLayout(1,3,20,20));
-		gestionLigne9.add(new JButton("Back"));
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back");
+		gestionLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
 		accueil.setActionCommand("Bouton Accueil");
@@ -260,14 +280,16 @@ public class AppView {
 		
 		gestion.add(gestionC,BorderLayout.CENTER);
 		
+		this.panelPrecedent = this.panelCourant;
+		this.panelCourant = gestion;
 		panel.add(gestion, BorderLayout.CENTER);
 	}
 	public void afficherRecherche(){
 		panel.removeAll();
-		recherche = new JPanel();
+		JPanel recherche = new JPanel();
 		recherche.setLayout(new BorderLayout(10,10));
 		
-		JLabel titre = new JLabel("Recherche de Photos");
+		JLabel titre = new JLabel(this.engine.getTitreRecherche());
 		titre.setHorizontalAlignment(SwingConstants.CENTER);
 		titre.setFont(new Font("Courrier",5,20));
 		titre.setForeground(Color.ORANGE);
@@ -321,24 +343,35 @@ public class AppView {
 		
 		JPanel rechercheLigne9 = new JPanel();
 		rechercheLigne9.setLayout(new GridLayout(1,3,20,20));
-		rechercheLigne9.add(new JButton("Back"));
+		
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back");
+		rechercheLigne9.add(butback);
+		
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
 		accueil.setActionCommand("Bouton Accueil");
 		rechercheLigne9.add(accueil);
-		rechercheLigne9.add(new JButton("Rechercher"));
+		
+		JButton butrecherche = new JButton("Rechercher");
+		butrecherche.addActionListener(ctrl);
+		butrecherche.setActionCommand("Faire Recherche");
+		rechercheLigne9.add(butrecherche);
 		recherche.add(rechercheLigne9,BorderLayout.SOUTH);
 		
 		recherche.add(rechercheC,BorderLayout.CENTER);
 		
+		this.panelPrecedent = this.panelCourant;
+		this.panelCourant = recherche;
 		panel.add(recherche, BorderLayout.CENTER);
 	}
 	public void afficherOptions(){
 		panel.removeAll();
-		options = new JPanel();
+		JPanel options = new JPanel();
 		options.setLayout(new BorderLayout(10,10));
 		
-		JLabel titre = new JLabel("Options");
+		JLabel titre = new JLabel(this.engine.getTitreOptions());
 		titre.setHorizontalAlignment(SwingConstants.CENTER);
 		titre.setFont(new Font("Courrier",5,20));
 		titre.setForeground(Color.ORANGE);
@@ -346,7 +379,10 @@ public class AppView {
 		
 		JPanel optionsLigne9 = new JPanel();
 		optionsLigne9.setLayout(new GridLayout(1,3,20,20));
-		optionsLigne9.add(new JButton("Back"));
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back");
+		optionsLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
 		accueil.setActionCommand("Bouton Accueil");
@@ -354,15 +390,17 @@ public class AppView {
 		optionsLigne9.add(new JButton("Ajouter selection"));
 		options.add(optionsLigne9,BorderLayout.SOUTH);
 		
+		this.panelPrecedent = this.panelCourant;
+		this.panelCourant = options;
 		panel.add(options,BorderLayout.CENTER);
 	}
 	
 	public void afficherEdition(){
 		panel.removeAll();
-		edition = new JPanel();
+		JPanel edition = new JPanel();
 		edition.setLayout(new BorderLayout(10,10));
 		
-		JLabel titre = new JLabel("Edition de la photo");
+		JLabel titre = new JLabel(this.engine.getTitreEdition());
 		titre.setHorizontalAlignment(SwingConstants.CENTER);
 		titre.setFont(new Font("Courrier",5,20));
 		titre.setForeground(Color.ORANGE);
@@ -416,7 +454,10 @@ public class AppView {
 		
 		JPanel editionLigne9 = new JPanel();
 		editionLigne9.setLayout(new GridLayout(1,3,20,20));
-		editionLigne9.add(new JButton("Back"));
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back");
+		editionLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
 		accueil.setActionCommand("Bouton Accueil");
@@ -426,15 +467,17 @@ public class AppView {
 		
 		edition.add(editionC,BorderLayout.CENTER);
 		
+		this.panelPrecedent = this.panelCourant;
+		this.panelCourant = edition;
 		panel.add(edition, BorderLayout.CENTER);
 	}
 	
 	public void afficherDiaporama(){
 		panel.removeAll();
-		diaporama = new JPanel();
+		JPanel diaporama = new JPanel();
 		diaporama.setLayout(new BorderLayout(10,10));
 		
-		JLabel titre = new JLabel("Diaporama de photo");
+		JLabel titre = new JLabel(this.engine.getTitreDiaporama());
 		titre.setHorizontalAlignment(SwingConstants.CENTER);
 		titre.setFont(new Font("Courrier",5,20));
 		titre.setForeground(Color.ORANGE);
@@ -461,7 +504,10 @@ public class AppView {
 		
 		JPanel diaporamaLigne9 = new JPanel();
 		diaporamaLigne9.setLayout(new GridLayout(1,3,20,20));
-		diaporamaLigne9.add(new JButton("Back"));
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back");
+		diaporamaLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
 		accueil.setActionCommand("Bouton Accueil");
@@ -473,11 +519,23 @@ public class AppView {
 		diaporama.add(diaporamaLigne9,BorderLayout.SOUTH);
 		
 		diaporama.add(diaporamaC,BorderLayout.CENTER);
+		
+		this.panelPrecedent = this.panelCourant;
+		this.panelCourant = diaporama;
+		
 		panel.add(diaporama,BorderLayout.CENTER);
 	}
-	/*
-	 *  Public methods
-	 */
+	
+	
+	
+	public JPanel getPanelPrecedent() {
+		return panelPrecedent;
+	}
+
+
+
+
+
 
 	/** 
 	 *  Get the main panel
