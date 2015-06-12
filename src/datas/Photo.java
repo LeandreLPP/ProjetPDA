@@ -25,16 +25,60 @@ public class Photo implements Serializable {
 	 * Constructeur sans parametre de la classe photo
 	 * Les attributs sont modifies par la suite par les getteurs/setteurs
 	 */
-	public Photo(String url) throws IOException{
-		this.imageURL = url;
+	public Photo(String urlOrigine, String urlDestination){
+		this.imageURL = urlDestination;
 		this.titre = this.imageURL.split("/")[this.imageURL.split("/").length-1];
+		this.CopierFichier(urlOrigine, urlDestination);
 		this.auteur = null;
 		this.pays = null;
 		this.date = Calendar.getInstance();
 		this.keyWords = new ArrayList<String>();
-		this.img = ImageIO.read(new File(this.imageURL));
+		try {
+			this.img = ImageIO.read(new File(this.imageURL));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.tagInvisible();
 		this.generateTag();
+	}
+	
+	private boolean CopierFichier(String source, String destination){
+		boolean resultat=false;
+		FileInputStream filesource=null;
+		FileOutputStream fileDestination=null;
+		File creation = new File(destination);
+		try{
+			creation.createNewFile();
+		} catch(IOException e) {
+			System.out.println("Impossible de creer le fichier");
+			e.printStackTrace();
+		}
+		try{
+			filesource=new FileInputStream(source);
+			fileDestination=new FileOutputStream(creation);
+			byte buffer[]=new byte[512*1024];
+			int nblecture;
+			while((nblecture=filesource.read(buffer))!=-1){
+				fileDestination.write(buffer,0,nblecture);
+			}
+			resultat=true;
+		}catch(FileNotFoundException nf){
+			nf.printStackTrace();
+		}catch(IOException io){
+			io.printStackTrace();
+		}finally{
+			try{
+				filesource.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			try{
+				fileDestination.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		} 
+		return resultat;
 	}
 
 	/**
@@ -54,18 +98,23 @@ public class Photo implements Serializable {
 	 * @return True si la photo correspond au tag, false sinon.
 	 * @throws IOException 
 	 */
-	public boolean checkTag() throws IOException{
+	public boolean checkTag(){
 		boolean ret = true;
-		BufferedImage imgTest = ImageIO.read(new File(this.imageURL));
-		int width = imgTest.getWidth();
-		int height = imgTest.getHeight();
-		int p1 = imgTest.getRGB(0, 0);
-		int p2 = imgTest.getRGB(width, height);
-		int[] tagTest = new int[]{width,height,p1,p2};
-		for(int i = 0; i<4;i++){
-			if(this.tag[i] != tagTest[i]){
-				ret = false;
+		BufferedImage imgTest;
+		try {
+			imgTest = ImageIO.read(new File(this.imageURL));
+			int width = imgTest.getWidth();
+			int height = imgTest.getHeight();
+			int p1 = imgTest.getRGB(0, 0);
+			int p2 = imgTest.getRGB(width, height);
+			int[] tagTest = new int[]{width,height,p1,p2};
+			for(int i = 0; i<4;i++){
+				if(this.tag[i] != tagTest[i]){
+					ret = false;
+				}
 			}
+		} catch (IOException e) {
+			ret = false;
 		}
 		return ret;
 	}
@@ -80,22 +129,6 @@ public class Photo implements Serializable {
 		Photo ret = null;
 		return ret;
 	}*/
-
-	/**
-	 * Compare les courbes de couleur des deux photographies.
-	 * @param p2 la photo a comparer
-	 * @return Le quotient de difference entre 0 et 100. 
-	 * 0 signifie que les courbes de couleurs sont identiques, 100 signifie que les courbes de couleurs sont totalement differentes.
-	 */
-	public int differenceCouleur(Photo p2){
-		int[] tab1 = this.courbeCouleur();
-		int[] tab2 = p2.courbeCouleur();
-		int ret = 0;
-		for(int i = 0; i<tab1.length; i++){
-			ret += Math.abs(tab1[i]-tab2[i]);			
-		}
-		return ret;
-	}
 
 	/**
 	 * Genere la courbe de couleur sous la forme d'un tableau de 765 entiers entre 0 et 100.
@@ -126,6 +159,22 @@ public class Photo implements Serializable {
 		}
 		return ret;
 	}
+
+	/**
+	 * Compare les courbes de couleur des deux photographies.
+	 * @param p2 la photo a comparer
+	 * @return Le quotient de difference entre 0 et 100. 
+	 * 0 signifie que les courbes de couleurs sont identiques, 100 signifie que les courbes de couleurs sont totalement differentes.
+	 */
+	public int differenceCouleur(Photo p2){
+		int[] tab1 = this.courbeCouleur();
+		int[] tab2 = p2.courbeCouleur();
+		int ret = 0;
+		for(int i = 0; i<tab1.length; i++){
+			ret += Math.abs(tab1[i]-tab2[i]);			
+		}
+		return ret;
+	}
 	
 	/**
 	 * 
@@ -139,7 +188,7 @@ public class Photo implements Serializable {
 		int height = this.img.getHeight();
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
-				Color rgb = new Color(this.img.getRGB(row, col));
+				Color rgb = new Color(this.img.getRGB(col, row));
 				alpha += rgb.getAlpha();
 				r += rgb.getRed();
 				g += rgb.getGreen();
@@ -151,8 +200,8 @@ public class Photo implements Serializable {
 		g %= 255;
 		b %= 255;
 		Color tag = new Color(alpha,r,g,b);
-		this.img.setRGB(height, width, tag.getRGB());
-		String extension = this.imageURL.split(".")[this.imageURL.split(".").length-1];
+		this.img.setRGB(width-1, height-1, tag.getRGB());
+		String extension = this.getExtension();
 		try {
 			ImageIO.write(this.img, extension, ImageIO.createImageOutputStream(this.imageURL));
 		} catch (IOException e) {
@@ -239,6 +288,20 @@ public class Photo implements Serializable {
 	 */
 	public BufferedImage getImg(){
 		return this.img;
+	}
+	
+	/**
+	 * @return the type of the image
+	 */
+	public String getExtension(){
+		String ext = "";
+		int i = this.imageURL.length()-1;
+		char c = this.imageURL.charAt(i);
+		while(c != '.'){
+			ext = c + ext;
+			i--;
+		}
+		return ext;
 	}
 
 	/*

@@ -30,7 +30,7 @@ public class User implements Serializable {
 		this.allPhotos = new Collection("All");
 		this.collections = new Hashtable<String,Collection>();
 	}
-	
+
 	// --- Methodes ---
 
 	public void addCollection(String key){
@@ -45,7 +45,7 @@ public class User implements Serializable {
 			this.collections.remove(key);
 		}
 	}
-	
+
 	public void movePhoto(String keyOrigine, String keyPhoto, String keyDestination){
 		if(keyOrigine != null && keyPhoto != null && keyDestination != null && !keyOrigine.equals(keyDestination)){
 			if (this.collections.containsKey(keyOrigine) && this.collections.containsKey(keyDestination)){
@@ -58,7 +58,7 @@ public class User implements Serializable {
 			}
 		}
 	}
-	
+
 	public void delPhoto(String keyPhoto){
 		this.allPhotos.delPhoto(keyPhoto);
 		File f = new File(keyPhoto);
@@ -71,45 +71,8 @@ public class User implements Serializable {
 	public void importerPhoto(String url){
 		String nom = url.split("/")[url.split("/").length-1];
 		String newUrl = this.urlDossier+"/"+nom;
-		this.CopierFichier(url, newUrl);
-		try {
-			Photo p = new Photo(newUrl);
-			this.allPhotos.addPhoto(p);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private boolean CopierFichier(String Source, String Destination){
-		boolean resultat=false;
-		FileInputStream filesource=null;
-		FileOutputStream fileDestination=null;
-		try{
-			filesource=new FileInputStream(Source);
-			fileDestination=new FileOutputStream(Destination);
-			byte buffer[]=new byte[512*1024];
-			int nblecture;
-			while((nblecture=filesource.read(buffer))!=-1){
-				fileDestination.write(buffer,0,nblecture);
-			}
-			resultat=true;
-		}catch(FileNotFoundException nf){
-			nf.printStackTrace();
-		}catch(IOException io){
-			io.printStackTrace();
-		}finally{
-			try{
-				filesource.close();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			try{
-				fileDestination.close();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		} 
-		return resultat;
+		Photo p = new Photo(url,newUrl);
+		this.allPhotos.addPhoto(p);
 	}
 
 	// --- Sauver et Charger ---
