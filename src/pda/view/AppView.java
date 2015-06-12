@@ -140,12 +140,12 @@ public class AppView {
 		JLayeredPane layered1 = new JLayeredPane();
 		layered1.setPreferredSize(new Dimension(350,150));
 		layered1.setBorder(BorderFactory.createTitledBorder("Lundi 27 Avril 2015"));
-		ImageIcon image = new ImageIcon("data/bljblm.jpg");
+		ImageIcon image = new ImageIcon("data/chat.jpg");
 		JLabel lab = new JLabel(image);
 		lab.setToolTipText("Petit Lapin !");
 		lab.setBounds(10, 20, 100, 100);
 		layered1.add(lab,JLayeredPane.DEFAULT_LAYER);
-		ImageIcon image2 = new ImageIcon("data/bbkim.jpg");
+		ImageIcon image2 = new ImageIcon("data/lapin.jpg");
 		JLabel lab2 = new JLabel(image2);
 		lab2.setBounds(120, 20, 100, 100);
 		layered1.add(lab2,JLayeredPane.DEFAULT_LAYER);
@@ -154,7 +154,7 @@ public class AppView {
 		JLayeredPane layered2 = new JLayeredPane();
 		layered2.setPreferredSize(new Dimension(350,150));
 		layered2.setBorder(BorderFactory.createTitledBorder("Samedi 25 Avril 2015"));
-		ImageIcon image3 = new ImageIcon("data/bljblm.jpg");
+		ImageIcon image3 = new ImageIcon("data/chat.jpg");
 		JLabel lab3 = new JLabel(image3);
 		lab3.setBounds(10, 20, 100, 100);
 		layered2.add(lab3,JLayeredPane.DEFAULT_LAYER);
@@ -231,7 +231,7 @@ public class AppView {
 		JLayeredPane layered1 = new JLayeredPane();
 		layered1.setPreferredSize(new Dimension(350,150));
 		layered1.setBorder(BorderFactory.createTitledBorder("Photo 1"));
-		ImageIcon image = new ImageIcon("data/bljblm.jpg");
+		ImageIcon image = new ImageIcon("data/chat.jpg");
 		JLabel lab = new JLabel(image);
 		lab.setBounds(10, 20, 100, 100);
 		layered1.add(lab,JLayeredPane.DEFAULT_LAYER);
@@ -420,7 +420,7 @@ public class AppView {
 		editionLigne2Pan2.add(new JTextField());
 		editionLigne2Pan2.add(new JTextField());
 		editionLigne2.add(editionLigne2Pan2);
-		editionLigne2.add(new JLabel(new ImageIcon("bbkim.jpg")));
+		editionLigne2.add(new JLabel(new ImageIcon("lapin.jpg")));
 		editionC.add(editionLigne2);
 		
 		JPanel editionLigne3 = new JPanel();
@@ -489,7 +489,7 @@ public class AppView {
 		diaporamaC.add(new JLabel("Petit Lapin !"),BorderLayout.NORTH);
 		
 		
-		diaporamaC.add(new JLabel(new ImageIcon("data/bljblm.jpg")),BorderLayout.CENTER);
+		diaporamaC.add(new JLabel(new ImageIcon("data/chat.jpg")),BorderLayout.CENTER);
 		
 		JPanel diaporamaCBout = new JPanel();
 		diaporamaCBout.setLayout(new GridLayout(1,3,10,10));
