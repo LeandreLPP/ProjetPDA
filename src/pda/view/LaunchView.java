@@ -24,53 +24,53 @@ import javax.swing.ImageIcon;
  */
 public class LaunchView {
 
-    	/*
-     	 * Private implementation -------------------------------------------------
-     	 */
+	/*
+	 * Private implementation -------------------------------------------------
+	 */
 
-    	/** the panel associated to the Launch application (Launch runs in this panel) */
-    	private JPanel panel;
+	/** the panel associated to the Launch application (Launch runs in this panel) */
+	private JPanel panel;
 
-    	/** the engine of the application */
-    	private LaunchDatas engine;
+	/** the engine of the application */
+	private LaunchDatas engine;
 
 	/*
-     	 *  Public ressources -----------------------------------------------------
-     	 *
-     	 *  Constructors
-     	 */
-    
-    	/** 
-     	 *  LaunchView constructor.
-     	 *
-     	 *  Initialize IHM for Launch application (i.e. its panel and the buttons).
-     	 */
-    	public LaunchView ( LaunchCtrl ctrl, LaunchDatas theEngine ) {
+	 *  Public ressources -----------------------------------------------------
+	 *
+	 *  Constructors
+	 */
+
+	/** 
+	 *  LaunchView constructor.
+	 *
+	 *  Initialize IHM for Launch application (i.e. its panel and the buttons).
+	 */
+	public LaunchView ( LaunchCtrl ctrl, LaunchDatas theEngine ) {
 
 		// Construction du panneau qui va contenir les boutons de lancement des différentes applis.
 		// Le nombre de cases du panneau = le nombre d'applications disponibles.
 		this.panel = new JPanel( new GridLayout ( (LaunchDatas.getNbApplications()), 1 ) );
-        	JButton btn;
-        	engine = theEngine;
-        
+		JButton btn;
+		engine = theEngine;
+
 		for(int i = 0; i < LaunchDatas.getNbApplications(); i++) {
-            		String apn = engine.appKeyAt(i);
-                	btn = new JButton(apn, new ImageIcon(engine.getIcon(apn)));
-                	panel.add(btn);
-                	btn.addActionListener(ctrl);
-            	}		
+			String apn = LaunchDatas.appKeyAt(i);
+			btn = new JButton(apn, new ImageIcon(engine.getIcon(apn)));
+			panel.add(btn);
+			btn.addActionListener(ctrl);
+		}		
 
-    	} // --------------------------------------------------------- LaunchView()
+	} // --------------------------------------------------------- LaunchView()
 
-    	/*
-     	 * Public methods
-     	 */
-    
-    	/* 
-     	 *  see interface documentation
-     	 */
-    	public JPanel getPanel() {
+	/*
+	 * Public methods
+	 */
+
+	/* 
+	 *  see interface documentation
+	 */
+	public JPanel getPanel() {
 		return panel;
-    	} // ------------------------------------------------------ getAppliPanel()        
+	} // ------------------------------------------------------ getAppliPanel()        
 
 } // ----------------------------------------------------------- Class LaunchView

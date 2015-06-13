@@ -49,23 +49,16 @@ public class Photo implements Serializable {
 		File creation = new File(destination);
 		try{
 			creation.createNewFile();
-		} catch(IOException e) {
-			System.out.println("Impossible de creer le fichier");
-			e.printStackTrace();
-		}
-		try{
 			filesource=new FileInputStream(source);
-			fileDestination=new FileOutputStream(creation);
+			fileDestination=new FileOutputStream(destination);
 			byte buffer[]=new byte[512*1024];
 			int nblecture;
 			while((nblecture=filesource.read(buffer))!=-1){
 				fileDestination.write(buffer,0,nblecture);
 			}
 			resultat=true;
-		}catch(FileNotFoundException nf){
-			nf.printStackTrace();
-		}catch(IOException io){
-			io.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
 		}finally{
 			try{
 				filesource.close();
@@ -77,7 +70,7 @@ public class Photo implements Serializable {
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-		} 
+		}
 		return resultat;
 	}
 
@@ -88,7 +81,7 @@ public class Photo implements Serializable {
 		int width = this.img.getWidth();
 		int height = this.img.getHeight();
 		int p1 = this.img.getRGB(0, 0);
-		int p2 = this.img.getRGB(width, height);
+		int p2 = this.img.getRGB(width-1, height-1);
 		this.tag = new int[]{width,height,p1,p2};
 	}
 
@@ -106,9 +99,10 @@ public class Photo implements Serializable {
 			int width = imgTest.getWidth();
 			int height = imgTest.getHeight();
 			int p1 = imgTest.getRGB(0, 0);
-			int p2 = imgTest.getRGB(width, height);
+			int p2 = imgTest.getRGB(width-1, height-1);
 			int[] tagTest = new int[]{width,height,p1,p2};
 			for(int i = 0; i<4;i++){
+				//System.out.println(this.tag[i]+" | "+tagTest[i]);
 				if(this.tag[i] != tagTest[i]){
 					ret = false;
 				}
@@ -139,23 +133,29 @@ public class Photo implements Serializable {
 	 * @return Un tableau de 765 entiers allant de 0 a 100.
 	 */
 	public int[] courbeCouleur(){
-		int[] ret = new int[765];
+		int[] ret = new int[768];
 		int width = this.img.getWidth();
 		int height = this.img.getHeight();
-		int nbPixels = width*height;
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
-				Color rgb = new Color(this.img.getRGB(row, col));
+				Color rgb = new Color(this.img.getRGB(col, row));
 				int r = rgb.getRed();
-				int g = rgb.getGreen() + 255;
-				int b = rgb.getBlue() + 510;
+				int g = rgb.getGreen() + 256;
+				int b = rgb.getBlue() + 512;
 				ret[r]++;
 				ret[g]++;
 				ret[b]++;
 			}
 		}
+		int max = 0;
 		for (int e : ret){
-			e = ((int)e/nbPixels)*100;
+			if(e>max){
+				max = e;
+			}
+		}
+		for (int e : ret){
+			double r = ((double)e/max) * 100;
+			e = (int)r;
 		}
 		return ret;
 	}
@@ -173,6 +173,7 @@ public class Photo implements Serializable {
 		for(int i = 0; i<tab1.length; i++){
 			ret += Math.abs(tab1[i]-tab2[i]);			
 		}
+		ret = (int)(((double)ret/768)*100);
 		return ret;
 	}
 	
@@ -188,11 +189,13 @@ public class Photo implements Serializable {
 		int height = this.img.getHeight();
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
-				Color rgb = new Color(this.img.getRGB(col, row));
-				alpha += rgb.getAlpha();
-				r += rgb.getRed();
-				g += rgb.getGreen();
-				b += rgb.getBlue();
+				if(col != width-1 || row != height-1){
+					Color rgb = new Color(this.img.getRGB(col, row));
+					alpha += rgb.getAlpha();
+					r += rgb.getRed();
+					g += rgb.getGreen();
+					b += rgb.getBlue();
+				}
 			}
 		}
 		alpha %= 255;
@@ -201,9 +204,14 @@ public class Photo implements Serializable {
 		b %= 255;
 		Color tag = new Color(alpha,r,g,b);
 		this.img.setRGB(width-1, height-1, tag.getRGB());
+		this.enregisterImg();
+	}
+	
+	private void enregisterImg(){
 		String extension = this.getExtension();
+		File f = new File(this.imageURL);
 		try {
-			ImageIO.write(this.img, extension, ImageIO.createImageOutputStream(this.imageURL));
+			ImageIO.write(this.img, extension, f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -223,7 +231,7 @@ public class Photo implements Serializable {
 			while(ret && row<this.img.getHeight()){
 				col = 0;
 				while(ret && col<this.img.getWidth()){
-					if(this.img.getRGB(row, col)!=p2.img.getRGB(row,col)) ret = false;
+					if(this.img.getRGB(col,row)!=p2.img.getRGB(col,row)) ret = false;
 					col++;
 				}
 				row++;
@@ -297,10 +305,11 @@ public class Photo implements Serializable {
 		String ext = "";
 		int i = this.imageURL.length()-1;
 		char c = this.imageURL.charAt(i);
-		while(c != '.'){
+		do {
 			ext = c + ext;
 			i--;
-		}
+			c = this.imageURL.charAt(i);
+		} while(c != '.');
 		return ext;
 	}
 
@@ -350,7 +359,7 @@ public class Photo implements Serializable {
 		this.keyWords = keyWords;
 	}
 	
-	// --- Sauver et Charger ---
+	/* --- Sauver et Charger ---
 	public void sauver(){
 		this.sauver(this.imageURL.split(".")[this.imageURL.split(".").length-2]+".out");
 	}
@@ -382,5 +391,5 @@ public class Photo implements Serializable {
 			e.printStackTrace();
 		} 
 		return ret;
-	}
+	}*/
 }
