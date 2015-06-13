@@ -22,20 +22,22 @@ public class TriPaysAntiAlpha extends Tri {
 		return rep;
 	}
 
-	public Hashtable<Integer, Object[]> split() {
-		Hashtable<Integer, Object[]> rep = new Hashtable<Integer, Object[]>();
+	public Hashtable<Integer, Object[][]> split() {
+		Hashtable<Integer, Object[][]> rep = new Hashtable<Integer, Object[][]>();
 		int i = 0;
 		String titre = this.liste.get(i).getPays();
 		ArrayList<Photo> liste = new ArrayList<Photo>();
 		for(Photo p : this.liste){
 			if(!p.getPays().equals(titre)){
-				Object[] couple = {titre,liste.toArray()};
+				Object[][] couple = {{titre},liste.toArray()};
 				rep.put(i, couple);
 				i++;
 				titre = p.getPays();
 			}
 			liste.add(p);
 		}
+		Object[][] couple = {{titre},liste.toArray()};
+		rep.put(i, couple);
 		return rep;
 	}
 }

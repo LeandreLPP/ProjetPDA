@@ -22,20 +22,35 @@ public class TriDateCroissante extends Tri {
 		return rep;
 	}
 
-	public Hashtable<Integer, Object[]> split() {
-		Hashtable<Integer, Object[]> rep = new Hashtable<Integer, Object[]>();
+	public Hashtable<Integer, Object[][]> split() {
+		Hashtable<Integer, Object[][]> rep = new Hashtable<Integer, Object[][]>();
 		int i = 0;
-		String titre = this.liste.get(i).getDate().toString();
+		String titre = this.dateToString(this.liste.get(i));
 		ArrayList<Photo> liste = new ArrayList<Photo>();
 		for(Photo p : this.liste){
 			if(!p.getDate().toString().equals(titre)){
-				Object[] couple = {titre,liste.toArray()};
+				Object[][] couple = {{titre},liste.toArray()};
 				rep.put(i, couple);
 				i++;
-				titre = p.getDate().toString();
+				titre = this.dateToString(p);
 			}
 			liste.add(p);
 		}
+		Object[][] couple = {{titre},liste.toArray()};
+		rep.put(i, couple);
+		return rep;
+	}
+	
+	private String dateToString(Photo p){
+		String rep = "";
+		java.util.Calendar d = p.getDate();
+		int day = d.DAY_OF_WEEK;
+		int numDay = d.DAY_OF_MONTH;
+		int month = d.MONTH;
+		int year = d.YEAR;
+		String stringDay;
+		String stringMonth;
+		
 		return rep;
 	}
 }

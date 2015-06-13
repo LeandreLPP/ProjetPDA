@@ -208,13 +208,14 @@ public class Photo implements Serializable {
 	}
 	
 	private void enregisterImg(){
-		String extension = this.getExtension();
+		/*String extension = this.getExtension();
 		File f = new File(this.imageURL);
+		
 		try {
 			ImageIO.write(this.img, extension, f);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**

@@ -32,5 +32,5 @@ public abstract class Tri implements Serializable {
 	
 	protected abstract boolean compare(int i1, int i2);
 	
-	public abstract Hashtable<Integer,Object[]> split();
+	public abstract Hashtable<Integer,Object[][]> split();
 }

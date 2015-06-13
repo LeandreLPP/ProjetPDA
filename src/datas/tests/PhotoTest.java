@@ -24,6 +24,16 @@ public class PhotoTest{
 		this.pChat = new Photo("data/chat.jpg","data/testJunit/chat.jpg");
 		this.pLapin = new Photo("data/lapin.jpg","data/testJunit/lapin.jpg");
 	}
+	
+	@After()
+	public void tearDown(){
+		this.pChat = null;
+		this.pLapin = null;
+		File f = new File("data/testJunit/chat.jpg");
+		f.delete();
+		f = new File("data/testJunit/lapin.jpg");
+		f.delete();
+	}
 
 	@Test()
 	public void testConstructeur() {
@@ -83,17 +93,5 @@ public class PhotoTest{
 	@Test()
 	public void testSetters(){
 		
-	}
-	
-	@After()
-	public void tearDown(){
-		this.pChat = null;
-		this.pLapin = null;
-		File f = new File("data/testJunit/chat.jpg");
-		f.delete();
-		f = new File("data/testJunit/lapin.jpg");
-		f.delete();
-		f = new File("data/testJunit/doubleChat.jpg");
-		f.delete();
 	}
 }

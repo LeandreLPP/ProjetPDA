@@ -22,18 +22,6 @@ public class Collection implements Serializable {
 	private int photoSelect;
 	private Tri tri;
 
-	public Collection(String titre, Photo[] listePhoto){
-		this.titre = titre;
-		this.mapPhotos = new Hashtable<String,Photo>();
-		this.listePhotos = new ArrayList<Photo>();
-		for(Photo p : listePhoto){
-			this.addPhoto(p);
-		}
-		this.photoSelect = 0;
-		this.tri = new TriTitreAlpha(this.listePhotos);
-		this.trier();
-	}
-
 	public Collection(String titre){
 		this.titre = titre;
 		this.mapPhotos = new Hashtable<String,Photo>();
@@ -41,6 +29,17 @@ public class Collection implements Serializable {
 		this.photoSelect = 0;
 		this.tri = new TriTitreAlpha(this.listePhotos);
 		this.trier();
+	}
+
+	public Collection(String titre, Photo[] listePhoto){
+		this.titre = titre;
+		this.mapPhotos = new Hashtable<String,Photo>();
+		this.listePhotos = new ArrayList<Photo>();
+		this.photoSelect = 0;
+		this.tri = new TriTitreAlpha(this.listePhotos);
+		for(Photo p : listePhoto){
+			this.addPhoto(p);
+		}
 	}
 
 	public void trier(){
@@ -61,16 +60,27 @@ public class Collection implements Serializable {
 				| SecurityException e) {
 			e.printStackTrace();
 		}
+		this.trier();
 	}
 
 	public Collection[] split(){
-		Hashtable<Integer, Object[]> tabDeTab = this.tri.split();
+		Hashtable<Integer, Object[][]> tabDeTab = this.tri.split();
 		Collection[] ret = new Collection[tabDeTab.size()];
 		for(int i : tabDeTab.keySet()){
-			Collection t = new Collection((String)tabDeTab.get(i)[0], (Photo[])tabDeTab.get(i)[1]);
+			Collection t = new Collection((String)tabDeTab.get(i)[0][0], this.toPhoto(tabDeTab.get(i)[1]));
 			ret[i] = t;
 		}
 		return ret;
+	}
+	
+	private Photo[] toPhoto(Object[] tab){
+		Photo[] rep = new Photo[tab.length];
+		int i = 0;
+		for(Object o : tab){
+			rep[i] = (Photo)o;
+			i++;
+		}
+		return rep;
 	}
 	
 	//---Del---
@@ -152,34 +162,42 @@ public class Collection implements Serializable {
 
 	public void setTriTitreAlpha(){
 		this.tri = new TriTitreAlpha(this.listePhotos);
+		this.updateTri();
 	}
 
 	public void setTriTitreAntiAlpha(){
 		this.tri = new TriTitreAntiAlpha(this.listePhotos);
+		this.updateTri();
 	}
 
 	public void setTriAuteurAlpha(){
 		this.tri = new TriAuteurAlpha(this.listePhotos);
+		this.updateTri();
 	}
 
 	public void setTriAuteurAntiAlpha(){
 		this.tri = new TriAuteurAntiAlpha(this.listePhotos);
+		this.updateTri();
 	}
 
 	public void setTriDateCroissante(){
 		this.tri = new TriDateCroissante(this.listePhotos);
+		this.updateTri();
 	}
 
 	public void setTriDateDecroissante(){
 		this.tri = new TriDateDecroissante(this.listePhotos);
+		this.updateTri();
 	}
 
 	public void setTriPaysAlpha(){
 		this.tri = new TriPaysAlpha(this.listePhotos);
+		this.updateTri();
 	}
 
 	public void setTriPaysAntiAlpha(){
 		this.tri = new TriPaysAntiAlpha(this.listePhotos);
+		this.updateTri();
 	}
 
 	// --- Sauver et Charger ---

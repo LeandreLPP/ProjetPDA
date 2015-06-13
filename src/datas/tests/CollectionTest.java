@@ -2,153 +2,195 @@ package datas.tests;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.util.Calendar;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import datas.*;
+
 public class CollectionTest {
 
+	private Photo pChat;
+	private Photo pLapin;
+
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
+		this.pChat = new Photo("data/chat.jpg","data/testJunit/chat.jpg");
+		this.pLapin = new Photo("data/lapin.jpg","data/testJunit/lapin.jpg");
 	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	@Test
-	public void testCollectionStringPhotoArray() {
-		fail("Not yet implemented");
+	
+	@After()
+	public void tearDown(){
+		this.pChat = null;
+		this.pLapin = null;
+		File f = new File("data/testJunit/chat.jpg");
+		f.delete();
+		f = new File("data/testJunit/lapin.jpg");
+		f.delete();
 	}
 
 	@Test
 	public void testCollectionString() {
-		fail("Not yet implemented");
+		Collection collection = new Collection("Test");
+		assertNotNull(collection);
 	}
 
 	@Test
-	public void testTrier() {
-		fail("Not yet implemented");
+	public void testCollectionStringPhotoArray() {
+		Photo[] tab = {this.pChat,this.pLapin};
+		Collection collection = new Collection("Test",tab);
+		assertNotNull(collection);
 	}
 
 	@Test
 	public void testAddPhoto() {
-		fail("Not yet implemented");
+		Collection collection = new Collection("Test");
+		assertEquals(collection.getListePhotos().size(),0);
+		collection.addPhoto(this.pChat);
+		assertEquals(collection.getListePhotos().size(),1);
+		assertEquals(collection.getPhoto(0),this.pChat);
+		collection.addPhoto(pLapin);
+		assertEquals(collection.getListePhotos().size(),2);
+		assertEquals(collection.getPhoto(1),this.pLapin);
 	}
 
 	@Test
 	public void testSplit() {
-		fail("Not yet implemented");
+		char a = 'a';
+		char b = 'b';
+		System.out.println(a - b);
+		Photo[] tab = {this.pChat,this.pLapin};
+		Collection collection = new Collection("Test",tab);
+		Collection[] split;
+		
+		// -- Tri par ordre alphabetique d'auteur --
+		this.pChat.setAuteur("A");
+		this.pLapin.setAuteur("B");
+		collection.setTriAuteurAlpha();
+		split = collection.split();
+		assertEquals(2,split.length);
+		assertEquals("A",split[0].getTitre());
+		assertEquals("B",split[1].getTitre());
+		// -- Tri par ordre anti-alphabetique d'auteur --
+		collection.setTriAuteurAntiAlpha();
+		split = collection.split();
+		assertEquals(2,split.length);
+		assertEquals("B",split[0].getTitre());
+		assertEquals("A",split[1].getTitre());
+		
+		// -- Tri par ordre alphabetique de titre --
+		this.pChat.setTitre("A");
+		this.pLapin.setTitre("B");
+		collection.setTriTitreAlpha();
+		split = collection.split();
+		assertEquals(2,split.length);
+		assertEquals("A",split[0].getTitre());
+		assertEquals("B",split[1].getTitre());
+		// -- Tri par ordre anti-alphabetique de titre --
+		collection.setTriTitreAntiAlpha();
+		split = collection.split();
+		assertEquals(2,split.length);
+		assertEquals("B",split[0].getTitre());
+		assertEquals("A",split[1].getTitre());
+		
+		// -- Tri par ordre alphabetique de pays --
+		this.pChat.setPays("A");
+		this.pLapin.setPays("B");
+		collection.setTriPaysAlpha();
+		split = collection.split();
+		assertEquals(2,split.length);
+		assertEquals("A",split[0].getTitre());
+		assertEquals("B",split[1].getTitre());
+		// -- Tri par ordre anti-alphabetique de pays --
+		collection.setTriPaysAntiAlpha();
+		split = collection.split();
+		assertEquals(2,split.length);
+		assertEquals("B",split[0].getTitre());
+		assertEquals("A",split[1].getTitre());
+		
+		// -- Tri par ordre chronologique des dates --
+		java.util.Calendar date1 = Calendar.getInstance();
+		date1.set(2012, 12, 12);
+		System.out.println(date1.toString());
+		java.util.Calendar date2 = Calendar.getInstance();
+		date2.set(2015, 1, 1);
+		System.out.println(date2.toString());
+		this.pChat.setDate(date1);
+		this.pLapin.setDate(date2);
+		collection.setTriDateCroissante();
+		split = collection.split();
+		assertEquals(2,split.length);
+		//assertEquals("A",split[0].getTitre());
+		//assertEquals("B",split[1].getTitre());
+		// -- Tri par ordre anti-alphabetique de pays --
+		collection.setTriDateDecroissante();
+		split = collection.split();
+		assertEquals(2,split.length);
+		//assertEquals("B",split[0].getTitre());
+		//assertEquals("A",split[1].getTitre());
 	}
 
 	@Test
 	public void testDelPhotoPhoto() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testDelPhotoInt() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testDelPhotoString() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testGetPhotoInt() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testGetPhotoString() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testGetTitre() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testToutesPhotos() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testGetListePhotos() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testGetPhotoSelect() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testGetTri() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testSetTitre() {
-		fail("Not yet implemented");
+		 
 	}
 
 	@Test
 	public void testSetPhotoSelect() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTriTitreAlpha() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTriTitreAntiAlpha() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTriAuteurAlpha() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTriAuteurAntiAlpha() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTriDateCroissante() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTriDateDecroissante() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTriPaysAlpha() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTriPaysAntiAlpha() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSauver() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testCharger() {
-		fail("Not yet implemented");
+		 
 	}
 
 }
