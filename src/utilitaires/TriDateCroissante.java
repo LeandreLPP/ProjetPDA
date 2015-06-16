@@ -28,11 +28,12 @@ public class TriDateCroissante extends Tri {
 		String titre = this.dateToString(this.liste.get(i));
 		ArrayList<Photo> liste = new ArrayList<Photo>();
 		for(Photo p : this.liste){
-			if(!p.getDate().toString().equals(titre)){
+			if(!this.dateToString(p).equals(titre)){
 				Object[][] couple = {{titre},liste.toArray()};
 				rep.put(i, couple);
 				i++;
 				titre = this.dateToString(p);
+				liste = new ArrayList<Photo>();
 			}
 			liste.add(p);
 		}
@@ -43,14 +44,11 @@ public class TriDateCroissante extends Tri {
 	
 	private String dateToString(Photo p){
 		String rep = "";
-		java.util.Calendar d = p.getDate();
-		int day = d.DAY_OF_WEEK;
-		int numDay = d.DAY_OF_MONTH;
-		int month = d.MONTH;
-		int year = d.YEAR;
-		String stringDay;
-		String stringMonth;
-		
+		java.util.GregorianCalendar d = p.getDate();
+		java.util.Date date = d.getTime();
+		java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("EEEEEEEE dd MMMMMMMM YYYY");
+		rep = format.format(date);
+		rep = Character.toUpperCase(rep.charAt(0))+rep.substring(1);
 		return rep;
 	}
 }

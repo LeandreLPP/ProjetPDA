@@ -89,9 +89,4 @@ public class PhotoTest{
 		File f = new File("data/testJunit/doubleChat.jpg");
 		f.delete();
 	}
-
-	@Test()
-	public void testSetters(){
-		
-	}
 }

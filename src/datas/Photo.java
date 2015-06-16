@@ -13,13 +13,10 @@ public class Photo implements Serializable {
 	private String titre;
 	private String auteur;
 	private String pays;
-	private Calendar date;
-	private ArrayList<String> keyWords;
-	private int[] tag;
+	private GregorianCalendar date;
+	private String[] keyWords;
+	private final int[] tag;
 	private BufferedImage img;
-	/* On ignore ces variables pour le moment
-	private long gpsLatitude;
-	private long gpsLongitude;*/
 
 	/**
 	 * Constructeur sans parametre de la classe photo
@@ -28,61 +25,84 @@ public class Photo implements Serializable {
 	public Photo(String urlOrigine, String urlDestination){
 		this.imageURL = urlDestination;
 		this.titre = this.imageURL.split("/")[this.imageURL.split("/").length-1];
-		this.CopierFichier(urlOrigine, urlDestination);
+		this.titre = this.titre.substring(0,this.titre.length()-(this.getExtension().length()+1));
 		this.auteur = null;
 		this.pays = null;
-		this.date = Calendar.getInstance();
-		this.keyWords = new ArrayList<String>();
+		this.date = new GregorianCalendar();
+		this.keyWords = new String[0];
 		try {
-			this.img = ImageIO.read(new File(this.imageURL));
+			this.CopierFichier(urlOrigine);
+			this.tagInvisible();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.tagInvisible();
-		this.generateTag();
+		this.tag = this.generateTag();
 	}
-	
-	private boolean CopierFichier(String source, String destination){
-		boolean resultat=false;
-		FileInputStream filesource=null;
-		FileOutputStream fileDestination=null;
-		File creation = new File(destination);
-		try{
-			creation.createNewFile();
-			filesource=new FileInputStream(source);
-			fileDestination=new FileOutputStream(destination);
-			byte buffer[]=new byte[512*1024];
-			int nblecture;
-			while((nblecture=filesource.read(buffer))!=-1){
-				fileDestination.write(buffer,0,nblecture);
-			}
-			resultat=true;
-		} catch(IOException e) {
-			e.printStackTrace();
-		}finally{
-			try{
-				filesource.close();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			try{
-				fileDestination.close();
-			}catch(Exception e){
-				e.printStackTrace();
+
+	/**
+	 * 
+	 * @param source
+	 */
+	private void CopierFichier(String source) throws IOException{
+		this.img = ImageIO.read(new File(source));
+		this.enregisterImg();
+		this.img = ImageIO.read(new File(this.imageURL));
+	}
+
+	/**
+	 * @throws IOException 
+	 * 
+	 */
+	private void enregisterImg() throws IOException{
+		String extension = this.getExtension();
+		File f = new File(this.imageURL);
+		f.createNewFile();
+		if(extension.equals("jpg") || extension.equals("jpeg")){
+			ImageIO.write(this.img, "png", f);
+		} else {
+			ImageIO.write(this.img, extension, f);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void tagInvisible() throws IOException{
+		int alpha = 0;
+		int r = 0;
+		int g = 0;
+		int b = 0;
+		int width = this.img.getWidth();
+		int height = this.img.getHeight();
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				if(col != width-1 || row != height-1){
+					Color rgb = new Color(this.img.getRGB(col, row));
+					alpha += rgb.getAlpha();
+					r += rgb.getRed();
+					g += rgb.getGreen();
+					b += rgb.getBlue();
+				}
 			}
 		}
-		return resultat;
+		alpha %= 255;
+		r %= 255;
+		g %= 255;
+		b %= 255;
+		Color tag = new Color(alpha,r,g,b);
+		this.img.setRGB(width-1, height-1, tag.getRGB());
+		this.enregisterImg();
 	}
 
 	/**
 	 * Genere le tag de securite de la photo
 	 */
-	private void generateTag(){
+	private int[] generateTag(){
 		int width = this.img.getWidth();
 		int height = this.img.getHeight();
 		int p1 = this.img.getRGB(0, 0);
 		int p2 = this.img.getRGB(width-1, height-1);
-		this.tag = new int[]{width,height,p1,p2};
+		return new int[]{width,height,p1,p2};
 	}
 
 
@@ -102,7 +122,6 @@ public class Photo implements Serializable {
 			int p2 = imgTest.getRGB(width-1, height-1);
 			int[] tagTest = new int[]{width,height,p1,p2};
 			for(int i = 0; i<4;i++){
-				//System.out.println(this.tag[i]+" | "+tagTest[i]);
 				if(this.tag[i] != tagTest[i]){
 					ret = false;
 				}
@@ -112,17 +131,6 @@ public class Photo implements Serializable {
 		}
 		return ret;
 	}
-
-	/*
-	 * Copie l'etat d'une photo dans un nouvel objet photo, excepte l'url qui est passe en parametre
-	 * @param url L'url de la nouvelle photo
-	 * @return Une nouvelle photo, aux attributs identiques a celle-ci.
-	 
-	public Photo copier(String url){
-		//TODO
-		Photo ret = null;
-		return ret;
-	}*/
 
 	/**
 	 * Genere la courbe de couleur sous la forme d'un tableau de 765 entiers entre 0 et 100.
@@ -176,47 +184,6 @@ public class Photo implements Serializable {
 		ret = (int)(((double)ret/768)*100);
 		return ret;
 	}
-	
-	/**
-	 * 
-	 */
-	private void tagInvisible(){
-		int alpha = 0;
-		int r = 0;
-		int g = 0;
-		int b = 0;
-		int width = this.img.getWidth();
-		int height = this.img.getHeight();
-		for (int row = 0; row < height; row++) {
-			for (int col = 0; col < width; col++) {
-				if(col != width-1 || row != height-1){
-					Color rgb = new Color(this.img.getRGB(col, row));
-					alpha += rgb.getAlpha();
-					r += rgb.getRed();
-					g += rgb.getGreen();
-					b += rgb.getBlue();
-				}
-			}
-		}
-		alpha %= 255;
-		r %= 255;
-		g %= 255;
-		b %= 255;
-		Color tag = new Color(alpha,r,g,b);
-		this.img.setRGB(width-1, height-1, tag.getRGB());
-		this.enregisterImg();
-	}
-	
-	private void enregisterImg(){
-		/*String extension = this.getExtension();
-		File f = new File(this.imageURL);
-		
-		try {
-			ImageIO.write(this.img, extension, f);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-	}
 
 	/**
 	 * Compare cette photographie et verifie si elle est identiques (au pixel pres) a celle passee en parametre.
@@ -241,20 +208,6 @@ public class Photo implements Serializable {
 		return ret;
 	}
 
-	/*
-	 * Compare cette photographie et verifie si elle est identiques (au pixel pres) a celle passee en parametre.
-	 * Contrairement a {@link #isIdentique(Photo)}, ignore les differences de format.
-	 * La photo la plus grande est redimensionne en une de la meme taille que la plus petite
-	 * @param p2 La photographie a comparer
-	 * @return True si les deux photogrpahies sont strictement identiques (au pixel pres, une fois redimensionne), false sinon.
-	 * @throws IOException 
-	public boolean isIdentiqueIgnoreDimension(Photo p2) throws IOException{
-		BufferedImage test = new BufferedImage();
-		boolean ret = true;
-		return ret;
-	}
-	 */
-
 	/**
 	 * @return the imageURL
 	 */
@@ -264,7 +217,7 @@ public class Photo implements Serializable {
 	/**
 	 * @return the keyWords
 	 */
-	public ArrayList<String> getKeyWords() {
+	public String[] getKeyWords() {
 		return this.keyWords;
 	}
 	/**
@@ -288,17 +241,17 @@ public class Photo implements Serializable {
 	/**
 	 * @return the date
 	 */
-	public Calendar getDate() {
+	public GregorianCalendar getDate() {
 		return this.date;
 	}
-	
+
 	/**
 	 * @return the img
 	 */
 	public BufferedImage getImg(){
 		return this.img;
 	}
-	
+
 	/**
 	 * @return the type of the image
 	 */
@@ -313,21 +266,6 @@ public class Photo implements Serializable {
 		} while(c != '.');
 		return ext;
 	}
-
-	/*
-	public long getGpsLatitude() {
-		return this.gpsLatitude;
-	}
-	public long getGpsLongitude() {
-		return this.gpsLongitude;
-	}
-	public void setGpsLatitude(long gpsLatitude) {
-		this.gpsLatitude = gpsLatitude;
-	}
-	public void setGpsLongitude(long gpsLongitude) {
-		this.gpsLongitude = gpsLongitude;
-	}
-	 */
 
 	/**
 	 * @param titre the titre to set
@@ -350,47 +288,13 @@ public class Photo implements Serializable {
 	/**
 	 * @param date the date to set
 	 */
-	public void setDate(Calendar date) {
+	public void setDate(GregorianCalendar date) {
 		this.date = date;
 	}
 	/**
 	 * @param keyWords the keyWords to set
 	 */
-	public void setKeyWords(ArrayList<String> keyWords) {
+	public void setKeyWords(String[] keyWords) {
 		this.keyWords = keyWords;
 	}
-	
-	/* --- Sauver et Charger ---
-	public void sauver(){
-		this.sauver(this.imageURL.split(".")[this.imageURL.split(".").length-2]+".out");
-	}
-	
-	public void sauver(String url){
-		FileOutputStream file;
-		ObjectOutputStream flux;
-		try {
-			file = new FileOutputStream(url); 
-			flux = new ObjectOutputStream(file);
-			flux.writeObject(this);
-			flux.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static Photo charger(String url){
-		FileInputStream file;
-		ObjectInputStream flux;
-		Photo ret = null;
-		try {
-			file = new FileInputStream(url);
-			flux = new ObjectInputStream(file);
-			ret = (Photo) flux.readObject();
-			flux.close();
-		} catch (IOException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		return ret;
-	}*/
 }

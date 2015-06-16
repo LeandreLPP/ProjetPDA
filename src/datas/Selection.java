@@ -1,31 +1,30 @@
 package datas;
 
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Enumeration;
 
 public class Selection {
 	private String[] titre;
 	private String[] auteur;
 	private String[] pays;
-	private Calendar dateDebut;
-	private Calendar dateFin;
+	private GregorianCalendar dateDebut;
+	private GregorianCalendar dateFin;
 	//private long gpsLatitude;
 	//private long gpsLongitude;
-	private ArrayList<String> keyWords;
+	private String[] keyWords;
 	private Collection source;
 	
 	/**
 	 * Cree une selection vide, les attributs etants modifies par les setteurs.
 	 */
-	public Selection(){
+	public Selection(Collection source){
 		this.titre = new String[0];
 		this.auteur = new String[0];
 		this.pays = new String[0];
-		this.dateDebut = Calendar.getInstance();
-		this.dateFin = Calendar.getInstance();
-		this.keyWords = new ArrayList<String>();
-		this.source = new Collection("Tmp");
+		this.dateDebut = new GregorianCalendar(1990,0,1);
+		this.dateFin = new GregorianCalendar(2200,11,30);
+		this.keyWords = new String[0];
+		this.source = source;
 	}
 	
 	/**
@@ -38,8 +37,11 @@ public class Selection {
 		Photo p = null;
 		while (listePhotos.hasMoreElements()){
 			p = listePhotos.nextElement();
-			if(this.tabContient(this.auteur, p.getAuteur()) && this.tabContient(this.pays, p.getPays()) && this.tabContient(this.titre, p.getTitre()) 
-					&& p.getDate().after(this.dateDebut) && p.getDate().before(this.dateFin)
+			if(this.tabContient(this.auteur, p.getAuteur()) 
+					&& this.tabContient(this.pays, p.getPays()) 
+					&& this.tabContient(this.titre, p.getTitre()) 
+					&& p.getDate().compareTo(this.dateDebut)>=0 
+					&& p.getDate().compareTo(this.dateFin)<=0
 					&& this.checkKeywords(p.getKeyWords())){
 				ret.addPhoto(p);				
 			}
@@ -47,34 +49,46 @@ public class Selection {
 		return ret;
 	}
 
-	private boolean checkKeywords(ArrayList<String> photo){
+	/**
+	 * 
+	 * @param photo
+	 * @return
+	 */
+	private boolean checkKeywords(String[] photo){
 		boolean ret = true;
 		int i = 0;
 		String motACheck;
-		while(i<this.keyWords.size() && ret){
-			motACheck = this.keyWords.get(i);
+		while(i<this.keyWords.length && ret){
+			motACheck = this.keyWords[i];
 			boolean contenu = false;
 			int j = 0;
-			while(!contenu && j<photo.size()){
-				if(motACheck.equalsIgnoreCase(photo.get(j))){
+			while(!contenu && j<photo.length){
+				if(motACheck.equalsIgnoreCase(photo[j])){
 					contenu = true;
 				}
 				j++;
 			}
 			i++;
+			ret = contenu;
 		}
 		return ret;
 	}
 	
+	/**
+	 * 
+	 * @param tab
+	 * @param elem
+	 * @return
+	 */
 	private boolean tabContient(String[] tab, String elem){
 		boolean ret = false;
-		if(elem != null && !elem.equals("")){
+		if(elem != null && !elem.equals("") && tab != null && tab.length>0){
 			for(String e : tab){
 				if(e.equalsIgnoreCase(elem)){
 					ret = true;
 				}
 			}
-		} else {
+		} else if(tab == null || tab.length<=0){
 			ret = true;
 		}
 		return ret;
@@ -104,36 +118,21 @@ public class Selection {
 	/**
 	 * @return the dateDebut
 	 */
-	public Calendar getDateDebut() {
+	public GregorianCalendar getDateDebut() {
 		return dateDebut;
 	}
 
 	/**
 	 * @return the dateFin
 	 */
-	public Calendar getDateFin() {
+	public GregorianCalendar getDateFin() {
 		return dateFin;
 	}
-
-	/*
-	 * @return the gpsLatitude
-	 
-	public long getGpsLatitude() {
-		return gpsLatitude;
-	}
-
-	/**
-	 * @return the gpsLongitude
-	 
-	public long getGpsLongitude() {
-		return gpsLongitude;
-	}
-	*/
 
 	/**
 	 * @return the keyWords
 	 */
-	public ArrayList<String> getKeyWords() {
+	public String[] getKeyWords() {
 		return keyWords;
 	}
 
@@ -168,35 +167,25 @@ public class Selection {
 	/**
 	 * @param dateDebut the dateDebut to set
 	 */
-	public void setDateDebut(Calendar dateDebut) {
-		this.dateDebut = dateDebut;
+	public void setDateDebut(GregorianCalendar dateDebut) {
+		if(this.dateFin.compareTo(dateDebut)>=0){
+			this.dateDebut = dateDebut;
+		}
 	}
 
 	/**
 	 * @param dateFin the dateFin to set
 	 */
-	public void setDateFin(Calendar dateFin) {
-		this.dateFin = dateFin;
+	public void setDateFin(GregorianCalendar dateFin) {
+		if(this.dateDebut.compareTo(dateFin)<=0){
+			this.dateFin = dateFin;
+		}
 	}
-
-	/*
-	 * @param gpsLatitude the gpsLatitude to set
-	 
-	public void setGpsLatitude(long gpsLatitude) {
-		this.gpsLatitude = gpsLatitude;
-	}
-
-	/**
-	 * @param gpsLongitude the gpsLongitude to set
-	 
-	public void setGpsLongitude(long gpsLongitude) {
-		this.gpsLongitude = gpsLongitude;
-	}
-	*/
+	
 	/**
 	 * @param keyWords the keyWords to set
 	 */
-	public void setKeyWords(ArrayList<String> keyWords) {
+	public void setKeyWords(String[] keyWords) {
 		this.keyWords = keyWords;
 	}
 

@@ -34,6 +34,7 @@ public class TriTitreAlpha extends Tri{
 				rep.put(i, couple);
 				i++;
 				titre = p.getTitre();
+				liste = new ArrayList<Photo>();
 			}
 			liste.add(p);
 		}

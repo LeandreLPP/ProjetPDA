@@ -33,6 +33,7 @@ public class TriAuteurAntiAlpha extends Tri {
 				rep.put(i, couple);
 				i++;
 				titre = p.getAuteur();
+				liste = new ArrayList<Photo>();
 			}
 			liste.add(p);
 		}

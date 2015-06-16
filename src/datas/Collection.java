@@ -1,10 +1,5 @@
 package datas;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -19,14 +14,14 @@ public class Collection implements Serializable {
 	private String titre;
 	private Hashtable<String,Photo> mapPhotos;
 	private ArrayList<Photo> listePhotos;
-	private int photoSelect;
+	private int indexSelect;
 	private Tri tri;
 
 	public Collection(String titre){
 		this.titre = titre;
 		this.mapPhotos = new Hashtable<String,Photo>();
 		this.listePhotos = new ArrayList<Photo>();
-		this.photoSelect = 0;
+		this.indexSelect = 0;
 		this.tri = new TriTitreAlpha(this.listePhotos);
 		this.trier();
 	}
@@ -35,7 +30,7 @@ public class Collection implements Serializable {
 		this.titre = titre;
 		this.mapPhotos = new Hashtable<String,Photo>();
 		this.listePhotos = new ArrayList<Photo>();
-		this.photoSelect = 0;
+		this.indexSelect = 0;
 		this.tri = new TriTitreAlpha(this.listePhotos);
 		for(Photo p : listePhoto){
 			this.addPhoto(p);
@@ -90,25 +85,37 @@ public class Collection implements Serializable {
 		this.updateTri();
 	}
 
-	public void delPhoto(int index){
+	public void delPhoto(int index) throws NoPhotoFoundException{
 		this.delPhoto(this.getPhoto(index));
 	}
 
-	public void delPhoto(String key){
+	public void delPhoto(String key) throws NoPhotoFoundException{
 		this.delPhoto(this.getPhoto(key));
 	}
 
 	//---Get---
-	public Photo getPhoto(int index){
+	public Photo getPhoto(int index) throws NoPhotoFoundException{
 		Photo ret = null;
-		if(index>= 0 && index < this.listePhotos.size()){
+		try{
 			ret = this.listePhotos.get(index);
+		} catch (IndexOutOfBoundsException e) {
+			if(this.listePhotos.size()>0){
+				if(index<0){
+					ret = this.listePhotos.get(0);
+				} else {
+					ret = this.listePhotos.get(this.listePhotos.size()-1);
+				}
+			} else throw new NoPhotoFoundException();
 		}
 		return ret;
 	}
 
-	public Photo getPhoto(String key){
-		return this.mapPhotos.get(key);
+	public Photo getPhoto(String key) throws NoPhotoFoundException{
+		Photo rep = this.mapPhotos.get(key);
+		if (rep == null){
+			throw new NoPhotoFoundException();
+		}
+		return rep;
 	}
 
 	/**
@@ -135,8 +142,8 @@ public class Collection implements Serializable {
 	/**
 	 * @return the photoSelect
 	 */
-	public int getPhotoSelect() {
-		return photoSelect;
+	public int getIndexSelect() {
+		return indexSelect;
 	}
 
 	/**
@@ -144,6 +151,10 @@ public class Collection implements Serializable {
 	 */
 	public Tri getTri() {
 		return tri;
+	}
+	
+	public Photo getPhotoSelect() throws NoPhotoFoundException{
+		return this.getPhoto(this.getIndexSelect());
 	}
 
 	/**
@@ -156,8 +167,31 @@ public class Collection implements Serializable {
 	/**
 	 * @param photoSelect the photoSelect to set
 	 */
-	public void setPhotoSelect(int photoSelect) {
-		this.photoSelect = photoSelect;
+	public void setIndexSelect(int photoSelect) {
+		if(photoSelect >= this.listePhotos.size()){
+			this.indexSelect = 0;
+		} else if(photoSelect <0) {
+			this.indexSelect = this.listePhotos.size()-1;
+		} else {
+			this.indexSelect = photoSelect;
+		}
+	}
+
+	/**
+	 * @param photoSelect the photoSelect to set
+	 * @throws NoPhotoFoundException 
+	 */
+	public void setIndexSelect(String key) throws NoPhotoFoundException {
+		Photo select = this.getPhoto(key);
+		this.indexSelect = this.listePhotos.indexOf(select);
+	}
+	
+	public void nextPhoto(){
+		this.setIndexSelect(this.getIndexSelect()+1);
+	}
+	
+	public void prevPhoto(){
+		this.setIndexSelect(this.getIndexSelect()-1);
 	}
 
 	public void setTriTitreAlpha(){
@@ -198,35 +232,5 @@ public class Collection implements Serializable {
 	public void setTriPaysAntiAlpha(){
 		this.tri = new TriPaysAntiAlpha(this.listePhotos);
 		this.updateTri();
-	}
-
-	// --- Sauver et Charger ---
-	public void sauver(String url){
-		FileOutputStream file;
-		ObjectOutputStream flux;
-		try {
-			file = new FileOutputStream(url); 
-			flux = new ObjectOutputStream(file);
-			flux.writeObject(this);
-			flux.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static Collection charger(String url){
-		FileInputStream file;
-		ObjectInputStream flux;
-		Collection ret = null;
-		try {
-			file = new FileInputStream(url);
-			flux = new ObjectInputStream(file);
-			ret = (Collection) flux.readObject();
-			flux.close();
-		} catch (IOException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		return ret;
 	}
 }

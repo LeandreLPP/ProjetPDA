@@ -33,6 +33,7 @@ public class TriPaysAlpha extends Tri {
 				rep.put(i, couple);
 				i++;
 				titre = p.getPays();
+				liste = new ArrayList<Photo>();
 			}
 			liste.add(p);
 		}

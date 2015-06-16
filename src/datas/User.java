@@ -49,22 +49,42 @@ public class User implements Serializable {
 	public void movePhoto(String keyOrigine, String keyPhoto, String keyDestination){
 		if(keyOrigine != null && keyPhoto != null && keyDestination != null && !keyOrigine.equals(keyDestination)){
 			if (this.collections.containsKey(keyOrigine) && this.collections.containsKey(keyDestination)){
-				this.collections.get(keyDestination).addPhoto(this.collections.get(keyOrigine).getPhoto(keyPhoto));
-				this.collections.get(keyOrigine).delPhoto(keyPhoto);
+				try {
+					this.collections.get(keyDestination).addPhoto(this.collections.get(keyOrigine).getPhoto(keyPhoto));
+					this.collections.get(keyOrigine).delPhoto(keyPhoto);
+				} catch (NoPhotoFoundException e) {
+					e.printStackTrace();
+				}
 			} else if (keyDestination.equalsIgnoreCase("All") && this.collections.containsKey(keyOrigine)){
-				this.collections.get(keyOrigine).delPhoto(keyPhoto);
+				try {
+					this.collections.get(keyOrigine).delPhoto(keyPhoto);
+				} catch (NoPhotoFoundException e) {
+					e.printStackTrace();
+				}
 			} else if (keyOrigine.equalsIgnoreCase("All") && this.collections.containsKey(keyDestination)){
-				this.collections.get(keyDestination).addPhoto(this.allPhotos.getPhoto(keyPhoto));
+				try {
+					this.collections.get(keyDestination).addPhoto(this.allPhotos.getPhoto(keyPhoto));
+				} catch (NoPhotoFoundException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
 	public void delPhoto(String keyPhoto){
-		this.allPhotos.delPhoto(keyPhoto);
+		try {
+			this.allPhotos.delPhoto(keyPhoto);
+		} catch (NoPhotoFoundException e) {
+			e.printStackTrace();
+		}
 		File f = new File(keyPhoto);
 		f.delete();
 		for(String e : this.collections.keySet()){
-			this.collections.get(e).delPhoto(keyPhoto);
+			try {
+				this.collections.get(e).delPhoto(keyPhoto);
+			} catch (NoPhotoFoundException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 
@@ -107,5 +127,4 @@ public class User implements Serializable {
 		} 
 		return ret;
 	}
-
 }
