@@ -16,7 +16,7 @@ public class Photo implements Serializable {
 	private GregorianCalendar date;
 	private String[] keyWords;
 	private final int[] tag;
-	private BufferedImage img;
+	private transient BufferedImage img;
 
 	/**
 	 * Constructeur sans parametre de la classe photo
@@ -133,55 +133,61 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * Genere la courbe de couleur sous la forme d'un tableau de 765 entiers entre 0 et 100.
-	 * Un entier pour chacune des 255 nuances de rouge, vert et bleu. 
-	 * Si l'entier vaut 0, cela veut dire que aucun pixel de l'image ne possede cette nuance de couleur.
-	 * Si l'entier vaut 100, cela veut dire que tous les pixels de l'image possedent cette nuance de couleur.
-	 * Un pixel etant code un code RGB (Red Green Blue), chacun possede trois nuances : une rouge, une verte et unee bleue, codee chacune sur 255 
-	 * @return Un tableau de 765 entiers allant de 0 a 100.
+	 * Genere la courbe de couleur sous la forme d'un tableau de 1024 entiers superieurs a 0.
+	 * Un entier pour chacune des 256 nuances de luminosite, de rouge, de vert et de bleu. 
+	 * Chaque entier correspond au nombre de pixels de cette nuance de couleur
+	 * Un pixel etant code un code RGB (Red Green Blue), chacun possede quatres nuances : 
+	 * la luminosite, le rouge, le vert et le bleu, codee chacun sur 256 
+	 * @return Un tableau de 1024 entiers positifs.
 	 */
 	public int[] courbeCouleur(){
-		int[] ret = new int[768];
+		int[] ret = new int[1024];
 		int width = this.img.getWidth();
 		int height = this.img.getHeight();
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				Color rgb = new Color(this.img.getRGB(col, row));
-				int r = rgb.getRed();
-				int g = rgb.getGreen() + 256;
-				int b = rgb.getBlue() + 512;
+				int a = rgb.getAlpha();
+				int r = rgb.getRed() + 256;
+				int g = rgb.getGreen() + 512;
+				int b = rgb.getBlue() + 768;
+				ret[a]++;
 				ret[r]++;
 				ret[g]++;
 				ret[b]++;
 			}
 		}
-		int max = 0;
-		for (int e : ret){
-			if(e>max){
-				max = e;
-			}
-		}
-		for (int e : ret){
-			double r = ((double)e/max) * 100;
-			e = (int)r;
-		}
 		return ret;
 	}
 
 	/**
-	 * Compare les courbes de couleur des deux photographies.
+	 * Compare les courbes de couleur des deux photographies et en sort un index de difference.
 	 * @param p2 la photo a comparer
-	 * @return Le quotient de difference entre 0 et 100. 
+	 * @return Un double demontrant le pourcentage de difference entre 0 et 100. 
 	 * 0 signifie que les courbes de couleurs sont identiques, 100 signifie que les courbes de couleurs sont totalement differentes.
 	 */
-	public int differenceCouleur(Photo p2){
+	public double differenceCouleur(Photo p2){
 		int[] tab1 = this.courbeCouleur();
 		int[] tab2 = p2.courbeCouleur();
-		int ret = 0;
-		for(int i = 0; i<tab1.length; i++){
-			ret += Math.abs(tab1[i]-tab2[i]);			
+		int nbPixelsSelf = this.img.getHeight()*this.img.getWidth();
+		int nbPixelsP2 = p2.getImg().getHeight()*p2.getImg().getWidth();
+		int min = Math.min(nbPixelsSelf, nbPixelsP2);
+		double dbMax = (double)Math.max(nbPixelsSelf, nbPixelsP2);
+		double dbMin = (double)min;
+		if(min == nbPixelsP2){
+			for(int i : tab1){
+				i = (int)((double)((double)i/dbMax)*dbMin);
+			}
+		} else {
+			for(int i : tab2){
+				i = (int)((double)((double)i/dbMax)*dbMin);
+			}
 		}
-		ret = (int)(((double)ret/768)*100);
+		double ret = 0;
+		for(int i = 0; i<tab1.length; i++){
+			ret += Math.abs(tab1[i]-tab2[i]);
+		}
+		ret = (ret/(8*min))*100;
 		return ret;
 	}
 
@@ -297,4 +303,14 @@ public class Photo implements Serializable {
 	public void setKeyWords(String[] keyWords) {
 		this.keyWords = keyWords;
 	}
+	
+	private void writeObject(ObjectOutputStream out)throws IOException{
+        out.defaultWriteObject();
+        this.enregisterImg();
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+        in.defaultReadObject();
+        this.img = ImageIO.read(new File(this.imageURL));
+    }
 }

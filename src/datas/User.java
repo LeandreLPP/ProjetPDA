@@ -1,6 +1,7 @@
 package datas;
 
 import java.io.*;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class User implements Serializable {
@@ -12,14 +13,18 @@ public class User implements Serializable {
 
 	public User(){
 		this.nom = "default";
-		this.urlDossier = "datas/"+nom;
+		this.urlDossier = "saves/"+this.nom;
+		File dossier = new File(this.urlDossier);
+		dossier.mkdirs();
 		this.allPhotos = new Collection("All");
 		this.collections = new Hashtable<String,Collection>();
 	}
 
 	public User(String nom){
 		this.nom = nom;
-		this.urlDossier = "datas/"+nom;
+		this.urlDossier = "saves/"+nom;
+		File dossier = new File(this.urlDossier);
+		dossier.mkdirs();
 		this.allPhotos = new Collection("All");
 		this.collections = new Hashtable<String,Collection>();
 	}
@@ -27,6 +32,8 @@ public class User implements Serializable {
 	public User(String nom, String url){
 		this.nom = nom;
 		this.urlDossier = url+"/"+nom;
+		File dossier = new File(this.urlDossier);
+		dossier.mkdirs();
 		this.allPhotos = new Collection("All");
 		this.collections = new Hashtable<String,Collection>();
 	}
@@ -46,7 +53,7 @@ public class User implements Serializable {
 		}
 	}
 
-	public void movePhoto(String keyOrigine, String keyPhoto, String keyDestination){
+	public void movePhoto(String keyPhoto, String keyOrigine,  String keyDestination){
 		if(keyOrigine != null && keyPhoto != null && keyDestination != null && !keyOrigine.equals(keyDestination)){
 			if (this.collections.containsKey(keyOrigine) && this.collections.containsKey(keyDestination)){
 				try {
@@ -93,6 +100,52 @@ public class User implements Serializable {
 		String newUrl = this.urlDossier+"/"+nom;
 		Photo p = new Photo(url,newUrl);
 		this.allPhotos.addPhoto(p);
+	}
+
+	/**
+	 * @return the nom
+	 */
+	public String getNom() {
+		return this.nom;
+	}
+
+	/**
+	 * @return the urlDossier
+	 */
+	public String getUrlDossier() {
+		return this.urlDossier;
+	}
+
+	/**
+	 * @return the allPhotos
+	 */
+	public Collection getAllPhotos() {
+		return this.allPhotos;
+	}
+	
+	public Collection getCollection(String key){
+		return this.collections.get(key);
+	}
+
+	/**
+	 * @return the collections
+	 */
+	public Enumeration<Collection> toutesCollections() {
+		return this.collections.elements();
+	}
+
+	/**
+	 * @param nom the nom to set
+	 */
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+	/**
+	 * @param urlDossier the urlDossier to set
+	 */
+	public void setUrlDossier(String urlDossier) {
+		this.urlDossier = urlDossier;
 	}
 
 	// --- Sauver et Charger ---

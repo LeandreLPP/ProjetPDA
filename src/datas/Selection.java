@@ -22,7 +22,7 @@ public class Selection {
 		this.auteur = new String[0];
 		this.pays = new String[0];
 		this.dateDebut = new GregorianCalendar(1990,0,1);
-		this.dateFin = new GregorianCalendar(2200,11,30);
+		this.dateFin = new GregorianCalendar();
 		this.keyWords = new String[0];
 		this.source = source;
 	}
@@ -168,7 +168,7 @@ public class Selection {
 	 * @param dateDebut the dateDebut to set
 	 */
 	public void setDateDebut(GregorianCalendar dateDebut) {
-		if(this.dateFin.compareTo(dateDebut)>=0){
+		if(this.dateFin.after(dateDebut) || this.dateFin.compareTo(dateDebut)==0){
 			this.dateDebut = dateDebut;
 		}
 	}
@@ -177,7 +177,7 @@ public class Selection {
 	 * @param dateFin the dateFin to set
 	 */
 	public void setDateFin(GregorianCalendar dateFin) {
-		if(this.dateDebut.compareTo(dateFin)<=0){
+		if(this.dateDebut.before(dateFin) || this.dateDebut.compareTo(dateFin)==0){
 			this.dateFin = dateFin;
 		}
 	}

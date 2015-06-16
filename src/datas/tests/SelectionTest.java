@@ -173,32 +173,20 @@ public class SelectionTest {
 
 	@Test
 	public void testGetSetDateDebut() {
-		java.util.GregorianCalendar calendar = new java.util.GregorianCalendar();
-		java.util.Date date = new java.util.Date();
-		calendar.setTime(date);
-		calendar.set(2010, 10, 10);
+		java.util.GregorianCalendar calendar = new java.util.GregorianCalendar(2010,6,6);
 		this.selection.setDateDebut(calendar);
 		assertEquals(calendar,this.selection.getDateDebut());
-		java.util.GregorianCalendar calendar2 = new java.util.GregorianCalendar();
-		java.util.Date date2 = new java.util.Date();
-		calendar2.setTime(date2);
-		calendar2.set(2020, 10, 10);
+		java.util.GregorianCalendar calendar2 = new java.util.GregorianCalendar(2040,7,7);
 		this.selection.setDateDebut(calendar2);
 		assertEquals(calendar,this.selection.getDateDebut());
 	}
 
 	@Test
 	public void testGetSetDateFin() {
-		java.util.GregorianCalendar calendar2 = new java.util.GregorianCalendar();
-		java.util.Date date2 = new java.util.Date();
-		calendar2.setTime(date2);
-		calendar2.set(2020, 10, 10);
+		java.util.GregorianCalendar calendar2 = new java.util.GregorianCalendar(2020, 10, 10);
 		this.selection.setDateFin(calendar2);
 		assertEquals(calendar2,this.selection.getDateFin());
-		java.util.GregorianCalendar calendar = new java.util.GregorianCalendar();
-		java.util.Date date = new java.util.Date();
-		calendar.setTime(date);
-		calendar.set(2010, 10, 10);
+		java.util.GregorianCalendar calendar = new java.util.GregorianCalendar(1900,5,5);
 		this.selection.setDateFin(calendar);
 		assertEquals(calendar2,this.selection.getDateFin());
 	}

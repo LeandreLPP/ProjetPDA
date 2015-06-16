@@ -1,12 +1,12 @@
 package datas.tests;
 
 import datas.*;
-
 import static org.junit.Assert.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 import org.junit.*;
@@ -66,17 +66,25 @@ public class PhotoTest{
 	public void testCourbeCouleur(){
 		int[] courbeChat = this.pChat.courbeCouleur();
 		for(int e : courbeChat){
-			Assert.assertTrue(e>=0 && e<=100);
+			Assert.assertTrue(e>=0);
 		}
 	}
 	
 	@Test()
 	public void testDifferenceCouleur(){
 		Photo doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
-		int diffNulle = doubleChat.differenceCouleur(pChat);
-		int diffNonNulle = this.pChat.differenceCouleur(pLapin);
-		Assert.assertEquals(diffNulle, 0);
-		Assert.assertTrue(diffNonNulle>=0 && diffNonNulle<=100);
+		Photo chatTag = new Photo("data/chatTag.jpg","data/testJunit/chatTag.jpg");
+		Photo noir = new Photo("data/noir.jpg","data/testJunit/noir.jpg");
+		Photo blanc = new Photo("data/blanc.jpg","data/testJunit/blanc.jpg");
+		double diffNulle = doubleChat.differenceCouleur(pChat);
+		double diffFaible = chatTag.differenceCouleur(pChat);
+		double diffForte = this.pChat.differenceCouleur(pLapin);
+		double diffTotale = noir.differenceCouleur(blanc);
+		Assert.assertEquals(0, diffNulle, 0);
+		Assert.assertTrue(diffFaible>=0 && diffFaible<=100);
+		Assert.assertTrue(diffForte>=0 && diffForte<=100);
+		Assert.assertTrue(diffForte>diffFaible);
+		Assert.assertEquals(75, diffTotale, 1);
 		File f = new File("data/testJunit/doubleChat.jpg");
 		f.delete();
 	}
