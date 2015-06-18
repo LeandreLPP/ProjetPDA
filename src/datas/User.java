@@ -97,11 +97,18 @@ public class User implements Serializable {
 		}
 	}
 
-	public void importerPhoto(String url){
+	public boolean importerPhoto(String url){
+		boolean ret = true;
 		String nom = url.split("/")[url.split("/").length-1];
 		String newUrl = this.urlDossier+"/"+nom;
-		Photo p = new Photo(url,newUrl);
-		this.allPhotos.addPhoto(p);
+		Photo p;
+		try {
+			p = new Photo(url,newUrl);
+			this.allPhotos.addPhoto(p);
+		} catch (IOException e) {
+			ret = false;
+		}
+		return ret;
 	}
 
 	/**

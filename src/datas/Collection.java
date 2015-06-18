@@ -23,7 +23,6 @@ public class Collection implements Serializable {
 		this.listePhotos = new ArrayList<Photo>();
 		this.indexSelect = 0;
 		this.tri = new TriTitreAlpha(this.listePhotos);
-		this.trier();
 	}
 
 	public Collection(String titre, Photo[] listePhoto){
@@ -201,46 +200,57 @@ public class Collection implements Serializable {
 
 	public void setTriTitreAlpha(){
 		this.tri = new TriTitreAlpha(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriTitreAntiAlpha(){
 		this.tri = new TriTitreAntiAlpha(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriAuteurAlpha(){
 		this.tri = new TriAuteurAlpha(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriAuteurAntiAlpha(){
 		this.tri = new TriAuteurAntiAlpha(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriDateCroissante(){
 		this.tri = new TriDateCroissante(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriDateDecroissante(){
 		this.tri = new TriDateDecroissante(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriPaysAlpha(){
 		this.tri = new TriPaysAlpha(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriPaysAntiAlpha(){
 		this.tri = new TriPaysAntiAlpha(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriCollectionAlpha(){
 		this.tri = new TriCollectionAlpha(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriCollectionAntiAlpha(){
 		this.tri = new TriCollectionAntiAlpha(this.listePhotos);
+		this.trier();
 	}
 
 	public void setTriSimilarite(int index){
 		this.setIndexSelect(index);
 		this.tri = new TriSimilarite(this);
+		this.trier();
 	}
 }

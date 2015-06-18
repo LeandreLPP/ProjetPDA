@@ -8,6 +8,9 @@
  */
 package pda.view;
 
+/**
+ * Importation des librairies java et des packages CONTROL et DATAS
+ */
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Enumeration;
@@ -20,11 +23,10 @@ import javax.swing.*;
 import datas.*;
 
 /**
+ * Classe AppView correspondant a la partie graphique de l'application
+ * @author FRETAY Juliette et LE POLLES--POTIN Leandre - Groupe 1C
  * 
- * @author Juliette FRETAY
- * @author Leandre LE POLLES--POTIN
- * 
- * @version 14/06/15
+ * @version 18/06/15
  *
  */
 public class AppView {
@@ -32,7 +34,8 @@ public class AppView {
 	/*
 	 * Private implementation -------------------------------------------------
 	 */
-
+	
+	/** partie control de l'application*/
 	private AppCtrl ctrl;
 	
 	/** the engine of the application */
@@ -42,95 +45,83 @@ public class AppView {
 	private JPanel panel;
 	
 	
+	
+	//Trier
 	private JPanel panelCourant;
 	private JPanel panelPrecedent;
 	
 	
+
+	/*
+	 * Les composants graphiques de l'application dont nous devons avoir acces pour la partie 
+	 */
 	
-
-
-
-	public JComboBox<String> getComboGalerie() {
-		return comboGalerie;
-	}
-
-
-	/** Les comboBox */
+	/* Les JComboBox */
 	private JComboBox<String> comboGalerie;
 	private JComboBox<String> comboTheme;
-
 	private JComboBox<String> comboCat;
-
-
-	private JTextField texteTitre;
-
 	private JComboBox<String> comboJour;
-
 	private JComboBox<String> comboMois;
-
 	private JComboBox<String> comboAnnee;
-
 	private JComboBox<String> comboJour2;
-
 	private JComboBox<String> comboMois2;
-
 	private JComboBox<String> comboAnnee2;
-
-
-	private JTextField texteMots;
+	private JComboBox<String> comboUsers;
 	
+	/* Les JTextField */
+	private JTextField texteTitre;
+	private JTextField texteMots;
+	private JTextField texteAuteur;
+	private JTextField textePays;
+	
+	/*Les JButton */
 	private JButton playpause;
 	
+	/*Les boolean */
 	private boolean lecture;
 
-	private JComboBox<String> comboUsers;
+	private TestThread threadDiapo;
 
-	private JTextField texteAuteur;
-
-	private JTextField textePays;
+	
+	
+	
 	/*
 	 *  Public ressources -----------------------------------------------------
-	 *
-	 *  Constructors
 	 */
-
-	public JButton getPlaypause() {
-		return playpause;
-	}
-
-
-
-
 
 
 	/**
 	 * Construction of the App IHM.
 	 *
 	 * @param anEngine link to the App datas
+	 * @param ctrl link to the App control
 	 */
 	public AppView (AppCtrl ctrl, AppDatas anEngine ) {
-		engine = anEngine;
+		
+		this.engine = anEngine;
 		this.ctrl = ctrl;
-		// mise en place de l'ihm
-		panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		
 		this.panelCourant = new JPanel();
 		this.panelPrecedent = new JPanel();
-		this.afficherMenu();
 		this.lecture = false;
 		
+		// mise en place de l'ihm
+		this.panel = new JPanel();
+		this.panel.setLayout(new BorderLayout());
+		this.afficherMenu();
 
 	} // ------------------------------------------------------------- AppView()
 
 	
 	
 	
-	
-	
 	/*
-	 *  Public methods
+	 *  Public methods ------------------------------------------------------------------
 	 */
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant au menu principal de l'application
+	 */
 	public void afficherMenu(){
 		panel.removeAll();
 		JPanel menu = new JPanel();
@@ -160,11 +151,17 @@ public class AppView {
 		boutonOptions.setActionCommand("Bouton Options");
 		menu.add(boutonOptions);
 		
+		this.engine.setCollectionSelect(this.engine.getUtilisateurSelect().getAllPhotos());
+		
 		this.panelPrecedent = this.panelCourant;
 		this.panelCourant = menu;
 		panel.add(menu,BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a une galerie
+	 * @param source Collection de photos qui va etre affichee dans la galerie
+	 */
 	public void afficherGalerie(Collection source){
 		panel.removeAll();
 		JPanel galerie = new JPanel();
@@ -185,6 +182,8 @@ public class AppView {
 		galerieLigne2.setLayout(new BorderLayout(5,5));
 		galerieLigne2.add(new JLabel("Trier par"),BorderLayout.WEST);
 		comboGalerie = new JComboBox<String>();
+		comboGalerie.addItem("Titre Alphabetique");
+		comboGalerie.addItem("Titre Non Alphabetique");
 		comboGalerie.addItem("Categorie Alphabetique");
 		comboGalerie.addItem("Categorie Non Alphabetique");
 		comboGalerie.addItem("Auteur Alphabetique");
@@ -193,8 +192,6 @@ public class AppView {
 		comboGalerie.addItem("Date Decroissante");
 		comboGalerie.addItem("Pays Alphabetique");
 		comboGalerie.addItem("Pays Non Alphabetique");
-		comboGalerie.addItem("Titre Alphabetique");
-		comboGalerie.addItem("Titre Non Alphabetique");
 		galerieLigne2.add(comboGalerie,BorderLayout.CENTER);
 		JButton ok = new JButton("OK");
 		ok.addActionListener(ctrl);
@@ -271,7 +268,11 @@ public class AppView {
 		
 	}
 	
-	public void afficherGalerie(Collection[] lesPhotos){
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a une galerie
+	 * @param lesPhotos Tableau de collections qui sera affiche dans la galerie
+	 */
+	/*public void afficherGalerie(Collection[] lesPhotos){
 		panel.removeAll();
 		JPanel galerie = new JPanel();
 		galerie.setLayout(new BorderLayout(10,10));
@@ -289,6 +290,8 @@ public class AppView {
 		galerieLigne2.setLayout(new BorderLayout(5,5));
 		galerieLigne2.add(new JLabel("Trier par"),BorderLayout.WEST);
 		comboGalerie = new JComboBox<String>();
+		comboGalerie.addItem("Titre Alphabetique");
+		comboGalerie.addItem("Titre Non Alphabetique");
 		comboGalerie.addItem("Categorie Alphabetique");
 		comboGalerie.addItem("Categorie Non Alphabetique");
 		comboGalerie.addItem("Auteur Alphabetique");
@@ -297,8 +300,6 @@ public class AppView {
 		comboGalerie.addItem("Date Decroissante");
 		comboGalerie.addItem("Pays Alphabetique");
 		comboGalerie.addItem("Pays Non Alphabetique");
-		comboGalerie.addItem("Titre Alphabetique");
-		comboGalerie.addItem("Titre Non Alphabetique");
 		galerieLigne2.add(comboGalerie,BorderLayout.CENTER);
 		JButton ok = new JButton("OK");
 		ok.addActionListener(ctrl);
@@ -373,25 +374,11 @@ public class AppView {
 		this.panelCourant = galerie;
 		panel.add(galerie, BorderLayout.CENTER);
 		
-	}
-	public JPanel getPanelCourant() {
-		return panelCourant;
-	}
-
-
-
-
-
-
-	private Image getScaledImage(Image srcImg, int w, int h){
-	    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-	    Graphics2D g2 = resizedImg.createGraphics();
-	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-	    g2.drawImage(srcImg, 0, 0, w, h, null);
-	    g2.dispose();
-	    return resizedImg;
-	}
+	}*/
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a la gestion des photographies
+	 */
 	public void afficherGestion(){
 		panel.removeAll();
 		JPanel gestion = new JPanel();
@@ -458,6 +445,9 @@ public class AppView {
 		panel.add(gestion, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a la gestion des photos selectionnees
+	 */
 	public void afficherGestionSelection(){
 		panel.removeAll();
 		JPanel gestion = new JPanel();
@@ -545,6 +535,9 @@ public class AppView {
 		panel.add(gestion, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant aux recherches
+	 */
 	public void afficherRecherche(){
 		panel.removeAll();
 		JPanel recherche = new JPanel();
@@ -571,9 +564,10 @@ public class AppView {
 		rechercheLigne3.setLayout(new GridLayout(1,2));
 		rechercheLigne3.add(new JLabel("Categorie :"));
 		comboCat = new JComboBox<String>();
-		Enumeration<Collection> enumCollec = this.engine.getUtilisateurSelect().toutesCollections();
-		while(enumCollec.hasMoreElements()){
-			comboCat.addItem(enumCollec.nextElement().getTitre());
+		comboCat.addItem("-");
+		Enumeration <Collection> collec = this.engine.getUtilisateurSelect().toutesCollections();
+		while(collec.hasMoreElements() ){
+			comboCat.addItem(collec.nextElement().getTitre());
 		}
 		rechercheLigne3.add(comboCat);
 		rechercheC.add(rechercheLigne3);
@@ -660,7 +654,7 @@ public class AppView {
 		rechercheC.add(texteMots);
 		
 		JPanel rechercheLigne9 = new JPanel();
-		rechercheLigne9.setLayout(new GridLayout(1,3,10,10));
+		rechercheLigne9.setLayout(new GridLayout(1,3,5,5));
 		
 		JButton butback = new JButton("Back");
 		butback.addActionListener(ctrl);
@@ -685,104 +679,9 @@ public class AppView {
 		panel.add(recherche, BorderLayout.CENTER);
 	}
 	
-	public JComboBox<String> getComboCat() {
-		return comboCat;
-	}
-
-
-
-
-	public JTextField getTexteTitre() {
-		return texteTitre;
-	}
-
-
-
-
-
-
-	public JComboBox<String> getComboJour() {
-		return comboJour;
-	}
-
-
-
-
-
-
-	public JComboBox<String> getComboMois() {
-		return comboMois;
-	}
-
-
-
-
-
-
-	public JComboBox<String> getComboAnnee() {
-		return comboAnnee;
-	}
-
-
-
-
-
-
-	public JComboBox<String> getComboJour2() {
-		return comboJour2;
-	}
-
-
-
-
-
-
-	public JComboBox<String> getComboMois2() {
-		return comboMois2;
-	}
-
-
-
-
-
-
-	public JComboBox<String> getComboAnnee2() {
-		return comboAnnee2;
-	}
-
-
-
-
-
-
-
-	public JTextField getTexteAuteur() {
-		return texteAuteur;
-	}
-
-
-
-
-
-
-	public JTextField getTextePays() {
-		return textePays;
-	}
-
-
-
-
-
-
-	public JTextField getTexteMots() {
-		return texteMots;
-	}
-
-
-
-
-
-
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant aux options de l'application
+	 */
 	public void afficherOptions(){
 		panel.removeAll();
 		JPanel options = new JPanel();
@@ -795,10 +694,10 @@ public class AppView {
 		options.add(titre,BorderLayout.NORTH);
 		
 		JPanel pan = new JPanel();
-		pan.setLayout(new GridLayout(8,1,5,5));
+		pan.setLayout(new GridLayout(9,1,5,5));
 		pan.add(new JLabel("Se connecter en tant qu'utilisateur :"));
 		comboUsers = new JComboBox<String>();
-		for(int i=0;i<this.engine.getListeUsers().length;i++){
+		for(int i=1;i<this.engine.getListeUsers().length;i++){
 			comboUsers.addItem(this.engine.getListeUsers()[i].getNom());
 		}
 		pan.add(comboUsers);
@@ -813,6 +712,17 @@ public class AppView {
 		deco.setActionCommand("Se Deconnecter");		
 		pan1.add(deco);
 		pan.add(pan1);
+		JPanel pan3 = new JPanel();
+		pan3.setLayout(new GridLayout(1,2,5,5));
+		JButton add = new JButton("Ajouter Utilisateur");
+		add.addActionListener(ctrl);
+		add.setActionCommand("Ajouter Utilisateur");
+		pan3.add(add);
+		JButton supp = new JButton("Supprimer l'utilisateur");
+		supp.addActionListener(ctrl);
+		supp.setActionCommand("Supprimer Utilisateur");		
+		pan3.add(supp);
+		pan.add(pan3);
 		pan.add(new JLabel("Theme :"));
 		comboTheme = new JComboBox<String>();
 		comboTheme.addItem("Barbie");
@@ -859,15 +769,9 @@ public class AppView {
 		panel.add(options,BorderLayout.CENTER);
 	}
 	
-	public JComboBox<String> getComboUsers() {
-		return comboUsers;
-	}
-
-
-
-
-
-
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a l'edition d'une photo electionnee
+	 */
 	public void afficherEdition(){
 		panel.removeAll();
 		JPanel edition = new JPanel();
@@ -882,7 +786,7 @@ public class AppView {
 		editionC.setLayout(new GridLayout(6,1,10,10));
 		
 		JPanel editionLigne2 = new JPanel();
-		editionLigne2.setLayout(new GridLayout(1,3));
+		editionLigne2.setLayout(new GridLayout(1,2));
 		JPanel editionLigne2Pan1 = new JPanel();
 		editionLigne2Pan1.setLayout(new GridLayout(2,1));
 		editionLigne2Pan1.add(new JLabel("Titre :"));
@@ -893,7 +797,6 @@ public class AppView {
 		editionLigne2Pan2.add(new JTextField());
 		editionLigne2Pan2.add(new JTextField());
 		editionLigne2.add(editionLigne2Pan2);
-		editionLigne2.add(new JLabel(new ImageIcon("bbkim.jpg")));
 		editionC.add(editionLigne2);
 		
 		JPanel editionLigne3 = new JPanel();
@@ -944,7 +847,11 @@ public class AppView {
 		this.panelCourant = edition;
 		panel.add(edition, BorderLayout.CENTER);
 	}
-	
+
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant au diaporama de la galerie courante
+	 * @param laPhoto Photo a afficher en premier dans le diaporama
+	 */
 	public void afficherDiaporama(Photo laPhoto){
 		panel.removeAll();
 		JPanel diaporama = new JPanel();
@@ -1031,28 +938,41 @@ public class AppView {
 		panel.add(diaporama,BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Methode publique permettant de faire tourner un diaporama
+	 */
 	public void lireDiaporama(){
 		this.lecture = true;
-		//System.out.println("4");
-		while(this.playpause.getText().equals("Play")){
-			//System.out.println("5");
+		System.out.println("4");
+			System.out.println("5");
 			try {
-				//System.out.println("6");
-				Thread.sleep(3000);
-				this.engine.getColprinc().nextPhoto();
+				System.out.println("6");
+				this.threadDiapo = new TestThread(this);
 				
-				this.afficherDiaporama(this.engine.getColprinc().getPhotoSelect());
-				//System.out.println("7");
+				this.afficherDiaporama(this.engine.getUtilisateurSelect().getAllPhotos().getPhotoSelect());
+				System.out.println("7");
 				
-				//System.out.println("8");
-			} catch (NoPhotoFoundException | InterruptedException e) {
+				System.out.println("8");
+			} catch (NoPhotoFoundException e) {
 				e.printStackTrace();
-				//System.out.println("erreur");
+				System.out.println("erreur");
 			}
-		}
 		this.lecture = false;
 	}
 	
+	public void nextPhoto(){
+		this.engine.getUtilisateurSelect().getAllPhotos().nextPhoto();
+		this.lireDiaporama();
+	}
+	
+	public void pauseDiapo(){
+		this.threadDiapo = null;
+		this.getPlaypause().setText("Pause");
+	}
+	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a l'aide de l'application
+	 */
 	public void afficherAide(){
 		panel.removeAll();
 		JPanel aide = new JPanel();
@@ -1090,6 +1010,9 @@ public class AppView {
 		panel.add(aide, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant au a propos de l'application
+	 */
 	public void afficherAPropos(){
 		panel.removeAll();
 		JPanel aPropos = new JPanel();
@@ -1124,20 +1047,147 @@ public class AppView {
 		panel.add(aPropos, BorderLayout.CENTER);
 	}
 	
-	public JPanel getPanelPrecedent() {
-		return panelPrecedent;
-	}
-
-
+	/* =========Les accesseurs permettant de recuperer les elements graphiques utiles a la classe control de l'application=========*/
+	
+	
+	/**
+	 * Accesseur renvoyant le JComboBox des themes
+	 * @return Le JComboBox des themes
+	 */
 	public JComboBox<String> getComboTheme() {
 		return comboTheme;
 	}
+	
+	/**
+	 * Accesseur renvoyant le JComboBox de galerie
+	 * @return Le JComboBox de galerie
+	 */
+	public JComboBox<String> getComboGalerie() {
+		return comboGalerie;
+	}
+	
+	/**
+	 * Accesseur renvoyant le JComboBox des categories
+	 * @return Le JComboBox des categories
+	 */
+	public JComboBox<String> getComboCat() {
+		return comboCat;
+	}
+	
+	/**
+	 * Accesseur renvoyant le JComboBox des jours1
+	 * @return Le JComboBox des jours1
+	 */
+	public JComboBox<String> getComboJour() {
+		return comboJour;
+	}
 
+	/**
+	 * Accesseur renvoyant le JComboBox des mois1
+	 * @return Le JComboBox des mois1
+	 */
+	public JComboBox<String> getComboMois() {
+		return comboMois;
+	}
 
+	/**
+	 * Accesseur renvoyant le JComboBox des annees1
+	 * @return Le JComboBox des annees1
+	 */
+	public JComboBox<String> getComboAnnee() {
+		return comboAnnee;
+	}
 
+	/**
+	 * Accesseur renvoyant le JComboBox des jours2
+	 * @return Le JComboBox des jours2
+	 */
+	public JComboBox<String> getComboJour2() {
+		return comboJour2;
+	}
+
+	/**
+	 * Accesseur renvoyant le JComboBox des mois2
+	 * @return Le JComboBox des mois2
+	 */
+	public JComboBox<String> getComboMois2() {
+		return comboMois2;
+	}
+	
+	/**
+	 * Accesseur renvoyant le JComboBox des annees2
+	 * @return Le JComboBox des annees2
+	 */
+	public JComboBox<String> getComboAnnee2() {
+		return comboAnnee2;
+	}
+	
+	/**
+	 * Accesseur renvoyant le JComboBox des utilisateurs
+	 * @return Le JComboBox des utilisateurs
+	 */
+	public JComboBox<String> getComboUsers() {
+		return comboUsers;
+	}
+
+	/**
+	 * Accesseur renvoyant le panel affiche precedemment 
+	 * @return Le panel affiche precedemment 
+	 */
+	public JPanel getPanelPrecedent() {
+		return panelPrecedent;
+	}
+	
+	/**
+	 * Accesseur renvoyant le panel courant 
+	 * @return Le panel courant
+	 */
+	public JPanel getPanelCourant() {
+		return panelCourant;
+	}
+	
+	/**
+	 * Accesseur renvoyant le Bouton Play/Pause
+	 * @return Le bouton Play/Pause
+	 */
+	public JButton getPlaypause() {
+		return playpause;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField Titre
+	 * @return Le JTextField Titre
+	 */
+	public JTextField getTexteTitre() {
+		return texteTitre;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField Auteur
+	 * @return Le JTextField Auteur
+	 */
+	public JTextField getTexteAuteur() {
+		return texteAuteur;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField Pays
+	 * @return Le JTextField Pays
+	 */
+	public JTextField getTextePays() {
+		return textePays;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField Mots Cles
+	 * @return Le JTextField Mots Cles
+	 */
+	public JTextField getTexteMots() {
+		return texteMots;
+	}
+	
 	/** 
 	 *  Get the main panel
-	 *
 	 * @return the main panel of the application
 	 */
 	public JPanel getPanel() {
@@ -1145,4 +1195,25 @@ public class AppView {
 		return panel;
 	} // ----------------------------------------------------------- getPanel()
 
+	
+	
+	/*
+	 *  Private methods ------------------------------------------------------------------
+	 */
+	
+	/**
+	 * Methode privee permettant de redimensionner une image
+	 * @param srcImg Image a redimensionner 
+	 * @param w Nouvelle largeur
+	 * @param h Nouvelle hauteur
+	 * @return L'image redimensionnee
+	 */
+	private Image getScaledImage(Image srcImg, int w, int h){
+	    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2 = resizedImg.createGraphics();
+	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	    g2.drawImage(srcImg, 0, 0, w, h, null);
+	    g2.dispose();
+	    return resizedImg;
+	}
 } // ------------------------------------------------------------- Class AppView

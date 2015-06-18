@@ -33,8 +33,8 @@ public class TriSimilarite extends Tri {
 	@Override
 	public Hashtable<Integer, Object[][]> split() {
 		Hashtable<Integer, Object[][]> rep = new Hashtable<Integer, Object[][]>();
-		Object[][] resultat = {{"Resultat de la comaraison"},this.liste.toArray()};
+		Object[][] resultat = {{"Resultat de la comparaison"},this.liste.toArray()};
 		rep.put(0, resultat);
-		return null;
+		return rep;
 	}
 }

@@ -10,36 +10,36 @@ import java.util.*;
 import javax.imageio.ImageIO;
 
 /**
- * Classe implementant les fonctionnalites pour la gestion et la manipulation des photos dans l'application.
- * @author FRETAY Juliette et LE POLLES--POTIN Leandre - Groupe 1C
+ * Classe implémentant les fonctionnalités pour la gestion et la manipulation des photos dans l'application.
+ * @author FRETAY Juliette et LE POLLES--POTIN Léandre - Groupe 1C
  */
 public class Photo implements Serializable {
 	private static final long serialVersionUID = 0;
 	
 	/**
-	 * Le chemin d'enregistrement de la photo a laquelle est lie cet objet Photo
-	 * Defini l'emplacement de sauvegarde de {@link #img}
+	 * Le chemin d'enregistrement de la photo à laquelle est lié cet objet Photo
+	 * Défini l'emplacement de sauvegarde de {@link #img}
 	 */
 	private String imageURL;
 	
 	/**
-	 * Le titre de cet objet photographie, initialise par defaut lors de la creation de l'objet au nom de l'image sans son extension
-	 * Par exemple la photographie "Chat.jpg" sera nommee par defaut "Chat".
+	 * Le titre de cet objet photographie, initialisé par defaut lors de la création de l'objet au nom du fichier image sans son extension
+	 * Par exemple la photographie enregistrée sous le nom "Chat.jpg" sera nommée par defaut "Chat".
 	 */
 	private String titre;
 	
 	/**
-	 * L'auteur de cette photographie, initialise par defaut à @null.
+	 * L'auteur de cette photographie, initialisé par defaut à @null.
 	 */
 	private String auteur;
 	
 	/**
-	 * Le pays de prise de vue de cette photographie, initialise par defaut à @null.
+	 * Le pays de prise de vue de cette photographie, initialisé par defaut à @null.
 	 */
 	private String pays;
 	
 	/**
-	 * Le nom de la collection a laquelle appartient cette photographie.
+	 * Le nom de la collection à laquelle appartient cette photographie.
 	 */
 	private String collection;
 	
@@ -49,12 +49,13 @@ public class Photo implements Serializable {
 	private GregorianCalendar date;
 	
 	/**
-	 * Les mots cles associes a cette photographie.
+	 * Les mots clés associés à cette photographie.
 	 */
 	private String[] keyWords;
 	
 	/**
-	 * Le tag permettant de verifier l'integrite de la photographie stockee en memoire.
+	 * Le tag permettant de vérifier l'intégrite de la photographie stockée en memoire.
+	 * Ce tag est généré à l'instanciation de l'objet par la méthode {@link #generateTag()}.
 	 */
 	private final int[] tag;
 	
@@ -68,8 +69,9 @@ public class Photo implements Serializable {
 	 * Construit un objet de type Photo
 	 * @param urlOrigine Chemin de l'image de type jpeg, png ou gif utilise pour creer l'objet photo
 	 * @param urlDestination Chemin de sauvegarde de l'image importee
+	 * @throws IOException En cas de problème avec les fichier dont les chemins sont passés en paramètre.
 	 */
-	public Photo(String urlOrigine, String urlDestination){
+	public Photo(String urlOrigine, String urlDestination) throws IOException{
 		this.imageURL = urlDestination;
 		this.titre = this.imageURL.split("/")[this.imageURL.split("/").length-1];
 		this.titre = this.titre.substring(0,this.titre.length()-(this.getExtension().length()+1));
@@ -78,18 +80,16 @@ public class Photo implements Serializable {
 		this.collection = "All";
 		this.date = new GregorianCalendar();
 		this.keyWords = new String[0];
-		try {
-			this.CopierFichier(urlOrigine);
-			this.tagInvisible();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.CopierFichier(urlOrigine);
+		this.tagInvisible();
 		this.tag = this.generateTag();
 	}
 
 	/**
-	 * 
-	 * @param source
+	 * Copie l'image dont le chemin est passé en paramètre dans l'emplacement du disque situé à l'adresse {@link #imageURL}.
+	 * Appelle la méthode {@link #enregisterImg()}.
+	 * @param source Le chemin du fichier à copier à l'adresse stockée par {@link #imageURL}.
+	 * @throws IOException En cas de problème de lecture ou d'écriture de la photographie. Par exemple si le chemin passé en paramètre est incorrect.
 	 */
 	private void CopierFichier(String source) throws IOException{
 		this.img = ImageIO.read(new File(source));
@@ -98,8 +98,8 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * @throws IOException 
-	 * 
+	 * Enregitre l'image stockée dans {@link #img} à l'emplacement du disque définit par {@link #imageURL}.
+	 * @throws IOException En cas de problème d'écriture de l'image, par exemple si le chemin stocké dans {@link #imageURL} est incorrecte.
 	 */
 	private void enregisterImg() throws IOException{
 		String extension = this.getExtension();
@@ -114,6 +114,7 @@ public class Photo implements Serializable {
 
 	/**
 	 * 
+	 * @throws IOException
 	 */
 	public void tagInvisible() throws IOException{
 		int alpha = 0;

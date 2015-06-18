@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.util.GregorianCalendar;
 
 import datas.Collection;
+import datas.NoPhotoFoundException;
 import datas.Photo;
 import datas.User;
 
@@ -27,17 +28,17 @@ import datas.User;
  */
 public class AppDatas {
 
-    	/*
-     	 * Private implementation -------------------------------------------------
-     	 */
-    
-    	/** the name of the application */
-    
+	/*
+	 * Private implementation -------------------------------------------------
+	 */
+
+	/** the name of the application */
+
 	private String galerie;
 	private String recherche;
 	private String gestion;
 	private String options;
-	
+
 	private Color galerieColor;
 	private Color rechercheColor;
 	private Color gestionColor;
@@ -50,11 +51,8 @@ public class AppDatas {
 	private String titreEdition;
 	private String titreDiaporama;
 	private String titreGestionSelection;
-	
-	private static Collection[] tabcol;
-	private Collection colprinc;
-	private static Collection[] tabcolp;
-	
+
+
 	public String getTitreGestionSelection() {
 		return titreGestionSelection;
 	}
@@ -63,12 +61,13 @@ public class AppDatas {
 	private User[] listeUsers;
 	private Collection colecjuliette1;
 	private Collection colecprincjuliette;
-	
-	
+
+
 	private User utilisateurSelect;	
-	
-	
-	
+	private User defaultUser;
+
+	private Collection collectionSelect;
+
 	/**
 	 * Initialise App datas.
 	 *
@@ -78,12 +77,12 @@ public class AppDatas {
 		recherche = "Recherche";
 		gestion = "Gestion des photos";
 		options = "Options";
-		
+
 		galerieColor = new Color(127,230,220);
 		rechercheColor = new Color(240,143,205);
 		gestionColor = new Color(242,195,102);
 		optionsColor = new Color(162,242,102);
-		
+
 		titreGalerie ="Galerie de photo";
 		titreGestion ="Gestion des photos";
 		titreDiaporama ="Diaporama de photo";
@@ -91,63 +90,9 @@ public class AppDatas {
 		titreOptions ="Options";
 		titreRecherche ="Recherche de Photos";
 		titreGestionSelection = "Gestion de la selection";
+
 		
-		//-------------PHOTOS-----------------
-		Photo photo1 = new Photo("data/bbkim.jpg","data/ChatPenche.jpg");
-		photo1.setAuteur("Juliette Fretay");
-		photo1.setDate(new GregorianCalendar(1996,05,26));
-		photo1.setPays("France");
-		Photo photo2 = new Photo("data/bljblm.jpg","data/LapinBulle.jpg");
-		photo2.setAuteur("Leandre Le Polles--Potin");
-		photo2.setDate(new GregorianCalendar(2015,11,31));
-		photo2.setPays("Allemagne");
-		Photo photo3 = new Photo("data/p.jpg","data/ChatPitie.jpg");
-		photo3.setAuteur("Juliette Fretay");
-		photo3.setDate(new GregorianCalendar(2000,00,10));
-		photo3.setPays("Portugal");
-		Photo photo4 = new Photo("data/viyvip.jpg","data/ChatChelou.jpg");
-		photo4.setAuteur("Leandre Le Polles--Potin");
-		photo4.setDate(new GregorianCalendar(1996,05,26));
-		photo4.setPays("Espagne");
-		Photo photo5 = new Photo("data/ar.jpg","data/Chien.jpg");
-		photo5.setAuteur("Juliette Fretay");
-		photo5.setDate(new GregorianCalendar(1998,07,15));
-		photo5.setPays("Suisse");
-		Photo photo6 = new Photo("data/lalalala.jpg","data/ChienTriste.jpg");
-		photo6.setAuteur("Leandre Le Polles--Potin");
-		photo6.setDate(new GregorianCalendar(2002,03,02));
-		photo6.setPays("Belgique");
-		
-		//-------------LISTE PHOTOS-----------------
-		Photo[] liste1 = new Photo[3];
-		Photo[] liste2 = new Photo[1];
-		Photo[] liste3 = new Photo[2];
-		Photo[] listeprinc = new Photo[6];
-		liste1[0]=photo1;
-		liste1[1]=photo3;
-		liste2[0]=photo2;
-		liste1[2]=photo4;
-		liste3[0]=photo5;
-		liste3[1]=photo6;
-		listeprinc[0]=photo1;
-		listeprinc[1]=photo2;
-		listeprinc[2]=photo3;
-		listeprinc[3]=photo4;
-		listeprinc[4]=photo5;
-		listeprinc[5]=photo6;
-		
-		//-------------COLLECTIONS CATEGORIES-----------------
-		Collection col1 = new Collection("chat",liste1);
-		Collection col2 = new Collection("lapin",liste2);
-		Collection col3 = new Collection("chien",liste3);
-		tabcol = new Collection[3];
-		tabcol[0]=col1;
-		tabcol[1]=col2;
-		tabcol[2]=col3;
-		
-		//-------------COLLECTION PRINCIPALE-----------------
-		colprinc = new Collection("Principale",listeprinc);
-	
+
 		//-------------UTILISATEUR-----------------
 		juliette = new User("Juliette");
 		juliette.importerPhoto("data/Girl.jpg");
@@ -164,12 +109,66 @@ public class AppDatas {
 		juliette.movePhoto("Fleur.jpg", "All", "Fille");
 		colecjuliette1 = juliette.getCollection("Manga");
 		colecprincjuliette = juliette.getCollection("All");
-		
+		//-------------UTILISATEUR-----------------
+		this.defaultUser = new User("Defaut");
+		this.defaultUser.importerPhoto("data/ar.jpg");
+		this.defaultUser.importerPhoto("data/bbkim.jpg");
+		this.defaultUser.importerPhoto("data/bljblm.jpg");
+		this.defaultUser.importerPhoto("data/p.jpg");
+		this.defaultUser.importerPhoto("data/lalalala.jpg");
+		this.defaultUser.importerPhoto("data/viyvip.jpg");
+		try {
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/ar.jpg").setAuteur("Juliette");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bbkim.jpg").setAuteur("Juliette");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bljblm.jpg").setAuteur("Pierre");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/p.jpg").setAuteur("Emilie");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/lalalala.jpg").setAuteur("Emilie");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/viyvip.jpg").setAuteur("Pierre");
+			
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/ar.jpg").setDate(new GregorianCalendar(1996,06,12));
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bbkim.jpg").setDate(new GregorianCalendar(1996,06,12));
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bljblm.jpg").setDate(new GregorianCalendar(2015,10,14));
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/p.jpg").setDate(new GregorianCalendar(2003,02,24));
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/lalalala.jpg").setDate(new GregorianCalendar(2010,04,01));
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/viyvip.jpg").setDate(new GregorianCalendar(2010,04,01));
+			
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/ar.jpg").setPays("Hollande");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bbkim.jpg").setPays("France");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bljblm.jpg").setPays("France");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/p.jpg").setPays("Italie");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/lalalala.jpg").setPays("France");
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/viyvip.jpg").setPays("Espagne");
+			
+			String[] keys = {"chien"};
+			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/lalalala.jpg").setKeyWords(keys);
+		} catch (NoPhotoFoundException e) {
+			e.printStackTrace();
+		}
+		this.defaultUser.addCollection("Chat");
+		this.defaultUser.addCollection("Chien");
+		this.defaultUser.addCollection("Lapin");
+		this.defaultUser.movePhoto("ar.jpg", "All", "Chien");
+		this.defaultUser.movePhoto("bbkim.jpg", "All", "Chat");
+		this.defaultUser.movePhoto("bljblm.jpg", "All", "Lapin");
+		this.defaultUser.movePhoto("p.jpg", "All", "Chat");
+		this.defaultUser.movePhoto("lalalala.jpg", "All", "Chien");
+		this.defaultUser.movePhoto("viyvip.jpg", "All", "Chat");
+
 		//-------------LISTE UTILISATEURS-----------------
-		this.listeUsers = new User[1];
-		listeUsers[0]=juliette;
-	
-		utilisateurSelect=null;
+		this.listeUsers = new User[2];
+		listeUsers[0]=this.defaultUser;
+		listeUsers[1]=juliette;
+
+		utilisateurSelect=defaultUser;
+		this.collectionSelect=this.utilisateurSelect.getAllPhotos();
+	}
+
+	public void setCollectionSelect(Collection collectionSelect) {
+		this.collectionSelect = collectionSelect;
+	}
+
+	public Collection getCollectionSelect() {
+		return collectionSelect;
 	}
 
 	public void setUtilisateurSelect(User utilisateurSelect) {
@@ -196,21 +195,6 @@ public class AppDatas {
 		return listeUsers;
 	}
 
-	public static Collection[] getTabcol() {
-		return tabcol;
-	}
-
-	public Collection getColprinc() {
-		return colprinc;
-	}
-
-	public static Collection[] getTabcolp() {
-		return tabcolp;
-	}
-
-	public static void setTabcolp(Collection[] tabcolp) {
-		AppDatas.tabcolp = tabcolp;
-	}
 
 	public void setTheme(String theme){
 		if(theme.equals("Barbie")){
@@ -244,7 +228,7 @@ public class AppDatas {
 			optionsColor = new Color(254,0,0);
 		}
 	}
-	
+
 	public String getTitreGalerie() {
 		return titreGalerie;
 	}
@@ -288,8 +272,8 @@ public class AppDatas {
 	public String getOptions() {
 		return options;
 	}
-	
-    public Color getRechercheColor() {
+
+	public Color getRechercheColor() {
 		return rechercheColor;
 	}
 
@@ -301,8 +285,8 @@ public class AppDatas {
 		return optionsColor;
 	}
 
-	
 
-    
- 
+
+
+
 } // ---------------------------------------------------------- Class AppDatas
