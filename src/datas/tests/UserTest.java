@@ -145,6 +145,26 @@ public class UserTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void testToutesCollections() {
+		java.util.Enumeration<Collection> enumCollec = this.user.toutesCollections();
+		int i = 0;
+		while(enumCollec.hasMoreElements()){
+			i++;
+			enumCollec.nextElement();
+		}
+		assertEquals(0,i);
+		this.user.addCollection("A");
+		this.user.addCollection("B");
+		enumCollec = this.user.toutesCollections();
+		i = 0;
+		while(enumCollec.hasMoreElements()){
+			i++;
+			enumCollec.nextElement();
+		}
+		assertEquals(2,i);
+	}
 
 	@Test
 	public void testSauver() {

@@ -1,26 +1,73 @@
 package datas;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Classe implementant les fonctionnalites pour la gestion et la manipulation des photos dans l'application.
+ * @author FRETAY Juliette et LE POLLES--POTIN Leandre - Groupe 1C
+ */
 public class Photo implements Serializable {
 	private static final long serialVersionUID = 0;
+	
+	/**
+	 * Le chemin d'enregistrement de la photo a laquelle est lie cet objet Photo
+	 * Defini l'emplacement de sauvegarde de {@link #img}
+	 */
 	private String imageURL;
+	
+	/**
+	 * Le titre de cet objet photographie, initialise par defaut lors de la creation de l'objet au nom de l'image sans son extension
+	 * Par exemple la photographie "Chat.jpg" sera nommee par defaut "Chat".
+	 */
 	private String titre;
+	
+	/**
+	 * L'auteur de cette photographie, initialise par defaut à @null.
+	 */
 	private String auteur;
+	
+	/**
+	 * Le pays de prise de vue de cette photographie, initialise par defaut à @null.
+	 */
 	private String pays;
+	
+	/**
+	 * Le nom de la collection a laquelle appartient cette photographie.
+	 */
+	private String collection;
+	
+	/**
+	 * La date de prise de vue de cette photographie.
+	 */
 	private GregorianCalendar date;
+	
+	/**
+	 * Les mots cles associes a cette photographie.
+	 */
 	private String[] keyWords;
+	
+	/**
+	 * Le tag permettant de verifier l'integrite de la photographie stockee en memoire.
+	 */
 	private final int[] tag;
+	
+	/**
+	 * L'objet de type BufferedImage utilise pour les manipulation de photographie.
+	 * Cet objet "img" est sauvegarde a l'emplacement defini par {@link #imageURL}
+	 */
 	private transient BufferedImage img;
 
 	/**
-	 * Constructeur sans parametre de la classe photo
-	 * Les attributs sont modifies par la suite par les getteurs/setteurs
+	 * Construit un objet de type Photo
+	 * @param urlOrigine Chemin de l'image de type jpeg, png ou gif utilise pour creer l'objet photo
+	 * @param urlDestination Chemin de sauvegarde de l'image importee
 	 */
 	public Photo(String urlOrigine, String urlDestination){
 		this.imageURL = urlDestination;
@@ -28,6 +75,7 @@ public class Photo implements Serializable {
 		this.titre = this.titre.substring(0,this.titre.length()-(this.getExtension().length()+1));
 		this.auteur = null;
 		this.pays = null;
+		this.collection = "All";
 		this.date = new GregorianCalendar();
 		this.keyWords = new String[0];
 		try {
@@ -132,6 +180,76 @@ public class Photo implements Serializable {
 		return ret;
 	}
 
+	// --- Comparaison d'images ---
+
+	public double differenceContours(Photo p2){
+		double rep = 0;
+		BufferedImage contourSelf = this.contours();
+		BufferedImage contourP2 = p2.contours();
+		int colMin = Math.min(contourSelf.getWidth(), contourP2.getWidth());
+		int rowMin = Math.min(contourSelf.getHeight(), contourP2.getHeight());
+		int nbPixels = colMin*rowMin;
+		contourSelf = this.redimensionner(contourSelf,colMin,rowMin);
+		contourP2 = this.redimensionner(contourP2,colMin,rowMin);
+		for(int col = 0; col<colMin; col++){
+			for(int row = 0; row<rowMin; row++){
+				if(contourSelf.getRGB(col, row) != contourP2.getRGB(col, row)){
+					rep++;
+				}
+			}
+		}
+		rep = (rep/nbPixels)*100;
+		return rep;
+	}
+	
+	public BufferedImage redimensionner( BufferedImage srcImg, int w, int h ){ 
+		BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB); 
+		Graphics2D g2 = resizedImg.createGraphics(); 
+		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR); 
+		g2.drawImage(srcImg, 0, 0, w, h, null); 
+		g2.dispose();
+		return resizedImg; 
+	} 
+
+	public BufferedImage contours(){
+		BufferedImage rep = new BufferedImage(this.img.getWidth(),this.img.getHeight(),this.img.getType());
+		for(int col = 1; col<this.img.getWidth()-1; col++){
+			for(int row = 1; row<this.img.getHeight()-1; row++){
+				int[] px = new int[8];
+				Color base = new Color(this.img.getRGB(col, row+1));
+				px[0] = this.img.getRGB(col-1, row+1);
+				px[1] = this.img.getRGB(col, row+1);
+				px[2] = this.img.getRGB(col+1, row+1);
+				px[3] = this.img.getRGB(col-1, row);
+				px[4] = this.img.getRGB(col+1, row);
+				px[5] = this.img.getRGB(col-1, row+1);
+				px[6] = this.img.getRGB(col, row+1);
+				px[7] = this.img.getRGB(col+1, row+1);
+				double max = 0;
+				for(int i : px){
+					Color c = new Color(i);
+					double diff = Math.abs(c.getAlpha()-base.getAlpha())
+							+ Math.abs(c.getRed()-base.getRed())
+							+ Math.abs(c.getGreen()-base.getGreen())
+							+ Math.abs(c.getBlue()-base.getBlue());
+					diff = (diff/(4*256))*100;
+					max = Math.max(max, diff);
+				}
+				if(max>7.5){
+					rep.setRGB(col, row, Color.BLACK.getRGB());
+				} else {
+					rep.setRGB(col, row, Color.WHITE.getRGB());
+				}
+			}
+		}
+		try {
+			ImageIO.write(rep, "png", new File("data/test/"+this.titre+"."+this.getExtension()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return rep;
+	}
+
 	/**
 	 * Genere la courbe de couleur sous la forme d'un tableau de 1024 entiers superieurs a 0.
 	 * Un entier pour chacune des 256 nuances de luminosite, de rouge, de vert et de bleu. 
@@ -215,6 +333,22 @@ public class Photo implements Serializable {
 	}
 
 	/**
+	 * 
+	 * @param base
+	 * @return
+	 */
+	public double similarite(Photo p2) {
+		double rep = 0;
+		if(this.isIdentique(p2)){
+			rep = 100;
+		} else {
+			rep = 100-((this.differenceCouleur(p2)+this.differenceContours(p2))/2);
+		}
+		return rep;
+	}
+
+	// --- Getteurs and Setters ---
+	/**
 	 * @return the imageURL
 	 */
 	public String getImageURL() {
@@ -274,6 +408,20 @@ public class Photo implements Serializable {
 	}
 
 	/**
+	 * @return the collection
+	 */
+	public String getCollection() {
+		return collection;
+	}
+
+	/**
+	 * @param collection the collection to set
+	 */
+	public void setCollection(String collection) {
+		this.collection = collection;
+	}
+
+	/**
 	 * @param titre the titre to set
 	 */
 	public void setTitre(String titre) {
@@ -303,14 +451,14 @@ public class Photo implements Serializable {
 	public void setKeyWords(String[] keyWords) {
 		this.keyWords = keyWords;
 	}
-	
-	private void writeObject(ObjectOutputStream out)throws IOException{
-        out.defaultWriteObject();
-        this.enregisterImg();
-    }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
-        in.defaultReadObject();
-        this.img = ImageIO.read(new File(this.imageURL));
-    }
+	private void writeObject(ObjectOutputStream out)throws IOException{
+		out.defaultWriteObject();
+		this.enregisterImg();
+	}
+
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+		in.defaultReadObject();
+		this.img = ImageIO.read(new File(this.imageURL));
+	}
 }

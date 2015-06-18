@@ -90,6 +90,25 @@ public class PhotoTest{
 	}
 	
 	@Test()
+	public void testDifferenceContour(){
+		Photo doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
+		Photo chatTag = new Photo("data/chatTag.jpg","data/testJunit/chatTag.jpg");
+		Photo noir = new Photo("data/noir.jpg","data/testJunit/noir.jpg");
+		Photo blanc = new Photo("data/blanc.jpg","data/testJunit/blanc.jpg");
+		double diffNulle = doubleChat.differenceContours(pChat);
+		double diffFaible = chatTag.differenceContours(pChat);
+		double diffForte = this.pChat.differenceContours(pLapin);
+		double diffTotale = noir.differenceContours(blanc);
+		Assert.assertEquals(0, diffNulle, 0);
+		Assert.assertTrue(diffFaible>=0 && diffFaible<=100);
+		Assert.assertTrue(diffForte>=0 && diffForte<=100);
+		Assert.assertTrue(diffForte>diffFaible);
+		Assert.assertEquals(0, diffTotale, 1);
+		File f = new File("data/testJunit/doubleChat.jpg");
+		f.delete();
+	}
+	
+	@Test()
 	public void testIsIdentique(){
 		Photo doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
 		Assert.assertTrue(doubleChat.isIdentique(this.pChat));

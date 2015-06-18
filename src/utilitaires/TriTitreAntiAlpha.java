@@ -12,7 +12,7 @@ public class TriTitreAntiAlpha extends Tri {
 		super(liste);
 	}
 
-	
+
 	protected boolean compare(int i1, int i2) {
 		boolean rep = false;
 		Photo p1 = this.liste.get(i1);
@@ -25,21 +25,26 @@ public class TriTitreAntiAlpha extends Tri {
 
 	public Hashtable<Integer, Object[][]> split() {
 		Hashtable<Integer, Object[][]> rep = new Hashtable<Integer, Object[][]>();
-		int i = 0;
-		String titre = this.liste.get(i).getTitre();
-		ArrayList<Photo> liste = new ArrayList<Photo>();
-		for(Photo p : this.liste){
-			if(!p.getTitre().equals(titre)){
-				Object[][] couple = {{titre},liste.toArray()};
-				rep.put(i, couple);
-				i++;
-				titre = p.getTitre();
-				liste = new ArrayList<Photo>();
+		if(this.liste != null && this.liste.size()>0){
+			int i = 0;
+			String titre = this.liste.get(i).getTitre();
+			ArrayList<Photo> liste = new ArrayList<Photo>();
+			for(Photo p : this.liste){
+				if(!p.getTitre().equals(titre)){
+					Object[][] couple = {{titre},liste.toArray()};
+					rep.put(i, couple);
+					i++;
+					titre = p.getTitre();
+					liste = new ArrayList<Photo>();
+				}
+				liste.add(p);
 			}
-			liste.add(p);
+			Object[][] couple = {{titre},liste.toArray()};
+			rep.put(i, couple);
+		} else {
+			Object[][] coupleVide = {{"Aucune photo n'a ete trouvee"},this.liste.toArray()};
+			rep.put(0, coupleVide);
 		}
-		Object[][] couple = {{titre},liste.toArray()};
-		rep.put(i, couple);
 		return rep;
 	}
 }

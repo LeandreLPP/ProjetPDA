@@ -1,4 +1,4 @@
-package pda.control;
+/*package pda.control;
 
 import static org.junit.Assert.*;
 import java.util.ArrayList;
@@ -37,4 +37,4 @@ public class PDAJUnit {
 		ArrayList<String> liste = lePda.getApplicationsName();
 		//assertEquals(liste.size(), 0);
 	}
-}
+}*/

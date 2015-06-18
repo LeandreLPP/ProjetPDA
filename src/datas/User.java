@@ -54,23 +54,24 @@ public class User implements Serializable {
 	}
 
 	public void movePhoto(String keyPhoto, String keyOrigine,  String keyDestination){
-		if(keyOrigine != null && keyPhoto != null && keyDestination != null && !keyOrigine.equals(keyDestination)){
+		String key = this.urlDossier+"/"+keyPhoto;
+		if(keyOrigine != null && key != null && keyDestination != null && !keyOrigine.equals(keyDestination)){
 			if (this.collections.containsKey(keyOrigine) && this.collections.containsKey(keyDestination)){
 				try {
-					this.collections.get(keyDestination).addPhoto(this.collections.get(keyOrigine).getPhoto(keyPhoto));
-					this.collections.get(keyOrigine).delPhoto(keyPhoto);
+					this.collections.get(keyDestination).addPhoto(this.collections.get(keyOrigine).getPhoto(key));
+					this.collections.get(keyOrigine).delPhoto(key);
 				} catch (NoPhotoFoundException e) {
 					e.printStackTrace();
 				}
 			} else if (keyDestination.equalsIgnoreCase("All") && this.collections.containsKey(keyOrigine)){
 				try {
-					this.collections.get(keyOrigine).delPhoto(keyPhoto);
+					this.collections.get(keyOrigine).delPhoto(key);
 				} catch (NoPhotoFoundException e) {
 					e.printStackTrace();
 				}
 			} else if (keyOrigine.equalsIgnoreCase("All") && this.collections.containsKey(keyDestination)){
 				try {
-					this.collections.get(keyDestination).addPhoto(this.allPhotos.getPhoto(keyPhoto));
+					this.collections.get(keyDestination).addPhoto(this.allPhotos.getPhoto(key));
 				} catch (NoPhotoFoundException e) {
 					e.printStackTrace();
 				}
@@ -79,16 +80,17 @@ public class User implements Serializable {
 	}
 
 	public void delPhoto(String keyPhoto){
+		String key = this.urlDossier+keyPhoto;
 		try {
-			this.allPhotos.delPhoto(keyPhoto);
+			this.allPhotos.delPhoto(key);
 		} catch (NoPhotoFoundException e) {
 			e.printStackTrace();
 		}
-		File f = new File(keyPhoto);
+		File f = new File(key);
 		f.delete();
 		for(String e : this.collections.keySet()){
 			try {
-				this.collections.get(e).delPhoto(keyPhoto);
+				this.collections.get(e).delPhoto(key);
 			} catch (NoPhotoFoundException e1) {
 				e1.printStackTrace();
 			}

@@ -24,21 +24,26 @@ public class TriAuteurAlpha extends Tri{
 
 	public Hashtable<Integer, Object[][]> split() {
 		Hashtable<Integer, Object[][]> rep = new Hashtable<Integer, Object[][]>();
-		int i = 0;
-		String titre = this.liste.get(i).getAuteur();
-		ArrayList<Photo> liste = new ArrayList<Photo>();
-		for(Photo p : this.liste){
-			if(!p.getAuteur().equals(titre)){
-				Object[][] couple = {{titre},liste.toArray()};
-				rep.put(i, couple);
-				i++;
-				titre = p.getAuteur();
-				liste = new ArrayList<Photo>();
+		if(this.liste != null && this.liste.size()>0){
+			int i = 0;
+			String titre = this.liste.get(i).getAuteur();
+			ArrayList<Photo> liste = new ArrayList<Photo>();
+			for(Photo p : this.liste){
+				if(!p.getAuteur().equals(titre)){
+					Object[][] couple = {{titre},liste.toArray()};
+					rep.put(i, couple);
+					i++;
+					titre = p.getAuteur();
+					liste = new ArrayList<Photo>();
+				}
+				liste.add(p);
 			}
-			liste.add(p);
+			Object[][] couple = {{titre},liste.toArray()};
+			rep.put(i, couple);
+		} else {
+			Object[][] coupleVide = {{"Aucune photo n'a ete trouvee"},this.liste.toArray()};
+			rep.put(0, coupleVide);
 		}
-		Object[][] couple = {{titre},liste.toArray()};
-		rep.put(i, couple);
 		return rep;
 	}
 }

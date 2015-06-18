@@ -21,8 +21,8 @@ public class Selection {
 		this.titre = new String[0];
 		this.auteur = new String[0];
 		this.pays = new String[0];
-		this.dateDebut = new GregorianCalendar(1990,0,1);
-		this.dateFin = new GregorianCalendar();
+		this.dateDebut = new GregorianCalendar(1700,0,0);
+		this.dateFin = new GregorianCalendar(3000,0,0);
 		this.keyWords = new String[0];
 		this.source = source;
 	}
@@ -168,7 +168,9 @@ public class Selection {
 	 * @param dateDebut the dateDebut to set
 	 */
 	public void setDateDebut(GregorianCalendar dateDebut) {
-		if(this.dateFin.after(dateDebut) || this.dateFin.compareTo(dateDebut)==0){
+		if(dateDebut == null){
+			this.dateDebut = new GregorianCalendar(1700,0,0);
+		}else if(this.dateFin.after(dateDebut) || this.dateFin.compareTo(dateDebut)==0){
 			this.dateDebut = dateDebut;
 		}
 	}
@@ -177,7 +179,9 @@ public class Selection {
 	 * @param dateFin the dateFin to set
 	 */
 	public void setDateFin(GregorianCalendar dateFin) {
-		if(this.dateDebut.before(dateFin) || this.dateDebut.compareTo(dateFin)==0){
+		if(dateFin == null){
+			this.dateFin = new GregorianCalendar(3000,0,0);
+		} else if(this.dateDebut.before(dateFin) || this.dateDebut.compareTo(dateFin)==0){
 			this.dateFin = dateFin;
 		}
 	}

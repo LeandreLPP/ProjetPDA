@@ -43,17 +43,22 @@ public class Collection implements Serializable {
 
 	public void addPhoto(Photo p){
 		this.listePhotos.add(p);
+		p.setCollection(this.titre);
 		this.mapPhotos.put(p.getImageURL(), p);
 		this.updateTri();
 	}
 
 	private void updateTri(){
 		ArrayList<Photo> t = new ArrayList<Photo>();
-		try {
-			this.tri.getClass().getConstructor(t.getClass()).newInstance(this.listePhotos);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException e) {
-			e.printStackTrace();
+		if(this.tri.getClass() == TriSimilarite.class){
+			this.tri = new TriSimilarite(this);
+		} else {
+			try {
+				this.tri.getClass().getConstructor(t.getClass()).newInstance(this.listePhotos);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+					| SecurityException e) {
+				e.printStackTrace();
+			}
 		}
 		this.trier();
 	}
@@ -67,7 +72,7 @@ public class Collection implements Serializable {
 		}
 		return ret;
 	}
-	
+
 	private Photo[] toPhoto(Object[] tab){
 		Photo[] rep = new Photo[tab.length];
 		int i = 0;
@@ -77,7 +82,7 @@ public class Collection implements Serializable {
 		}
 		return rep;
 	}
-	
+
 	//---Del---
 	public void delPhoto(Photo p){
 		this.mapPhotos.remove(p.getImageURL());
@@ -152,7 +157,7 @@ public class Collection implements Serializable {
 	public Tri getTri() {
 		return tri;
 	}
-	
+
 	public Photo getPhotoSelect() throws NoPhotoFoundException{
 		return this.getPhoto(this.getIndexSelect());
 	}
@@ -185,52 +190,57 @@ public class Collection implements Serializable {
 		Photo select = this.getPhoto(key);
 		this.indexSelect = this.listePhotos.indexOf(select);
 	}
-	
+
 	public void nextPhoto(){
 		this.setIndexSelect(this.getIndexSelect()+1);
 	}
-	
+
 	public void prevPhoto(){
 		this.setIndexSelect(this.getIndexSelect()-1);
 	}
 
 	public void setTriTitreAlpha(){
 		this.tri = new TriTitreAlpha(this.listePhotos);
-		this.updateTri();
 	}
 
 	public void setTriTitreAntiAlpha(){
 		this.tri = new TriTitreAntiAlpha(this.listePhotos);
-		this.updateTri();
 	}
 
 	public void setTriAuteurAlpha(){
 		this.tri = new TriAuteurAlpha(this.listePhotos);
-		this.updateTri();
 	}
 
 	public void setTriAuteurAntiAlpha(){
 		this.tri = new TriAuteurAntiAlpha(this.listePhotos);
-		this.updateTri();
 	}
 
 	public void setTriDateCroissante(){
 		this.tri = new TriDateCroissante(this.listePhotos);
-		this.updateTri();
 	}
 
 	public void setTriDateDecroissante(){
 		this.tri = new TriDateDecroissante(this.listePhotos);
-		this.updateTri();
 	}
 
 	public void setTriPaysAlpha(){
 		this.tri = new TriPaysAlpha(this.listePhotos);
-		this.updateTri();
 	}
 
 	public void setTriPaysAntiAlpha(){
 		this.tri = new TriPaysAntiAlpha(this.listePhotos);
-		this.updateTri();
+	}
+
+	public void setTriCollectionAlpha(){
+		this.tri = new TriCollectionAlpha(this.listePhotos);
+	}
+
+	public void setTriCollectionAntiAlpha(){
+		this.tri = new TriCollectionAntiAlpha(this.listePhotos);
+	}
+
+	public void setTriSimilarite(int index){
+		this.setIndexSelect(index);
+		this.tri = new TriSimilarite(this);
 	}
 }
