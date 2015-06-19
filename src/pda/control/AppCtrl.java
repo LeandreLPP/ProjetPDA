@@ -194,8 +194,9 @@ public class AppCtrl implements IApplication, ActionListener {
 			else{
 				localisation = null;
 			}
+			
 			String[] motsCles;
-			if(this.view.getTexteMots().getText().trim().equals("")== false && this.view.getTexteMots() == null){
+			if(this.view.getTexteMots().getText().trim().equals("")== false && this.view.getTexteMots() != null){
 				motsCles = this.view.getTexteMots().getText().split(";");
 			}
 			else{
@@ -319,7 +320,6 @@ public class AppCtrl implements IApplication, ActionListener {
 			else if(tri.equals("Titre Non Alphabetique")){
 				System.out.println("Titre Non Alphabetique");
 
-
 				this.engine.getCollectionSelect().setTriTitreAntiAlpha();
 				this.view.afficherGalerie(this.engine.getCollectionSelect());
 
@@ -438,6 +438,11 @@ public class AppCtrl implements IApplication, ActionListener {
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Supprimer Utilisateur"){
 			System.out.println("Bouton Supprimer Utilisateur");
+		}
+		//-------------------------------------------------------------
+		else if(source.getActionCommand() == "Similarite"){
+			this.engine.getCollectionSelect().setTriSimilarite(this.engine.getCollectionSelect().getIndexSelect());
+			this.view.afficherGalerie(this.engine.getCollectionSelect());
 		}
 	} // ---------------------------------------------------------- actionPerformed()
 

@@ -80,7 +80,7 @@ public class AppView {
 	/*Les boolean */
 	private boolean lecture;
 
-	private TestThread threadDiapo;
+	private TestThread thread;
 
 	
 	
@@ -151,6 +151,7 @@ public class AppView {
 		boutonOptions.setActionCommand("Bouton Options");
 		menu.add(boutonOptions);
 		
+		this.engine.getUtilisateurSelect().getAllPhotos().setTriTitreAlpha();
 		this.engine.setCollectionSelect(this.engine.getUtilisateurSelect().getAllPhotos());
 		
 		this.panelPrecedent = this.panelCourant;
@@ -794,8 +795,26 @@ public class AppView {
 		editionLigne2.add(editionLigne2Pan1);
 		JPanel editionLigne2Pan2 = new JPanel();
 		editionLigne2Pan2.setLayout(new GridLayout(2,1));
-		editionLigne2Pan2.add(new JTextField());
-		editionLigne2Pan2.add(new JTextField());
+		JTextField titreEd = new JTextField();
+		String titreS;
+		try {
+			titreS = this.engine.getCollectionSelect().getPhotoSelect().getTitre();
+		} catch (NoPhotoFoundException e) {
+			titreS = "Pas de titre";
+			e.printStackTrace();
+		}
+		titreEd.setText(titreS);
+		editionLigne2Pan2.add(titreEd);
+		JTextField auteurEd = new JTextField();
+		String auteurS;
+		try {
+			auteurS = this.engine.getCollectionSelect().getPhotoSelect().getAuteur();
+		} catch (NoPhotoFoundException e) {
+			auteurS = "Pas d'auteur";
+			e.printStackTrace();
+		}
+		auteurEd.setText(auteurS);
+		editionLigne2Pan2.add(auteurEd);
 		editionLigne2.add(editionLigne2Pan2);
 		editionC.add(editionLigne2);
 		
@@ -808,7 +827,16 @@ public class AppView {
 		JPanel editionLigne4 = new JPanel();
 		editionLigne4.setLayout(new GridLayout(1,2));
 		editionLigne4.add(new JLabel("Pays de prise de vue :"));
-		editionLigne4.add(new JTextField());
+		JTextField paysEd = new JTextField();
+		String paysS;
+		try {
+			paysS = this.engine.getCollectionSelect().getPhotoSelect().getPays();
+		} catch (NoPhotoFoundException e) {
+			paysS = "Pas de Pays";
+			e.printStackTrace();
+		}
+		paysEd.setText(paysS);
+		editionLigne4.add(paysEd);
 		editionC.add(editionLigne4);
 		
 		JPanel editionLigne5 = new JPanel();
@@ -824,7 +852,10 @@ public class AppView {
 		
 		JPanel editionLigne7 = new JPanel();
 		editionLigne7.setLayout(new GridLayout(1,2,10,10));
-		editionLigne7.add(new JButton("Recherche par similarite"));
+		JButton simil = new JButton("Recherche par similarite");
+		simil.addActionListener(ctrl);
+		simil.setActionCommand("Similarite");
+		editionLigne7.add(simil);
 		editionLigne7.add(new JButton("Supprimer la photo"));
 		editionC.add(editionLigne7);
 		
@@ -942,32 +973,25 @@ public class AppView {
 	 * Methode publique permettant de faire tourner un diaporama
 	 */
 	public void lireDiaporama(){
+		System.out.println("lireDiapo");
 		this.lecture = true;
-		System.out.println("4");
-			System.out.println("5");
-			try {
-				System.out.println("6");
-				this.threadDiapo = new TestThread(this);
-				
-				this.afficherDiaporama(this.engine.getUtilisateurSelect().getAllPhotos().getPhotoSelect());
-				System.out.println("7");
-				
-				System.out.println("8");
-			} catch (NoPhotoFoundException e) {
-				e.printStackTrace();
-				System.out.println("erreur");
-			}
-		this.lecture = false;
+		if(this.playpause.getText().equals("Play")){
+			this.thread = new TestThread(this, Thread.currentThread());
+		} else { 
+			this.lecture = false;
+		}
 	}
 	
 	public void nextPhoto(){
-		this.engine.getUtilisateurSelect().getAllPhotos().nextPhoto();
-		this.lireDiaporama();
-	}
-	
-	public void pauseDiapo(){
-		this.threadDiapo = null;
-		this.getPlaypause().setText("Pause");
+		System.out.println("NextPhoto");
+		try {
+			this.thread = null;
+			this.engine.getUtilisateurSelect().getAllPhotos().nextPhoto();
+			this.afficherDiaporama(this.engine.getUtilisateurSelect().getAllPhotos().getPhotoSelect());
+			this.lireDiaporama();
+		} catch (NoPhotoFoundException e) {
+			this.nextPhoto();
+		}
 	}
 	
 	/**
