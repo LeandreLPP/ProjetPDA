@@ -21,8 +21,12 @@ public class PhotoTest{
 	
 	@Before()
 	public void setUp(){
-		this.pChat = new Photo("data/chat.jpg","data/testJunit/chat.jpg");
-		this.pLapin = new Photo("data/lapin.jpg","data/testJunit/lapin.jpg");
+		try {
+			this.pChat = new Photo("data/chat.jpg","data/testJunit/chat.jpg");
+			this.pLapin = new Photo("data/lapin.jpg","data/testJunit/lapin.jpg");
+		} catch (IOException e) {
+			fail();
+		}
 	}
 	
 	@After()
@@ -72,10 +76,18 @@ public class PhotoTest{
 	
 	@Test()
 	public void testDifferenceCouleur(){
-		Photo doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
-		Photo chatTag = new Photo("data/chatTag.jpg","data/testJunit/chatTag.jpg");
-		Photo noir = new Photo("data/noir.jpg","data/testJunit/noir.jpg");
-		Photo blanc = new Photo("data/blanc.jpg","data/testJunit/blanc.jpg");
+		Photo doubleChat = null;
+		Photo chatTag = null;
+		Photo noir = null;
+		Photo blanc = null;
+		try {
+			doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
+			chatTag = new Photo("data/chatTag.jpg","data/testJunit/chatTag.jpg");
+			noir = new Photo("data/noir.jpg","data/testJunit/noir.jpg");
+			blanc = new Photo("data/blanc.jpg","data/testJunit/blanc.jpg");
+		} catch (IOException e) {
+			fail();
+		}
 		double diffNulle = doubleChat.differenceCouleur(pChat);
 		double diffFaible = chatTag.differenceCouleur(pChat);
 		double diffForte = this.pChat.differenceCouleur(pLapin);
@@ -91,10 +103,18 @@ public class PhotoTest{
 	
 	@Test()
 	public void testDifferenceContour(){
-		Photo doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
-		Photo chatTag = new Photo("data/chatTag.jpg","data/testJunit/chatTag.jpg");
-		Photo noir = new Photo("data/noir.jpg","data/testJunit/noir.jpg");
-		Photo blanc = new Photo("data/blanc.jpg","data/testJunit/blanc.jpg");
+		Photo doubleChat = null;
+		Photo chatTag = null;
+		Photo noir = null;
+		Photo blanc = null;
+		try {
+			doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
+			chatTag = new Photo("data/chatTag.jpg","data/testJunit/chatTag.jpg");
+			noir = new Photo("data/noir.jpg","data/testJunit/noir.jpg");
+			blanc = new Photo("data/blanc.jpg","data/testJunit/blanc.jpg");
+		} catch (IOException e) {
+			fail();
+		}
 		double diffNulle = doubleChat.differenceContours(pChat);
 		double diffFaible = chatTag.differenceContours(pChat);
 		double diffForte = this.pChat.differenceContours(pLapin);
@@ -110,7 +130,12 @@ public class PhotoTest{
 	
 	@Test()
 	public void testIsIdentique(){
-		Photo doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
+		Photo doubleChat = null;
+		try {
+			doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
+		} catch (IOException e) {
+			fail();
+		}
 		Assert.assertTrue(doubleChat.isIdentique(this.pChat));
 		Assert.assertFalse(doubleChat.isIdentique(this.pLapin));
 		File f = new File("data/testJunit/doubleChat.jpg");

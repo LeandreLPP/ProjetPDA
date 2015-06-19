@@ -42,7 +42,6 @@ public class Collection implements Serializable {
 
 	public void addPhoto(Photo p){
 		this.listePhotos.add(p);
-		p.setCollection(this.titre);
 		this.mapPhotos.put(p.getImageURL(), p);
 		this.updateTri();
 	}
@@ -65,9 +64,13 @@ public class Collection implements Serializable {
 	public Collection[] split(){
 		Hashtable<Integer, Object[][]> tabDeTab = this.tri.split();
 		Collection[] ret = new Collection[tabDeTab.size()];
-		for(int i : tabDeTab.keySet()){
-			Collection t = new Collection((String)tabDeTab.get(i)[0][0], this.toPhoto(tabDeTab.get(i)[1]));
-			ret[i] = t;
+		if(this.tri.getClass() != TriSimilarite.class){
+			for(int i : tabDeTab.keySet()){
+				Collection t = new Collection((String)tabDeTab.get(i)[0][0], this.toPhoto(tabDeTab.get(i)[1]));
+				ret[i] = t;
+			}
+		} else {
+			ret[0] = this;
 		}
 		return ret;
 	}

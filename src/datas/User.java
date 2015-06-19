@@ -59,6 +59,7 @@ public class User implements Serializable {
 			if (this.collections.containsKey(keyOrigine) && this.collections.containsKey(keyDestination)){
 				try {
 					this.collections.get(keyDestination).addPhoto(this.collections.get(keyOrigine).getPhoto(key));
+					this.collections.get(keyOrigine).getPhoto(key).setCollection(this.collections.get(keyDestination).getTitre());
 					this.collections.get(keyOrigine).delPhoto(key);
 				} catch (NoPhotoFoundException e) {
 					e.printStackTrace();
@@ -66,12 +67,14 @@ public class User implements Serializable {
 			} else if (keyDestination.equalsIgnoreCase("All") && this.collections.containsKey(keyOrigine)){
 				try {
 					this.collections.get(keyOrigine).delPhoto(key);
+					this.allPhotos.getPhoto(key).setCollection("All");
 				} catch (NoPhotoFoundException e) {
 					e.printStackTrace();
 				}
 			} else if (keyOrigine.equalsIgnoreCase("All") && this.collections.containsKey(keyDestination)){
 				try {
 					this.collections.get(keyDestination).addPhoto(this.allPhotos.getPhoto(key));
+					this.allPhotos.getPhoto(key).setCollection(this.collections.get(keyDestination).getTitre());
 				} catch (NoPhotoFoundException e) {
 					e.printStackTrace();
 				}

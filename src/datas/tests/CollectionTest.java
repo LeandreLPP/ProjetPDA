@@ -3,6 +3,7 @@ package datas.tests;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,8 +19,12 @@ public class CollectionTest {
 
 	@Before
 	public void setUp(){
-		this.pChat = new Photo("data/chat.jpg","data/testJunit/chat.jpg");
-		this.pLapin = new Photo("data/lapin.jpg","data/testJunit/lapin.jpg");
+		try {
+			this.pChat = new Photo("data/chat.jpg","data/testJunit/chat.jpg");
+			this.pLapin = new Photo("data/lapin.jpg","data/testJunit/lapin.jpg");
+		} catch (IOException e) {
+			fail();
+		}
 		Photo[] tab = {this.pChat,this.pLapin};
 		this.collection = new Collection("Test",tab);
 	}
