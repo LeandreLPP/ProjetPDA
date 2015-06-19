@@ -147,21 +147,18 @@ public class User implements Serializable {
 	 * Supprime la {@link Photo} dont le {@link Photo#getNomFichier()} est passe en parametre.
 	 * @param keyPhoto La cle de la photo.
 	 */
-	public void delPhoto(String keyPhoto){
-		String key = this.urlDossier+keyPhoto;
+	public void delPhoto(String key){
 		try {
 			this.allPhotos.delPhoto(key);
 		} catch (NoPhotoFoundException e) {
 			e.printStackTrace();
 		}
-		File f = new File(key);
+		File f = new File(this.urlDossier+"/"+key);
 		f.delete();
 		for(String e : this.collections.keySet()){
 			try {
 				this.collections.get(e).delPhoto(key);
-			} catch (NoPhotoFoundException e1) {
-				e1.printStackTrace();
-			}
+			} catch (NoPhotoFoundException e1) {}
 		}
 	}
 

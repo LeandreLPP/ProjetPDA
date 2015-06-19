@@ -490,26 +490,33 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 			this.view.afficherMenu();
 		}
 		//-------------------------------------------------------------
-		else if(source.getActionCommand() == "Connection"){
+		else if(source.getActionCommand() == "Connexion"){
 			String nomUser = this.view.getUser().getText();
 			try{
 				String pathFile = "saves/"+nomUser+".out";
 				this.engine.setUtilisateurSelect(User.charger(pathFile));
-				this.view.afficherMenu();
+				if(this.view.getMdp().getText().equals(this.engine.getUtilisateurSelect().getPassword())){
+					this.view.afficherMenu();
+				}
+				else{
+					this.view.getLabelC().setText("Mot de passe incorrecte");
+				}
+				
 			}
 			catch(java.lang.Exception p){
-				this.view.getUser().setText("Cet utilisateur n'existe pas");
+				this.view.getLabelC().setText("Cet utilisateur n'existe pas");
 			}
 
 		}
 		//-------------------------------------------------------------
-		else if(source.getActionCommand() == "Retour Connection"){
+		else if(source.getActionCommand() == "Retour Connexion"){
 			this.view.getUser().setText("Entrez votre nom");
-			this.view.afficherConnection();
+			this.view.afficherConnexion();
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Bouton Sauver"){
 			this.engine.getUtilisateurSelect().sauver();
+			this.view.afficherMenu();
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Supprimer Photo"){
@@ -520,7 +527,8 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 				laPhoto = null;
 				e1.printStackTrace();
 			}
-			this.engine.getCollectionSelect().delPhoto(laPhoto);
+			this.engine.getUtilisateurSelect().delPhoto(laPhoto.getNomFichier());
+			this.view.afficherGalerie(this.engine.getCollectionSelect());
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Chercher Photo"){
@@ -585,22 +593,48 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 			this.view.afficherCheck();
 		}
 		//-------------------------------------------------------------
-		else if(source.getActionCommand() == "Bouton Back Connection"){
-			this.view.afficherConnection();
+		else if(source.getActionCommand() == "Bouton Back Connexion"){
+			this.view.afficherConnexion();
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Bouton Valider Creation User"){
-			if(!this.view.getTextnewU().getText().equals("") && this.view.getTextnewU().getText() != null){
-				User nouveau = new User(this.view.getTextnewU().getText());
+			if(!this.view.getTextnewU().getText().equals("") && this.view.getTextnewU().getText() != null ){
+				if(this.view.getTextnewMdp().getText() != null && !this.view.getTextnewMdp().getText().equals("")){
+					User nouveau = new User(this.view.getTextnewU().getText());
+				nouveau.setPassword(this.view.getTextnewMdp().getText());
 				nouveau.sauver();
-				this.view.afficherConnection();
+				this.view.afficherConnexion();
+				}
+				else{
+					this.view.getLabelM().setText("Entrez un mot de passe svp");
+				}
 			}
 			else{
-				this.view.getTextnewU().setText("Entrez un nom svp !");
+				this.view.getLabelM().setText("Entrez un nom svp !");
 			}
-			
+
 		}
-		
+		//-------------------------------------------------------------
+		else if(source.getActionCommand() == "Changer de Mot de Passe"){
+			this.view.afficherNouveauMDP();
+		}
+		//-------------------------------------------------------------
+		else if(source.getActionCommand() == "Valider MDP"){
+			if(this.view.getUser2().getText().equals(this.engine.getUtilisateurSelect().getPassword())){
+				if(this.view.getMdp2().getText() != null && !this.view.getMdp2().getText().equals("Entrez votre nouveau mot de passe") && !this.view.getMdp2().getText().equals("")){
+					this.engine.getUtilisateurSelect().setPassword(this.view.getMdp().getText());
+					this.view.afficherOptions();
+				}
+				else{
+					this.view.getLabelMDP().setText("Entrez un mot de passe svp !");
+				}
+
+			}
+			else{
+				this.view.getLabelMDP().setText("Mot de passe incorrect");
+			}
+		}
+
 	} // ---------------------------------------------------------- actionPerformed()
 
 	public String replaceAllString(String strOrig, String strFind, String strReplace) {

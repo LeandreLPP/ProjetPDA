@@ -123,6 +123,20 @@ public class PhotoTechView {
 	private JLabel textCheck;
 
 	private JTextField textnewU;
+
+	private JPasswordField mdp;
+
+	private JPasswordField textnewMdp;
+
+	private JPasswordField user2;
+
+	private JPasswordField mdp2;
+
+	private JLabel labelMDP;
+
+	private JLabel labelC;
+
+	private JLabel labelM;
 	
 
 	
@@ -149,7 +163,7 @@ public class PhotoTechView {
 		// mise en place de l'ihm
 		this.panel = new JPanel();
 		this.panel.setLayout(new BorderLayout());
-		this.afficherConnection();
+		this.afficherConnexion();
 
 	} // ------------------------------------------------------------- PhotoTechView()
 
@@ -163,36 +177,44 @@ public class PhotoTechView {
 	/**
 	 * Methode publique permettant d'afficher le panel correspondant au menu principal de l'application
 	 */
-	public void afficherConnection(){
+	public void afficherConnexion(){
 		panel.removeAll();
-		JPanel connection = new JPanel();
-		connection.setLayout(new GridLayout(6,1,5,5));
+		JPanel connexion = new JPanel();
+		connexion.setLayout(new GridLayout(11,1,5,5));
 		
 		JLabel label = new JLabel("PhotoTech");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Courrier",5,20));
 		label.setForeground(Color.orange);
-		connection.add(label);
+		connexion.add(label);
 		
-		connection.add(new JPanel());
+		connexion.add(new JPanel());
 		
-		user = new JTextField("Entrez votre nom");
-		connection.add(user);
-		
+		JLabel co = new JLabel("Se connecter:");
+		co.setHorizontalAlignment(SwingConstants.CENTER);
+		connexion.add(co);
+		connexion.add(new JLabel("Entrez votre nom :"));
+		user = new JTextField();
+		connexion.add(user);
+		connexion.add(new JLabel("Entrez votre mot de passe"));
+		mdp = new JPasswordField();
+		connexion.add(mdp);
+		labelC = new JLabel();
+		connexion.add(labelC);
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(new GridLayout(1,2,5,5));
-		JButton connectionG = new JButton("Se connecter");
-		connectionG.addActionListener(ctrl);
-		connectionG.setActionCommand("Connection");
-		panel1.add(connectionG);
+		JButton connexionG = new JButton("Se connecter");
+		connexionG.addActionListener(ctrl);
+		connexionG.setActionCommand("Connexion");
+		panel1.add(connexionG);
 		JButton sansUser = new JButton("Par defaut");
 		sansUser.addActionListener(ctrl);
 		sansUser.setActionCommand("Sans User");
 		panel1.add(sansUser);
-		connection.add(panel1);
+		connexion.add(panel1);
 		
 		
-		connection.add(new JPanel());
+		connexion.add(new JPanel());
 		
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new GridLayout(1,1,5,5));
@@ -200,11 +222,25 @@ public class PhotoTechView {
 		add.addActionListener(ctrl);
 		add.setActionCommand("Ajouter Utilisateur");
 		panel2.add(add);
-		connection.add(panel2);
+		connexion.add(panel2);
 		
-		panel.add(connection,BorderLayout.CENTER);
+		panel.add(connexion,BorderLayout.CENTER);
 	}
 	
+	public JLabel getLabelC() {
+		return labelC;
+	}
+
+
+
+
+	public JTextField getMdp() {
+		return mdp;
+	}
+
+
+
+
 	public JTextField getUser() {
 		return user;
 	}
@@ -596,12 +632,16 @@ public class PhotoTechView {
 		gestion.add(titre,BorderLayout.NORTH);
 		
 		JPanel panC = new JPanel();
-		panC.setLayout(new GridLayout(5,1));
+		panC.setLayout(new GridLayout(7,1));
 		panC.add(new JPanel());
 		panC.add(new JLabel("Entrez votre nom :"));
 		textnewU = new JTextField();
 		panC.add(textnewU);
-		panC.add(new JPanel());
+		panC.add(new JLabel("Entrez un mot de passe :"));
+		textnewMdp = new JPasswordField();
+		panC.add(textnewMdp);
+		labelM = new JLabel();
+		panC.add(labelM);
 		panC.add(new JPanel());
 		gestion.add(panC,BorderLayout.CENTER);
 		
@@ -609,7 +649,7 @@ public class PhotoTechView {
 		pan.setLayout(new GridLayout(1,3));
 		JButton accueil = new JButton("Back");
 		accueil.addActionListener(ctrl);
-		accueil.setActionCommand("Bouton Back Connection");
+		accueil.setActionCommand("Bouton Back connexion");
 		pan.add(accueil);
 		pan.add(new JPanel());
 		JButton diapo = new JButton("Valider");
@@ -621,6 +661,20 @@ public class PhotoTechView {
 		
 		panel.add(gestion, BorderLayout.CENTER);
 	}
+
+
+	public JLabel getLabelM() {
+		return labelM;
+	}
+
+
+
+
+	public JTextField getTextnewMdp() {
+		return textnewMdp;
+	}
+
+
 
 
 	public JTextField getTextnewU() {
@@ -807,15 +861,22 @@ public class PhotoTechView {
 		options.add(titre,BorderLayout.NORTH);
 		
 		JPanel pan = new JPanel();
-		pan.setLayout(new GridLayout(7,1,5,5));
+		pan.setLayout(new GridLayout(8,1,5,5));
 		JButton sauver = new JButton("Sauver la phototheque");
 		sauver.addActionListener(ctrl);
 		sauver.setActionCommand("Bouton Sauver");
 		pan.add(sauver);
+		JButton Bmdp = new JButton("Changer de Mot de Passe");
+		Bmdp.addActionListener(ctrl);
+		Bmdp.setActionCommand("Changer de Mot de Passe");
+		pan.add(Bmdp);
+		if(this.engine.getUtilisateurSelect().getNom().equals("Defaut")){
+			Bmdp.setEnabled(false);
+		}
 		pan.add(new JLabel("Changer d'utilisateur :"));
-		JButton home = new JButton("Retour sur la page de connection");
+		JButton home = new JButton("Retour sur la page de connexion");
 		home.addActionListener(ctrl);
-		home.setActionCommand("Retour Connection");
+		home.setActionCommand("Retour Connexion");
 		pan.add(home);
 		pan.add(new JLabel("Theme :"));
 		comboTheme = new JComboBox<String>();
@@ -1235,10 +1296,74 @@ public class PhotoTechView {
 		panel.add(edition, BorderLayout.CENTER);
 	}
 	
+	public void afficherNouveauMDP(){
+		panel.removeAll();
+		JPanel connexion1 = new JPanel();
+		connexion1.setLayout(new BorderLayout(5,5));
+		JPanel connexion = new JPanel();
+		connexion.setLayout(new GridLayout(8,1,5,5));
+		
+		JLabel label = new JLabel("Changer de Mot de Passe");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setFont(new Font("Courrier",5,20));
+		label.setForeground(Color.orange);
+		connexion.add(label);
+		
+		connexion.add(new JPanel());
+		
+		connexion.add(new JLabel("Entrez votre mot de passe actuel"));
+		user2 = new JPasswordField();
+		connexion.add(user2);
+		connexion.add(new JLabel("Entrez votre nouveau mot de passe"));
+		mdp2 = new JPasswordField();
+		connexion.add(mdp2);
+		labelMDP = new JLabel();
+		connexion.add(labelMDP);
+		connexion.add(new JPanel());
+		JPanel editionLigne9 = new JPanel();
+		editionLigne9.setLayout(new GridLayout(1,3,10,10));
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back de Options");
+		editionLigne9.add(butback);
+		JButton accueil = new JButton("Accueil");
+		accueil.addActionListener(ctrl);
+		accueil.setActionCommand("Bouton Accueil");
+		editionLigne9.add(accueil);
+		JButton valmodif = new JButton("Valider");
+		valmodif.addActionListener(ctrl);
+		valmodif.setActionCommand("Valider MDP");
+		editionLigne9.add(valmodif);
+		connexion1.add(editionLigne9,BorderLayout.SOUTH);
+		
+		connexion1.add(connexion,BorderLayout.CENTER);
+		
+		panel.add(connexion1,BorderLayout.CENTER);
+	}
 	
 	
 	
-	
+	public JLabel getLabelMDP() {
+		return labelMDP;
+	}
+
+
+
+
+	public JTextField getUser2() {
+		return user2;
+	}
+
+
+
+
+	public JTextField getMdp2() {
+		return mdp2;
+	}
+
+
+
+
 	public JComboBox<String> getComboCatnew() {
 		return comboCatnew;
 	}
@@ -1494,7 +1619,7 @@ public class PhotoTechView {
 		aide.add(titre,BorderLayout.NORTH);
 		
 		JScrollPane aide2 = new JScrollPane();
-		JLabel aideC = new JLabel("<html>=============================================<br>Galerie<br>=============================================<br><br>blabla<br><br>=============================================<br>Recherche<br>=============================================<br><br>blabla<br><br>=============================================<br>Diaporama<br>=============================================<br><br>blabla<br><br>=============================================<br>Edition<br>=============================================<br><br>blabla<br><br>=============================================<br>Gestion<br>=============================================<br><br>blabla<br><br>=============================================<br>Options<br>=============================================<br><br>blabla<br><br>");
+		JLabel aideC = new JLabel("<html>==========================================<br>Galerie<br>==========================================<br><br>La galerie affiche l'ensemble de vos photos. <br>Pour l'afficher, cliquer sur le bouton Galerie du menu<br> principal.<br><br>Quand vous arrivez dans la galerie vous pouvez : <br> -Trier les photos selon differents criteres(titre,<br>auteur,categorie,date et pays);<br>-Cliquer sur une photo pour l'afficher en grand et <br>pouvoir faire defiler les photos comme un <br>diaporama;<br>-Cliquer sur diaporama pour afficher la premiere <br>photo de la galerie en grand et pouvoir faire defiler <br>les photos comme un diaporama;<br><br>==========================================<br>Recherche<br>==========================================<br><br>La recherche permet de rechercher dans <br>l'ensemble de vos photos les photos correspondant <br>aux criteres de votre choix.<br><br>Le resultat de votre recherche s'affiche sous la <br>forme d'une galerie ne comprenant que les photos <br>correspondant a la recherche.<br><br>==========================================<br>Diaporama<br>==========================================<br><br>Le diaporama affiche une image en grand format.<br><br>Vous pouvez utiliser les boutons ''Previous'' et <br>''Next'' pour afficher les autres photos de la galerie.<br>Vous avez egalement la possibilite d'editer les <br>meta-donnees de la photo affichee.<br><br>==========================================<br>Edition<br>==========================================<br><br>L'edition affiche dans un premier temps les details <br>de l'image.<br>Vous pouvez ensuite les modifier, supprimer la <br>photo ou alors faire une recherche par similarite par <br>rapport a cette image.<br><br>==========================================<br>Gestion<br>==========================================<br><br>La gestion des photos vous permet d'ajouter une <br>photo,ajouter ou supprimer une categorie ou verifier <br>l'authenticite des photos.<br><br>==========================================<br>Options<br>==========================================<br><br>Les options sont :<br>-sauver la phototheque afin de sauvegarder <br>l'ensemble des modifications apportees a vos <br>photos; <br>-retourner a la page de connexion;<br>-choisir un theme pour votre application;<br>-afficher a propos;<br>-afficher l'aide;<br><br>");
 		aide2.setViewportView(aideC);
 		
 		

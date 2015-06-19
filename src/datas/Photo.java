@@ -73,7 +73,7 @@ public class Photo implements Serializable {
 	 * @throws IOException En cas de probleme avec les fichier dont les chemins sont passes en parametre.
 	 */
 	public Photo(String urlOrigine, String urlDestination) throws IOException{
-		this.imageURL = urlDestination;
+		this.imageURL = this.checkURL(urlDestination);
 		this.titre = this.imageURL.split("/")[this.imageURL.split("/").length-1];
 		this.titre = this.titre.substring(0,this.titre.length()-(this.getExtension().length()+1));
 		this.auteur = null;
@@ -84,6 +84,31 @@ public class Photo implements Serializable {
 		this.CopierFichier(urlOrigine);
 		this.tagInvisible();
 		this.tag = this.generateTag();
+	}
+
+	/**
+	 * Permet de modifier le chemin de destination de la photo prete a etre enregistrer pour eviter l'ecrasement de fichiers.
+	 * @param urlDestination L'url a verifier.
+	 * @return Une url modifiee si besoin est.
+	 */
+	private String checkURL(String urlDestination) {
+		String url = urlDestination;
+		File fileChecker = new File(url);
+		if(fileChecker.exists()){
+			int i = url.length()-1;
+			while(url.charAt(i)!='.'){
+				i--;
+			}
+			String path = url.substring(0,i);
+			String ext = url.substring(i+1,url.length());
+			i = 0;
+			do{
+				i++;
+				url = path+"("+i+")."+ext;
+				fileChecker = new File(url);
+			}while(fileChecker.exists());
+		}
+		return url;
 	}
 
 	/**

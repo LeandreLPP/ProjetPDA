@@ -141,7 +141,6 @@ public class PdaCtrl implements ActionListener {
 	 * Quit the PDA program
 	 */
 	private synchronized void quit() {
-
 		view.quit();
 	} // --------------------------------------------------------------- quit()
 
