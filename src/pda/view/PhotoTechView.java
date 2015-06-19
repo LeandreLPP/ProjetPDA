@@ -19,36 +19,34 @@ import pda.control.*;
 import pda.datas.*;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 
 import datas.*;
 
 /**
- * Classe AppView correspondant a la partie graphique de l'application
+ * Classe PhotoTechView correspondant a la partie graphique de l'application
  * @author FRETAY Juliette et LE POLLES--POTIN Leandre - Groupe 1C
  * 
  * @version 18/06/15
  *
  */
-public class AppView {
+public class PhotoTechView {
 
 	/*
 	 * Private implementation -------------------------------------------------
 	 */
 	
 	/** partie control de l'application*/
-	private AppCtrl ctrl;
+	private PhotoTechCtrl ctrl;
 	
 	/** the engine of the application */
-	private AppDatas engine;
+	private PhotoTechDatas engine;
 
-	/** the panel associated to the App application (App runs in this panel) */
+	/** the panel associated to the PhotoTech application (PhotoTech runs in this panel) */
 	private JPanel panel;
 	
 	
 	
-	//Trier
-	private JPanel panelCourant;
-	private JPanel panelPrecedent;
 	
 	
 
@@ -79,8 +77,53 @@ public class AppView {
 	
 	/*Les boolean */
 	private boolean lecture;
+	
+	private JComboBox<String> comboMoisModif;
 
-	private TestThread thread;
+	private JComboBox<String> comboJourModif;
+
+	private JComboBox<String> comboAnneeModif;
+
+	private JTextField user;
+
+	private JTextField titreEd;
+
+	private JTextField auteurEd;
+
+	private JComboBox<String> comboCatModif;
+
+	private JTextField paysEd;
+
+	private JTextField motsEd;
+
+	private JTextField textURL;
+
+	private JButton boutonURL;
+
+	private JTextField titrenew;
+
+	private JTextComponent auteurnew;
+
+	private JTextField motsnew;
+
+	private JComboBox<String> comboMoisnew;
+
+	private JComboBox<String> comboJournew;
+
+	private JComboBox<String> comboAnneenew;
+
+	private JTextField paysnew;
+
+	private JComboBox<String> comboCatnew;
+
+	private JTextField textCatEd;
+
+	private JComboBox<String> catG;
+
+	private JLabel textCheck;
+
+	private JTextField textnewU;
+	
 
 	
 	
@@ -91,26 +134,24 @@ public class AppView {
 
 
 	/**
-	 * Construction of the App IHM.
+	 * Construction of the PhotoTech IHM.
 	 *
-	 * @param anEngine link to the App datas
-	 * @param ctrl link to the App control
+	 * @param anEngine link to the PhotoTech datas
+	 * @param ctrl link to the PhotoTech control
 	 */
-	public AppView (AppCtrl ctrl, AppDatas anEngine ) {
+	public PhotoTechView (PhotoTechCtrl ctrl, PhotoTechDatas anEngine ) {
 		
 		this.engine = anEngine;
 		this.ctrl = ctrl;
 		
-		this.panelCourant = new JPanel();
-		this.panelPrecedent = new JPanel();
 		this.lecture = false;
 		
 		// mise en place de l'ihm
 		this.panel = new JPanel();
 		this.panel.setLayout(new BorderLayout());
-		this.afficherMenu();
+		this.afficherConnection();
 
-	} // ------------------------------------------------------------- AppView()
+	} // ------------------------------------------------------------- PhotoTechView()
 
 	
 	
@@ -119,6 +160,58 @@ public class AppView {
 	 *  Public methods ------------------------------------------------------------------
 	 */
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant au menu principal de l'application
+	 */
+	public void afficherConnection(){
+		panel.removeAll();
+		JPanel connection = new JPanel();
+		connection.setLayout(new GridLayout(6,1,5,5));
+		
+		JLabel label = new JLabel("PhotoTech");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setFont(new Font("Courrier",5,20));
+		label.setForeground(Color.orange);
+		connection.add(label);
+		
+		connection.add(new JPanel());
+		
+		user = new JTextField("Entrez votre nom");
+		connection.add(user);
+		
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new GridLayout(1,2,5,5));
+		JButton connectionG = new JButton("Se connecter");
+		connectionG.addActionListener(ctrl);
+		connectionG.setActionCommand("Connection");
+		panel1.add(connectionG);
+		JButton sansUser = new JButton("Par defaut");
+		sansUser.addActionListener(ctrl);
+		sansUser.setActionCommand("Sans User");
+		panel1.add(sansUser);
+		connection.add(panel1);
+		
+		
+		connection.add(new JPanel());
+		
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new GridLayout(1,1,5,5));
+		JButton add = new JButton("Creer un utilisateur");
+		add.addActionListener(ctrl);
+		add.setActionCommand("Ajouter Utilisateur");
+		panel2.add(add);
+		connection.add(panel2);
+		
+		panel.add(connection,BorderLayout.CENTER);
+	}
+	
+	public JTextField getUser() {
+		return user;
+	}
+
+
+
+
 	/**
 	 * Methode publique permettant d'afficher le panel correspondant au menu principal de l'application
 	 */
@@ -154,8 +247,7 @@ public class AppView {
 		this.engine.getUtilisateurSelect().getAllPhotos().setTriTitreAlpha();
 		this.engine.setCollectionSelect(this.engine.getUtilisateurSelect().getAllPhotos());
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = menu;
+		
 		panel.add(menu,BorderLayout.CENTER);
 	}
 	
@@ -250,7 +342,7 @@ public class AppView {
 		galerieLigne9.setLayout(new GridLayout(1,3,10,10));
 		JButton butback = new JButton("Back");
 		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
+		butback.setActionCommand("Back de Galerie");
 		galerieLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
@@ -263,8 +355,7 @@ public class AppView {
 		galerie.add(galerieLigne9,BorderLayout.SOUTH);
 		galerie.add(galerieC,BorderLayout.CENTER);
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = galerie;
+		
 		panel.add(galerie, BorderLayout.CENTER);
 		
 	}
@@ -407,7 +498,8 @@ public class AppView {
 		addCategorie.addActionListener(ctrl);
 		addCategorie.setActionCommand("Ajouter Categorie");
 		gestionLigne2Pan1.add(addCategorie);
-		gestionLigne2Pan1.add(new JTextField("Nom de la categorie"));
+		textCatEd = new JTextField("Nom de la categorie");
+		gestionLigne2Pan1.add(textCatEd);
 		gestionLigne2.add(gestionLigne2Pan1);
 		JPanel gestionLigne2Pan2 = new JPanel();
 		gestionLigne2Pan2.setLayout(new GridLayout(1,2,5,5));
@@ -415,12 +507,18 @@ public class AppView {
 		suppCat.addActionListener(ctrl);
 		suppCat.setActionCommand("Supprimer Categorie");
 		gestionLigne2Pan2.add(suppCat);
-		gestionLigne2Pan2.add(new JComboBox<String>());
+		catG = new JComboBox<String>();
+		Enumeration<Collection> enumeration = this.engine.getUtilisateurSelect().toutesCollections();
+		while(enumeration.hasMoreElements()){
+			Collection p = enumeration.nextElement();
+			catG.addItem(p.getTitre());
+		}
+		gestionLigne2Pan2.add(catG);
 		gestionLigne2.add(gestionLigne2Pan2);
 		gestionLigne2.add(new JSeparator());
-		JButton boutselection = new JButton("Gestion de la selection");
+		JButton boutselection = new JButton("Verification de l'authenticite des photos");
 		boutselection.addActionListener(ctrl);
-		boutselection.setActionCommand("Bouton Gestion Selection");
+		boutselection.setActionCommand("Bouton Verification");
 		gestionLigne2.add(boutselection);
 		gestionC.add(gestionLigne2,BorderLayout.CENTER);
 		
@@ -428,9 +526,42 @@ public class AppView {
 		
 		JPanel gestionLigne9 = new JPanel();
 		gestionLigne9.setLayout(new GridLayout(1,3,10,10));
+		gestionLigne9.add(new JPanel());
+		JButton accueil = new JButton("Accueil");
+		accueil.addActionListener(ctrl);
+		accueil.setActionCommand("Bouton Accueil");
+		gestionLigne9.add(accueil);
+		gestionLigne9.add(new JPanel());
+		gestion.add(gestionLigne9,BorderLayout.SOUTH);
+		
+		gestion.add(gestionC,BorderLayout.CENTER);
+		
+		
+		panel.add(gestion, BorderLayout.CENTER);
+	}
+	
+	public void afficherCheck(){
+		panel.removeAll();
+		JPanel gestion = new JPanel();
+		gestion.setLayout(new BorderLayout(10,10));
+		
+		JLabel titre = new JLabel(this.engine.getTitreCheck());
+		titre.setHorizontalAlignment(SwingConstants.CENTER);
+		titre.setFont(new Font("Courrier",5,20));
+		titre.setForeground(Color.ORANGE);
+		gestion.add(titre,BorderLayout.NORTH);
+		
+		JPanel gestionC = new JPanel();
+		textCheck = new JLabel("Authenticite ...");
+		textCheck.setHorizontalAlignment(SwingConstants.CENTER);
+		gestionC.add(textCheck);
+		
+		
+		JPanel gestionLigne9 = new JPanel();
+		gestionLigne9.setLayout(new GridLayout(1,3,10,10));
 		JButton butback = new JButton("Back");
 		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
+		butback.setActionCommand("Back de Gestion");
 		gestionLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
@@ -441,101 +572,85 @@ public class AppView {
 		
 		gestion.add(gestionC,BorderLayout.CENTER);
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = gestion;
+		
 		panel.add(gestion, BorderLayout.CENTER);
 	}
 	
-	/**
-	 * Methode publique permettant d'afficher le panel correspondant a la gestion des photos selectionnees
-	 */
-	public void afficherGestionSelection(){
+	public void setTextCheck(String textCheck) {
+		this.textCheck.setText(textCheck);
+	}
+
+
+
+
+
+	public void afficherNouveauUtilisateur(){
 		panel.removeAll();
 		JPanel gestion = new JPanel();
 		gestion.setLayout(new BorderLayout(10,10));
 		
-		JLabel titre = new JLabel(this.engine.getTitreGestionSelection());
+		JLabel titre = new JLabel(this.engine.getTitreNewUser());
 		titre.setHorizontalAlignment(SwingConstants.CENTER);
 		titre.setFont(new Font("Courrier",5,20));
 		titre.setForeground(Color.ORANGE);
 		gestion.add(titre,BorderLayout.NORTH);
 		
-		JPanel gestionC = new JPanel();
-		gestionC.setLayout(new BorderLayout(10,10));
+		JPanel panC = new JPanel();
+		panC.setLayout(new GridLayout(5,1));
+		panC.add(new JPanel());
+		panC.add(new JLabel("Entrez votre nom :"));
+		textnewU = new JTextField();
+		panC.add(textnewU);
+		panC.add(new JPanel());
+		panC.add(new JPanel());
+		gestion.add(panC,BorderLayout.CENTER);
 		
-		JScrollPane gestionLigne3 = new JScrollPane();
-		JPanel panelg = new JPanel();
-		panelg.setLayout(new GridLayout(4,1));
-		
-		JLayeredPane layered1 = new JLayeredPane();
-		layered1.setPreferredSize(new Dimension(350,150));
-		layered1.setBorder(BorderFactory.createTitledBorder("Photo 1"));
-		ImageIcon image = new ImageIcon("data/bljblm.jpg");
-		JLabel lab = new JLabel(image);
-		lab.setBounds(10, 20, 100, 100);
-		layered1.add(lab,JLayeredPane.DEFAULT_LAYER);
-		
-		JLayeredPane layered2 = new JLayeredPane();
-		layered2.setPreferredSize(new Dimension(350,150));
-		layered2.setBorder(BorderFactory.createTitledBorder("Photo 2"));
-		
-		JLayeredPane layered3 = new JLayeredPane();
-		layered3.setPreferredSize(new Dimension(350,150));
-		layered3.setBorder(BorderFactory.createTitledBorder("Photo 3"));
-		
-		JLayeredPane layered4 = new JLayeredPane();
-		layered4.setPreferredSize(new Dimension(350,150));
-		layered4.setBorder(BorderFactory.createTitledBorder("Photo 4"));
-		
-		panelg.add(layered1);
-		panelg.add(layered2);
-		panelg.add(layered3);
-		panelg.add(layered4);
-		gestionLigne3.setViewportView(panelg);
-		gestionC.add(gestionLigne3,BorderLayout.CENTER);
-		
-		JPanel gestionLigne4 = new JPanel();
-		gestionLigne4.setLayout(new GridLayout(2,1,10,10));
-		JPanel gestionLigne4Pan1 = new JPanel();
-		gestionLigne4Pan1.setLayout(new GridLayout(1,2,5,5));
-		JButton sup = new JButton("Supprimer");
-		sup.addActionListener(ctrl);
-		sup.setActionCommand("Supprimer Selection");
-		gestionLigne4Pan1.add(sup);
-		JButton add = new JButton("Ajouter une recherche");
-		add.addActionListener(ctrl);
-		add.setActionCommand("Ajouter Recherche");
-		gestionLigne4Pan1.add(add);
-		gestionLigne4.add(gestionLigne4Pan1);
-		JButton edit = new JButton("Editer la selection");
-		edit.addActionListener(ctrl);
-		edit.setActionCommand("Edit Selection");
-		gestionLigne4.add(edit);
-		gestionC.add(gestionLigne4,BorderLayout.SOUTH);
-		
-		JPanel gestionLigne9 = new JPanel();
-		gestionLigne9.setLayout(new GridLayout(1,3,10,10));
-		JButton butback = new JButton("Back");
-		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
-		gestionLigne9.add(butback);
-		JButton accueil = new JButton("Accueil");
+		JPanel pan = new JPanel();
+		pan.setLayout(new GridLayout(1,3));
+		JButton accueil = new JButton("Back");
 		accueil.addActionListener(ctrl);
-		accueil.setActionCommand("Bouton Accueil");
-		gestionLigne9.add(accueil);
-		JButton boutAjouter = new JButton("Ajouter selection");
-		boutAjouter.addActionListener(ctrl);
-		boutAjouter.setActionCommand("Ajouter Selection");
-		gestionLigne9.add(boutAjouter);
-		gestion.add(gestionLigne9,BorderLayout.SOUTH);
+		accueil.setActionCommand("Bouton Back Connection");
+		pan.add(accueil);
+		pan.add(new JPanel());
+		JButton diapo = new JButton("Valider");
+		diapo.addActionListener(ctrl);
+		diapo.setActionCommand("Bouton Valider Creation User");
+		pan.add(diapo);
+		gestion.add(pan,BorderLayout.SOUTH);
 		
-		gestion.add(gestionC,BorderLayout.CENTER);
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = gestion;
 		panel.add(gestion, BorderLayout.CENTER);
 	}
-	
+
+
+	public JTextField getTextnewU() {
+		return textnewU;
+	}
+
+
+
+
+	public JLabel getTextCheck() {
+		return textCheck;
+	}
+
+
+
+
+	public JComboBox<String> getCatG() {
+		return catG;
+	}
+
+
+
+
+	public JTextField getTextCatEd() {
+		return textCatEd;
+	}
+
+
+
+
 	/**
 	 * Methode publique permettant d'afficher le panel correspondant aux recherches
 	 */
@@ -657,10 +772,8 @@ public class AppView {
 		JPanel rechercheLigne9 = new JPanel();
 		rechercheLigne9.setLayout(new GridLayout(1,3,5,5));
 		
-		JButton butback = new JButton("Back");
-		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
-		rechercheLigne9.add(butback);
+		
+		rechercheLigne9.add(new JPanel());
 		
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
@@ -675,8 +788,7 @@ public class AppView {
 		
 		recherche.add(rechercheC,BorderLayout.CENTER);
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = recherche;
+		
 		panel.add(recherche, BorderLayout.CENTER);
 	}
 	
@@ -695,35 +807,16 @@ public class AppView {
 		options.add(titre,BorderLayout.NORTH);
 		
 		JPanel pan = new JPanel();
-		pan.setLayout(new GridLayout(9,1,5,5));
-		pan.add(new JLabel("Se connecter en tant qu'utilisateur :"));
-		comboUsers = new JComboBox<String>();
-		for(int i=1;i<this.engine.getListeUsers().length;i++){
-			comboUsers.addItem(this.engine.getListeUsers()[i].getNom());
-		}
-		pan.add(comboUsers);
-		JPanel pan1 = new JPanel();
-		pan1.setLayout(new GridLayout(1,2,5,5));
-		JButton co = new JButton("Se connecter");
-		co.addActionListener(ctrl);
-		co.setActionCommand("Se Connecter");
-		pan1.add(co);
-		JButton deco = new JButton("Se deconnecter");
-		deco.addActionListener(ctrl);
-		deco.setActionCommand("Se Deconnecter");		
-		pan1.add(deco);
-		pan.add(pan1);
-		JPanel pan3 = new JPanel();
-		pan3.setLayout(new GridLayout(1,2,5,5));
-		JButton add = new JButton("Ajouter Utilisateur");
-		add.addActionListener(ctrl);
-		add.setActionCommand("Ajouter Utilisateur");
-		pan3.add(add);
-		JButton supp = new JButton("Supprimer l'utilisateur");
-		supp.addActionListener(ctrl);
-		supp.setActionCommand("Supprimer Utilisateur");		
-		pan3.add(supp);
-		pan.add(pan3);
+		pan.setLayout(new GridLayout(7,1,5,5));
+		JButton sauver = new JButton("Sauver la phototheque");
+		sauver.addActionListener(ctrl);
+		sauver.setActionCommand("Bouton Sauver");
+		pan.add(sauver);
+		pan.add(new JLabel("Changer d'utilisateur :"));
+		JButton home = new JButton("Retour sur la page de connection");
+		home.addActionListener(ctrl);
+		home.setActionCommand("Retour Connection");
+		pan.add(home);
 		pan.add(new JLabel("Theme :"));
 		comboTheme = new JComboBox<String>();
 		comboTheme.addItem("Barbie");
@@ -742,22 +835,25 @@ public class AppView {
 		boutThemeD.setActionCommand("Defaut Theme");
 		pan2.add(boutThemeD);
 		pan.add(pan2);
+		
+		JPanel panaide = new JPanel();
+		panaide.setLayout(new GridLayout(1,2,5,5));
 		JButton apropos = new JButton("A propos");
 		apropos.addActionListener(ctrl);
 		apropos.setActionCommand("A Propos");
-		pan.add(apropos);
+		panaide.add(apropos);
 		JButton help = new JButton("Aide");
 		help.addActionListener(ctrl);
 		help.setActionCommand("Aide");
-		pan.add(help);
+		panaide.add(help);
+		pan.add(panaide);
+		
 		options.add(pan, BorderLayout.CENTER);
 		
 		JPanel optionsLigne9 = new JPanel();
 		optionsLigne9.setLayout(new GridLayout(1,3,10,10));
-		JButton butback = new JButton("Back");
-		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
-		optionsLigne9.add(butback);
+		
+		optionsLigne9.add(new JPanel());
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
 		accueil.setActionCommand("Bouton Accueil");
@@ -765,8 +861,7 @@ public class AppView {
 		optionsLigne9.add(new JPanel());
 		options.add(optionsLigne9,BorderLayout.SOUTH);
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = options;
+		
 		panel.add(options,BorderLayout.CENTER);
 	}
 	
@@ -795,7 +890,7 @@ public class AppView {
 		editionLigne2.add(editionLigne2Pan1);
 		JPanel editionLigne2Pan2 = new JPanel();
 		editionLigne2Pan2.setLayout(new GridLayout(2,1));
-		JTextField titreEd = new JTextField();
+		
 		String titreS;
 		try {
 			titreS = this.engine.getCollectionSelect().getPhotoSelect().getTitre();
@@ -803,9 +898,8 @@ public class AppView {
 			titreS = "Pas de titre";
 			e.printStackTrace();
 		}
-		titreEd.setText(titreS);
+		JLabel titreEd = new JLabel(titreS);
 		editionLigne2Pan2.add(titreEd);
-		JTextField auteurEd = new JTextField();
 		String auteurS;
 		try {
 			auteurS = this.engine.getCollectionSelect().getPhotoSelect().getAuteur();
@@ -813,6 +907,131 @@ public class AppView {
 			auteurS = "Pas d'auteur";
 			e.printStackTrace();
 		}
+		JLabel auteurEd = new JLabel(auteurS);
+		editionLigne2Pan2.add(auteurEd);
+		editionLigne2.add(editionLigne2Pan2);
+		editionC.add(editionLigne2);
+		
+		JPanel editionLigne3 = new JPanel();
+		editionLigne3.setLayout(new GridLayout(1,2));
+		editionLigne3.add(new JLabel("Categorie :"));
+		String cat;
+		try {
+			cat = this.engine.getCollectionSelect().getPhotoSelect().getCollection();
+		} catch (NoPhotoFoundException e1) {
+			cat = "Pas de categorie";
+			e1.printStackTrace();
+		}
+		editionLigne3.add(new JLabel(cat));
+		editionC.add(editionLigne3);
+		
+		JPanel editionLigne4 = new JPanel();
+		editionLigne4.setLayout(new GridLayout(1,2));
+		editionLigne4.add(new JLabel("Pays de prise de vue :"));
+		String paysS;
+		try {
+			paysS = this.engine.getCollectionSelect().getPhotoSelect().getPays();
+		} catch (NoPhotoFoundException e) {
+			paysS = "Pas de Pays";
+			e.printStackTrace();
+		}
+		JLabel paysEd = new JLabel(paysS);
+		editionLigne4.add(paysEd);
+		editionC.add(editionLigne4);
+		
+		JPanel editionLigne5 = new JPanel();
+		editionLigne5.setLayout(new GridLayout(1,2,5,5));
+		editionLigne5.add(new JLabel("Prise le :"));
+		String date;
+		try {
+			date = this.dateToString(this.engine.getCollectionSelect().getPhotoSelect());
+		} catch (NoPhotoFoundException e) {
+			date = "Pas de date";
+			e.printStackTrace();
+		}
+		editionLigne5.add(new JLabel(date));
+		editionC.add(editionLigne5);
+		
+		String mots="Mots Cles : ";
+		Photo laPhoto;
+		try {
+			laPhoto = this.engine.getCollectionSelect().getPhotoSelect();
+		} catch (NoPhotoFoundException e) {
+			laPhoto = null;
+			e.printStackTrace();
+		}
+		for(int i=0;i<laPhoto.getKeyWords().length;i++){
+			mots += laPhoto.getKeyWords()[i]+"; ";
+		}
+		if(laPhoto.getKeyWords() == null || laPhoto.getKeyWords().length == 0){
+			mots+="Pas de mot cle entre.";
+		}
+		editionC.add(new JLabel(mots));
+		
+		JPanel editionLigne7 = new JPanel();
+		editionLigne7.setLayout(new GridLayout(1,2,10,10));
+		JButton simil = new JButton("Recherche par similarite");
+		simil.addActionListener(ctrl);
+		simil.setActionCommand("Similarite");
+		editionLigne7.add(simil);
+		JButton supp = new JButton("Supprimer la photo");
+		supp.addActionListener(ctrl);
+		supp.setActionCommand("Supprimer Photo");
+		editionLigne7.add(supp);
+		editionC.add(editionLigne7);
+		
+		JPanel editionLigne9 = new JPanel();
+		editionLigne9.setLayout(new GridLayout(1,3,10,10));
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back de Diapo");
+		editionLigne9.add(butback);
+		JButton accueil = new JButton("Accueil");
+		accueil.addActionListener(ctrl);
+		accueil.setActionCommand("Bouton Accueil");
+		editionLigne9.add(accueil);
+		JButton modif = new JButton("Modifier");
+		modif.addActionListener(ctrl);
+		modif.setActionCommand("Modifier");
+		editionLigne9.add(modif);
+		edition.add(editionLigne9,BorderLayout.SOUTH);
+		
+		edition.add(editionC,BorderLayout.CENTER);
+		
+		
+		panel.add(edition, BorderLayout.CENTER);
+	}
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a la modification d'une photo electionnee
+	 */
+	public void afficherEditionModification(){
+		panel.removeAll();
+		JPanel edition = new JPanel();
+		edition.setLayout(new BorderLayout(10,10));
+		
+		JLabel titre = new JLabel(this.engine.getTitreEditionModification());
+		titre.setHorizontalAlignment(SwingConstants.CENTER);
+		titre.setFont(new Font("Courrier",5,20));
+		titre.setForeground(Color.ORANGE);
+		edition.add(titre,BorderLayout.NORTH);		
+		JPanel editionC = new JPanel();
+		editionC.setLayout(new GridLayout(5,1,10,10));
+		
+		JPanel editionLigne2 = new JPanel();
+		editionLigne2.setLayout(new GridLayout(1,2));
+		JPanel editionLigne2Pan1 = new JPanel();
+		editionLigne2Pan1.setLayout(new GridLayout(2,1));
+		editionLigne2Pan1.add(new JLabel("Titre :"));
+		editionLigne2Pan1.add(new JLabel("Auteur :"));
+		editionLigne2.add(editionLigne2Pan1);
+		JPanel editionLigne2Pan2 = new JPanel();
+		editionLigne2Pan2.setLayout(new GridLayout(2,1));
+		titreEd = new JTextField();
+		String titreS = "Entrez un nouveau titre";
+		titreEd.setText(titreS);
+		editionLigne2Pan2.add(titreEd);
+		auteurEd = new JTextField();
+		String auteurS = "Entrez un nouvel auteur";
 		auteurEd.setText(auteurS);
 		editionLigne2Pan2.add(auteurEd);
 		editionLigne2.add(editionLigne2Pan2);
@@ -821,63 +1040,330 @@ public class AppView {
 		JPanel editionLigne3 = new JPanel();
 		editionLigne3.setLayout(new GridLayout(1,2));
 		editionLigne3.add(new JLabel("Categorie :"));
-		editionLigne3.add(new JComboBox<String>());
+		comboCatModif = new JComboBox<String>();
+		comboCatModif.addItem("-");
+		Enumeration<Collection> enumeration = this.engine.getUtilisateurSelect().toutesCollections();
+		while(enumeration.hasMoreElements()){
+			Collection p = enumeration.nextElement();
+			comboCatModif.addItem(p.getTitre());
+		}
+		editionLigne3.add(comboCatModif);
 		editionC.add(editionLigne3);
 		
 		JPanel editionLigne4 = new JPanel();
 		editionLigne4.setLayout(new GridLayout(1,2));
 		editionLigne4.add(new JLabel("Pays de prise de vue :"));
-		JTextField paysEd = new JTextField();
-		String paysS;
-		try {
-			paysS = this.engine.getCollectionSelect().getPhotoSelect().getPays();
-		} catch (NoPhotoFoundException e) {
-			paysS = "Pas de Pays";
-			e.printStackTrace();
-		}
+		paysEd = new JTextField();
+		String paysS = "Entrez un nouveau Pays";
 		paysEd.setText(paysS);
 		editionLigne4.add(paysEd);
 		editionC.add(editionLigne4);
 		
 		JPanel editionLigne5 = new JPanel();
 		editionLigne5.setLayout(new GridLayout(1,4,5,5));
-		editionLigne5.add(new JLabel("Prise le :"));
-		editionLigne5.add(new JComboBox<String>());
-		editionLigne5.add(new JComboBox<String>());
-		editionLigne5.add(new JComboBox<String>());
+		editionLigne5.add(new JLabel("Nouvelle date :"));
+		comboJourModif = new JComboBox<String>();
+		comboJourModif.addItem("-");
+		for(int i=1;i<=31;i++){
+			comboJourModif.addItem(""+i+"");
+		}
+		editionLigne5.add(comboJourModif);
+		comboMoisModif = new JComboBox<String>();
+		comboMoisModif.addItem("-");
+		comboMoisModif.addItem("janvier");
+		comboMoisModif.addItem("fevrier");
+		comboMoisModif.addItem("mars");
+		comboMoisModif.addItem("avril");
+		comboMoisModif.addItem("mai");
+		comboMoisModif.addItem("juin");
+		comboMoisModif.addItem("juillet");
+		comboMoisModif.addItem("aout");
+		comboMoisModif.addItem("septembre");
+		comboMoisModif.addItem("octobre");
+		comboMoisModif.addItem("novembre");
+		comboMoisModif.addItem("decembre");
+		editionLigne5.add(comboMoisModif);
+		comboAnneeModif = new JComboBox<String>();
+		comboAnneeModif.addItem("-");
+		for(int i=1990;i<=2015;i++){
+			comboAnneeModif.addItem(""+i+"");
+		}
+		editionLigne5.add(comboAnneeModif);
 		editionC.add(editionLigne5);
 		
+		motsEd = new JTextField("Nouveaux mots cles de la photo (separes par des ; ).");
+		editionC.add(motsEd);
 		
-		editionC.add(new JTextField("Entrez les mots cles de la photo (separes par des ; )."));
-		
-		JPanel editionLigne7 = new JPanel();
-		editionLigne7.setLayout(new GridLayout(1,2,10,10));
-		JButton simil = new JButton("Recherche par similarite");
-		simil.addActionListener(ctrl);
-		simil.setActionCommand("Similarite");
-		editionLigne7.add(simil);
-		editionLigne7.add(new JButton("Supprimer la photo"));
-		editionC.add(editionLigne7);
 		
 		JPanel editionLigne9 = new JPanel();
 		editionLigne9.setLayout(new GridLayout(1,3,10,10));
 		JButton butback = new JButton("Back");
 		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
+		butback.setActionCommand("Back de Modification");
 		editionLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
 		accueil.setActionCommand("Bouton Accueil");
 		editionLigne9.add(accueil);
-		editionLigne9.add(new JPanel());
+		JButton valmodif = new JButton("Valider");
+		valmodif.addActionListener(ctrl);
+		valmodif.setActionCommand("Valider Modification");
+		editionLigne9.add(valmodif);
 		edition.add(editionLigne9,BorderLayout.SOUTH);
 		
 		edition.add(editionC,BorderLayout.CENTER);
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = edition;
+		
 		panel.add(edition, BorderLayout.CENTER);
 	}
+	
+	
+	public void afficherNouvelleImage(){
+		panel.removeAll();
+		JPanel edition = new JPanel();
+		edition.setLayout(new BorderLayout(10,10));
+		
+		JLabel titre = new JLabel(this.engine.getTitreNouvelleImage());
+		titre.setHorizontalAlignment(SwingConstants.CENTER);
+		titre.setFont(new Font("Courrier",5,20));
+		titre.setForeground(Color.ORANGE);
+		edition.add(titre,BorderLayout.NORTH);		
+		JPanel editionC = new JPanel();
+		editionC.setLayout(new GridLayout(6,1,10,10));
+		JPanel panfile = new JPanel();
+		panfile.setLayout(new GridLayout(1,2));
+		textURL = new JTextField("URL de votre Photo");
+		boutonURL = new JButton("Chercher une Photo");
+		boutonURL.addActionListener(ctrl);
+		boutonURL.setActionCommand("Chercher Photo");
+		panfile.add(textURL);
+		panfile.add(boutonURL);
+		editionC.add(panfile);
+		JPanel editionLigne2 = new JPanel();
+		editionLigne2.setLayout(new GridLayout(1,2));
+		JPanel editionLigne2Pan1 = new JPanel();
+		editionLigne2Pan1.setLayout(new GridLayout(2,1));
+		editionLigne2Pan1.add(new JLabel("Titre :"));
+		editionLigne2Pan1.add(new JLabel("Auteur :"));
+		editionLigne2.add(editionLigne2Pan1);
+		JPanel editionLigne2Pan2 = new JPanel();
+		editionLigne2Pan2.setLayout(new GridLayout(2,1));
+		titrenew = new JTextField();
+		String titreS = "Entrez un titre";
+		titrenew.setText(titreS);
+		editionLigne2Pan2.add(titrenew);
+		auteurnew = new JTextField();
+		String auteurS = "Entrez un auteur";
+		auteurnew.setText(auteurS);
+		editionLigne2Pan2.add(auteurnew);
+		editionLigne2.add(editionLigne2Pan2);
+		editionC.add(editionLigne2);
+		
+		JPanel editionLigne3 = new JPanel();
+		editionLigne3.setLayout(new GridLayout(1,2));
+		editionLigne3.add(new JLabel("Categorie :"));
+		comboCatnew = new JComboBox<String>();
+		Enumeration<Collection> enumeration = this.engine.getUtilisateurSelect().toutesCollections();
+		while(enumeration.hasMoreElements()){
+			Collection p = enumeration.nextElement();
+			comboCatnew.addItem(p.getTitre());
+		}
+		editionLigne3.add(comboCatnew);
+		editionC.add(editionLigne3);
+		
+		JPanel editionLigne4 = new JPanel();
+		editionLigne4.setLayout(new GridLayout(1,2));
+		editionLigne4.add(new JLabel("Pays de prise de vue :"));
+		paysnew = new JTextField();
+		String paysS = "Entrez un nouveau Pays";
+		paysnew.setText(paysS);
+		editionLigne4.add(paysnew);
+		editionC.add(editionLigne4);
+		
+		JPanel editionLigne5 = new JPanel();
+		editionLigne5.setLayout(new GridLayout(1,4,5,5));
+		editionLigne5.add(new JLabel("Selectionnez une date :"));
+		comboJournew = new JComboBox<String>();
+		for(int i=1;i<=31;i++){
+			comboJournew.addItem(""+i+"");
+		}
+		editionLigne5.add(comboJournew);
+		comboMoisnew = new JComboBox<String>();
+		comboMoisnew.addItem("janvier");
+		comboMoisnew.addItem("fevrier");
+		comboMoisnew.addItem("mars");
+		comboMoisnew.addItem("avril");
+		comboMoisnew.addItem("mai");
+		comboMoisnew.addItem("juin");
+		comboMoisnew.addItem("juillet");
+		comboMoisnew.addItem("aout");
+		comboMoisnew.addItem("septembre");
+		comboMoisnew.addItem("octobre");
+		comboMoisnew.addItem("novembre");
+		comboMoisnew.addItem("decembre");
+		editionLigne5.add(comboMoisnew);
+		comboAnneenew = new JComboBox<String>();
+		for(int i=1990;i<=2015;i++){
+			comboAnneenew.addItem(""+i+"");
+		}
+		editionLigne5.add(comboAnneenew);
+		editionC.add(editionLigne5);
+		
+		motsnew = new JTextField("Les mots cles de la photo (separes par des ; ).");
+		editionC.add(motsnew);
+		
+		
+		JPanel editionLigne9 = new JPanel();
+		editionLigne9.setLayout(new GridLayout(1,3,10,10));
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back de Gestion");
+		editionLigne9.add(butback);
+		JButton accueil = new JButton("Accueil");
+		accueil.addActionListener(ctrl);
+		accueil.setActionCommand("Bouton Accueil");
+		editionLigne9.add(accueil);
+		JButton valmodif = new JButton("Valider");
+		valmodif.addActionListener(ctrl);
+		valmodif.setActionCommand("Valider Ajout");
+		editionLigne9.add(valmodif);
+		edition.add(editionLigne9,BorderLayout.SOUTH);
+		
+		edition.add(editionC,BorderLayout.CENTER);
+		
+		
+		panel.add(edition, BorderLayout.CENTER);
+	}
+	
+	
+	
+	
+	
+	public JComboBox<String> getComboCatnew() {
+		return comboCatnew;
+	}
+
+
+
+
+	public JTextField getTitrenew() {
+		return titrenew;
+	}
+
+
+
+
+	public JTextComponent getAuteurnew() {
+		return auteurnew;
+	}
+
+
+
+
+	public JTextField getMotsnew() {
+		return motsnew;
+	}
+
+
+
+
+	public JComboBox<String> getComboMoisnew() {
+		return comboMoisnew;
+	}
+
+
+
+
+	public JComboBox<String> getComboJournew() {
+		return comboJournew;
+	}
+
+
+
+
+	public JComboBox<String> getComboAnneenew() {
+		return comboAnneenew;
+	}
+
+
+
+
+	public JTextField getPaysnew() {
+		return paysnew;
+	}
+
+
+
+
+	public JTextField getTextURL() {
+		return textURL;
+	}
+
+
+
+
+	public JButton getBoutonURL() {
+		return boutonURL;
+	}
+
+
+
+
+	public JComboBox<String> getComboMoisModif() {
+		return comboMoisModif;
+	}
+
+
+
+
+	public JComboBox<String> getComboJourModif() {
+		return comboJourModif;
+	}
+
+
+
+
+	public JComboBox<String> getComboAnneeModif() {
+		return comboAnneeModif;
+	}
+
+
+
+
+	public JTextField getTitreEd() {
+		return titreEd;
+	}
+
+
+
+
+	public JTextField getAuteurEd() {
+		return auteurEd;
+	}
+
+
+
+
+	public JComboBox<String> getComboCatModif() {
+		return comboCatModif;
+	}
+
+
+
+
+	public JTextField getPaysEd() {
+		return paysEd;
+	}
+
+
+
+
+	public JTextField getMotsEd() {
+		return motsEd;
+	}
+
+
+
 
 	/**
 	 * Methode publique permettant d'afficher le panel correspondant au diaporama de la galerie courante
@@ -949,7 +1435,7 @@ public class AppView {
 		diaporamaLigne9.setLayout(new GridLayout(1,3,10,10));
 		JButton butback = new JButton("Back");
 		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
+		butback.setActionCommand("Back de Edition");
 		diaporamaLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
@@ -963,8 +1449,7 @@ public class AppView {
 		
 		diaporama.add(diaporamaC,BorderLayout.CENTER);
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = diaporama;
+		
 		
 		panel.add(diaporama,BorderLayout.CENTER);
 	}
@@ -973,25 +1458,25 @@ public class AppView {
 	 * Methode publique permettant de faire tourner un diaporama
 	 */
 	public void lireDiaporama(){
-		System.out.println("lireDiapo");
 		this.lecture = true;
-		if(this.playpause.getText().equals("Play")){
-			this.thread = new TestThread(this, Thread.currentThread());
-		} else { 
-			this.lecture = false;
+		System.out.println("4");
+		while(this.playpause.getText().equals("Play")){
+			System.out.println("5");
+			try {
+				System.out.println("6");
+				Thread.sleep(3000);
+				this.engine.getUtilisateurSelect().getAllPhotos().nextPhoto();
+				
+				this.afficherDiaporama(this.engine.getUtilisateurSelect().getAllPhotos().getPhotoSelect());
+				System.out.println("7");
+				
+				System.out.println("8");
+			} catch (NoPhotoFoundException | InterruptedException e) {
+				e.printStackTrace();
+				System.out.println("erreur");
+			}
 		}
-	}
-	
-	public void nextPhoto(){
-		System.out.println("NextPhoto");
-		try {
-			this.thread = null;
-			this.engine.getUtilisateurSelect().getAllPhotos().nextPhoto();
-			this.afficherDiaporama(this.engine.getUtilisateurSelect().getAllPhotos().getPhotoSelect());
-			this.lireDiaporama();
-		} catch (NoPhotoFoundException e) {
-			this.nextPhoto();
-		}
+		this.lecture = false;
 	}
 	
 	/**
@@ -1018,7 +1503,7 @@ public class AppView {
 		aideLigne9.setLayout(new GridLayout(1,3,10,10));
 		JButton butback = new JButton("Back");
 		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
+		butback.setActionCommand("Back de Options");
 		aideLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
@@ -1029,8 +1514,7 @@ public class AppView {
 		
 		aide.add(aide2,BorderLayout.CENTER);
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = aide;
+		
 		panel.add(aide, BorderLayout.CENTER);
 	}
 	
@@ -1055,7 +1539,7 @@ public class AppView {
 		aProposLigne9.setLayout(new GridLayout(1,3,10,10));
 		JButton butback = new JButton("Back");
 		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
+		butback.setActionCommand("Back de Options");
 		aProposLigne9.add(butback);
 		JButton accueil = new JButton("Accueil");
 		accueil.addActionListener(ctrl);
@@ -1066,8 +1550,7 @@ public class AppView {
 		
 		aPropos.add(aProposC,BorderLayout.CENTER);
 		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = aPropos;
+		
 		panel.add(aPropos, BorderLayout.CENTER);
 	}
 	
@@ -1153,22 +1636,6 @@ public class AppView {
 	public JComboBox<String> getComboUsers() {
 		return comboUsers;
 	}
-
-	/**
-	 * Accesseur renvoyant le panel affiche precedemment 
-	 * @return Le panel affiche precedemment 
-	 */
-	public JPanel getPanelPrecedent() {
-		return panelPrecedent;
-	}
-	
-	/**
-	 * Accesseur renvoyant le panel courant 
-	 * @return Le panel courant
-	 */
-	public JPanel getPanelCourant() {
-		return panelCourant;
-	}
 	
 	/**
 	 * Accesseur renvoyant le Bouton Play/Pause
@@ -1240,4 +1707,14 @@ public class AppView {
 	    g2.dispose();
 	    return resizedImg;
 	}
-} // ------------------------------------------------------------- Class AppView
+	
+	private String dateToString(Photo p){
+		String rep = "";
+		java.util.GregorianCalendar d = p.getDate();
+		java.util.Date date = d.getTime();
+		java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("EEEEEEEE dd MMMMMMMM YYYY");
+		rep = format.format(date);
+		rep = Character.toUpperCase(rep.charAt(0))+rep.substring(1);
+		return rep;
+	}
+} // ------------------------------------------------------------- Class PhotoTechView

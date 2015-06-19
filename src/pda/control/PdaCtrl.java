@@ -11,9 +11,7 @@ package pda.control;
 import pda.view.*;
 import pda.datas.*;
 
-import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 import java.util.ArrayList;
 
 /**
