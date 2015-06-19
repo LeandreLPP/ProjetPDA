@@ -14,29 +14,29 @@ import utilitaires.*;
  */
 public class Collection implements Serializable {
 	private static final long serialVersionUID = 0;
-	
+
 	/**
 	 * Le titre de cette collection.
 	 */
 	private String titre;
-	
+
 	/**
 	 * La {@link Hashtable} repertoriant toutes les photos contenues dans cette collection.
-	 * La cle est l'attribut de {@link Photo} recupere par {@link Photo#getImageURL()}
+	 * La cle est l'attribut de {@link Photo} recupere par {@link Photo#getNomFichier()}
 	 */
 	private Hashtable<String,Photo> mapPhotos;
-	
+
 	/**
 	 * La liste des {@link Photo} contenues par cette collection, ordonnees selont un tri particulier.
 	 */
 	private ArrayList<Photo> listePhotos;
-	
+
 	/**
 	 * L'object {@link Photo} selectionne actuellement.
 	 * Cet attribut est utilise lors de l'affichage en mode diaporama de la collection.
 	 */
 	private int indexSelect;
-	
+
 	/**
 	 * Le tri selon lequel ordonner la {@link #listePhotos}.
 	 */
@@ -69,7 +69,7 @@ public class Collection implements Serializable {
 			this.addPhoto(p);
 		}
 	}
-	
+
 	/**
 	 * Tri la {@link #listePhotos} grace a la methode de {@link #tri}.
 	 */
@@ -83,7 +83,7 @@ public class Collection implements Serializable {
 	 */
 	public void addPhoto(Photo p){
 		this.listePhotos.add(p);
-		this.mapPhotos.put(p.getImageURL(), p);
+		this.mapPhotos.put(p.getNomFichier(), p);
 		this.updateTri();
 	}
 
@@ -120,9 +120,18 @@ public class Collection implements Serializable {
 				ret[i] = t;
 			}
 		} else {
-			ret[0] = this;
+			for(int i : tabDeTab.keySet()){
+				Collection t = new Collection((String)tabDeTab.get(i)[0][0], this.toPhoto(tabDeTab.get(i)[1]));
+				t.copierOrdre(this);
+				ret[i] = t;
+			}
 		}
 		return ret;
+	}
+
+	public void copierOrdre(Collection model){
+		this.tri = new TriCopier(this.getListePhotos(),model);
+		this.trier();
 	}
 
 	/**
@@ -146,7 +155,7 @@ public class Collection implements Serializable {
 	 * @param p L'objet {@link Photo} a suppriemr de cette collection.
 	 */
 	public void delPhoto(Photo p){
-		this.mapPhotos.remove(p.getImageURL());
+		this.mapPhotos.remove(p.getNomFichier());
 		this.listePhotos.remove(p);
 		this.updateTri();
 	}
@@ -205,7 +214,7 @@ public class Collection implements Serializable {
 		}
 		return rep;
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #titre}.
 	 * @return Le {@link String} titre.
@@ -213,14 +222,14 @@ public class Collection implements Serializable {
 	public String getTitre() {
 		return titre;
 	}
-	
+
 	/**
 	 * @return Une {@link Enumeration} contenant toutes les photos de cette collection.
 	 */
 	public Enumeration<Photo> toutesPhotos() {
 		return mapPhotos.elements();
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #listePhotos}.
 	 * @return La {@link ArrayList} listePhotos.
@@ -228,7 +237,7 @@ public class Collection implements Serializable {
 	public ArrayList<Photo> getListePhotos() {
 		return listePhotos;
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #indexSelect}.
 	 * @return L'entier indexSelect.
@@ -236,7 +245,7 @@ public class Collection implements Serializable {
 	public int getIndexSelect() {
 		return indexSelect;
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #tri}.
 	 * @return L'attribut de type {@link Tri}.
@@ -244,7 +253,7 @@ public class Collection implements Serializable {
 	public Tri getTri() {
 		return tri;
 	}
-	
+
 	/**
 	 * @return La photo situe a l'index {@link #indexSelect} dans la {@link #listePhotos}.
 	 */

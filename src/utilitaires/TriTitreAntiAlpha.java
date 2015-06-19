@@ -17,7 +17,17 @@ public class TriTitreAntiAlpha extends Tri {
 		boolean rep = false;
 		Photo p1 = this.liste.get(i1);
 		Photo p2 = this.liste.get(i2);
-		if(p1.getTitre().compareToIgnoreCase(p2.getTitre())<0){
+		String s1 = p1.getTitre();
+		String s2 = p2.getTitre();
+		if(s1 == null){
+			s1="";
+			p1.setTitre("");
+		}
+		if(s2 == null){
+			s2="";
+			p2.setTitre("");
+		}
+		if(s1.compareToIgnoreCase(s2)<0){
 			rep = true;
 		}
 		return rep;

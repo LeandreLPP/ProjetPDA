@@ -328,8 +328,8 @@ public class PhotoTechView {
 				label.setContentAreaFilled(false);
 				label.setBorderPainted(false);
 				label.setToolTipText(lesPhotos[i].getListePhotos().get(y).getTitre());
-				label.addActionListener(ctrl);
-				label.setActionCommand("Image"+lesPhotos[i].getListePhotos().get(y).getImageURL());
+				label.addActionListener(this.ctrl);
+				label.setActionCommand("Image"+lesPhotos[i].getListePhotos().get(y).getNomFichier());
 				lepanel.add(label,BorderLayout.CENTER);
 				layered.add(lepanel);
 			}
@@ -436,7 +436,7 @@ public class PhotoTechView {
 				label.setBorderPainted(false);
 				label.setToolTipText(lesPhotos[i].getListePhotos().get(y).getTitre());
 				label.addActionListener(ctrl);
-				label.setActionCommand("Image"+lesPhotos[i].getListePhotos().get(y).getImageURL());
+				label.setActionCommand("Image"+lesPhotos[i].getListePhotos().get(y).getNomFichier());
 				lepanel.add(label,BorderLayout.CENTER);
 				layered.add(lepanel);
 			}

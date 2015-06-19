@@ -1,5 +1,6 @@
 package utilitaires;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import datas.Collection;
@@ -40,8 +41,25 @@ public class TriSimilarite extends Tri {
 	@Override
 	public Hashtable<Integer, Object[][]> split() {
 		Hashtable<Integer, Object[][]> rep = new Hashtable<Integer, Object[][]>();
-		Object[][] resultat = {{"Resultat de la comparaison"},this.liste.toArray()};
-		rep.put(0, resultat);
+		ArrayList<Photo> identique = new ArrayList<Photo>();
+		ArrayList<Photo> forte = new ArrayList<Photo>();
+		ArrayList<Photo> faible = new ArrayList<Photo>();
+		for(Photo p : this.liste){
+			double simil = this.similarite.get(p);
+			if(simil == (double)100){
+				identique.add(p);
+			} else if(simil>=50) {
+				forte.add(p);
+			} else {
+				faible.add(p);
+			}
+		}
+		Object[][] resultatIdentique = {{"Photo identiques"},identique.toArray()};
+		rep.put(0, resultatIdentique);
+		Object[][] resultatFort = {{"Photo a forte ressemblance"},forte.toArray()};
+		rep.put(1, resultatFort);
+		Object[][] resultatFaible = {{"Photo a faible ressemblance"},faible.toArray()};
+		rep.put(2, resultatFaible);
 		return rep;
 	}
 }

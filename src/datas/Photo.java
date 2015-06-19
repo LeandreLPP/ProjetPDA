@@ -443,6 +443,9 @@ public class Photo implements Serializable {
 		return ext;
 	}
 	
+	public String getNomFichier(){
+		return this.imageURL.split("/")[this.imageURL.split("/").length-1];
+	}
 	/**
 	 * Accesseur de l'attribut {@link #collection}.
 	 * @return Le {@link String} collection.

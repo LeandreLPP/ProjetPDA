@@ -16,7 +16,17 @@ public class TriAuteurAntiAlpha extends Tri {
 		boolean rep = false;
 		Photo p1 = this.liste.get(i1);
 		Photo p2 = this.liste.get(i2);
-		if(p1.getAuteur().compareToIgnoreCase(p2.getAuteur())<0){
+		String s1 = p1.getAuteur();
+		String s2 = p2.getAuteur();
+		if(s1 == null){
+			s1="";
+			p1.setAuteur("");
+		}
+		if(s2 == null){
+			s2="";
+			p2.setAuteur("");
+		}
+		if(s1.compareToIgnoreCase(s2)<0){
 			rep = true;
 		}
 		return rep;

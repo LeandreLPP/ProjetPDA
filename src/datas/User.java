@@ -96,10 +96,24 @@ public class User implements Serializable {
 	 */
 	public void delCollection(String key){
 		if(key != null && !key.equalsIgnoreCase("All")){
+			Enumeration<Photo> enumPhoto = this.collections.get(key).toutesPhotos();
+			while(enumPhoto.hasMoreElements()){
+				Photo p = enumPhoto.nextElement();
+				p.setCollection("All");
+			}
 			this.collections.remove(key);
 		}
 	}
 
+	/**
+	 * Deplace une {@link Photo} specifie d'une {@link Collection} a une autre.
+	 * Si la categorie d'origine est "All", la {@link Photo} n'est pas supprimee de "All" mais juste ajoutee a la {@link Collection} de destination.
+	 * A l'inverse si la categorie de destination est "All", la {@link Photo} est simplement supprimee de la {@link Collection} d'origine.
+	 * Si la collection d'origine et la collection de destination sont identiques, cette methode ne fait rien.
+	 * @param keyPhoto 
+	 * @param keyOrigine
+	 * @param keyDestination
+	 */
 	public void movePhoto(String keyPhoto, String keyOrigine,  String keyDestination){
 		String key = this.urlDossier+"/"+keyPhoto;
 		if(keyOrigine != null && key != null && keyDestination != null && !keyOrigine.equals(keyDestination)){
@@ -129,6 +143,10 @@ public class User implements Serializable {
 		}
 	}
 
+	/**
+	 * Supprime la {@link Photo} dont le {@link Photo#getNomFichier()} est passe en parametre.
+	 * @param keyPhoto La cle de la photo.
+	 */
 	public void delPhoto(String keyPhoto){
 		String key = this.urlDossier+keyPhoto;
 		try {
@@ -147,6 +165,11 @@ public class User implements Serializable {
 		}
 	}
 
+	/**
+	 * Importe la photo situe a l'url passe en parametre
+	 * @param url L'url de la photo a importer
+	 * @return true si l'importation s'est bien passee
+	 */
 	public boolean importerPhoto(String url){
 		boolean ret = true;
 		String nom = url.split("/")[url.split("/").length-1];

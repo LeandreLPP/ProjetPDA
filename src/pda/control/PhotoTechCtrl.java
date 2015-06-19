@@ -537,17 +537,23 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 		else if(source.getActionCommand() == "Valider Ajout"){
 			String titre = this.view.getTitrenew().getText();
 			String auteur = this.view.getAuteurnew().getText();
-			String collection = this.view.getComboCatnew().getSelectedItem().toString();
+			String collection = "All";
+			if(this.view.getComboCatnew().getSelectedItem() != null){
+				collection = this.view.getComboCatnew().getSelectedItem().toString();
+			}
 			String pays = this.view.getPaysnew().getText();
 			int annee = this.view.getComboAnneenew().getSelectedIndex()+1990;
 			int mois = this.view.getComboMoisnew().getSelectedIndex();
 			int jour = this.view.getComboMoisnew().getSelectedIndex()+3;
 			String[] keyWords = this.view.getMotsnew().getText().split(";");
-			if(titre!=null && titre!="Entrez un titre" && auteur!=null && auteur!="Entrez un auteur" && pays!=null && pays!="Entrez un nouveau Pays" && keyWords!=null && keyWords[0] != "Les mots cles de la photo (separes par des "){
+			if(titre!=null && !titre.equals("Entrez un titre") 
+					&& auteur!=null && !auteur.equals("Entrez un auteur") 
+					&& pays!=null && !pays.equals("Entrez un nouveau Pays") 
+					&& keyWords!=null && !keyWords[0].equals("Les mots cles de la photo (separes par des ")){
 				String nom = this.replaceAllString(this.view.getTextURL().getText(), "\\", "/");
 				this.engine.getUtilisateurSelect().importerPhoto(nom);
 				String[] nomF = nom.split("/");
-				String nomFinal = "saves/"+this.engine.getUtilisateurSelect().getNom()+"/"+nomF[nomF.length-1];
+				String nomFinal = nomF[nomF.length-1];
 				try {
 					Photo laPhoto = this.engine.getUtilisateurSelect().getAllPhotos().getPhoto(nomFinal);
 					laPhoto.setTitre(titre);

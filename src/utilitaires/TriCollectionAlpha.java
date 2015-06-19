@@ -17,7 +17,17 @@ public class TriCollectionAlpha extends Tri {
 		boolean rep = false;
 		Photo p1 = this.liste.get(i1);
 		Photo p2 = this.liste.get(i2);
-		if(p1.getCollection().compareToIgnoreCase(p2.getCollection())>0){
+		String s1 = p1.getCollection();
+		String s2 = p2.getCollection();
+		if(s1 == null){
+			s1="All";
+			p1.setCollection("All");
+		}
+		if(s2 == null){
+			s2="All";
+			p2.setCollection("All");
+		}
+		if(s1.compareToIgnoreCase(s2)>0){
 			rep = true;
 		}
 		return rep;

@@ -16,7 +16,17 @@ public class TriPaysAntiAlpha extends Tri {
 		boolean rep = false;
 		Photo p1 = this.liste.get(i1);
 		Photo p2 = this.liste.get(i2);
-		if(p1.getPays().compareToIgnoreCase(p2.getPays())<0){
+		String s1 = p1.getPays();
+		String s2 = p2.getPays();
+		if(s1 == null){
+			s1="";
+			p1.setPays("");
+		}
+		if(s2 == null){
+			s2="";
+			p2.setPays("");
+		}
+		if(s1.compareToIgnoreCase(s2)<0){
 			rep = true;
 		}
 		return rep;
