@@ -4,13 +4,40 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+/**
+ * Classe implementant les methodes pour gerer un utilisateur.
+ * @author FRETAY Juliette et LE POLLES--POTIN Leandre - Groupe 1C
+ */
 public class User implements Serializable {
 	private static final long serialVersionUID = 0;
+	/**
+	 * Le nom de l'utilisateur.
+	 */
 	private String nom;
+	
+	/**
+	 * Le mot de passe de l'utilisateur.
+	 */
+	private String password;
+	
+	/**
+	 * Le chemin du repertoire dans lequel toutes les photographies de cet utilisateur sont stockees.
+	 */
 	private String urlDossier;
+	
+	/**
+	 * {@link Collection} contenant toutes les {@link Photo} appartenant a cet utilisateur.
+	 */
 	private Collection allPhotos;
+	
+	/**
+	 * {@link Hashtable} contenant toutes les collections crees par cet utilisateur.
+	 */
 	private Hashtable<String,Collection> collections;
 
+	/**
+	 * Cree un {@link User} dont le {@link #nom} est "Default" et {@link #urlDossier} est "saves/Default" (en chemin relatif).
+	 */
 	public User(){
 		this.nom = "default";
 		this.urlDossier = "saves/"+this.nom;
@@ -20,6 +47,10 @@ public class User implements Serializable {
 		this.collections = new Hashtable<String,Collection>();
 	}
 
+	/**
+	 * Cree un {@link User} dont le {@link #nom} est passe en parametre et {@link #urlDossier} est "saves/{@link #nom}" (en chemin relatif).
+	 * @param nom Le nom de l'utilisateur.
+	 */
 	public User(String nom){
 		this.nom = nom;
 		this.urlDossier = "saves/"+nom;
@@ -29,6 +60,11 @@ public class User implements Serializable {
 		this.collections = new Hashtable<String,Collection>();
 	}
 
+	/**
+	 * Cree un {@link User} dont le {@link #nom} et {@link #urlDossier} sont passes en parametre.
+	 * @param nom Le nom de l'utilisateur.
+	 * @param url Le chemin du dossier de stockage des photographies de cet utilisateur.
+	 */
 	public User(String nom, String url){
 		this.nom = nom;
 		this.urlDossier = url+"/"+nom;
@@ -40,13 +76,24 @@ public class User implements Serializable {
 
 	// --- Methodes ---
 
+	/**
+	 * Cree une nouvelle {@link Collection} dont le nom est passe en parametre.
+	 * Cette {@link Collection} est ensuite ajoutee a {@link #collections} avec pour cle le nom passe en parametre.
+	 * Si le nom existe deja, la {@link Collection} n'est pas cree.
+	 * @param key Le nom de la {@link Collection} a creer.
+	 */
 	public void addCollection(String key){
 		if(key != null && !key.equalsIgnoreCase("All") && !this.collections.containsKey(key)){
 			Collection c = new Collection(key);
 			this.collections.put(key,c);
 		}
 	}
-
+	
+	/**
+	 * Supprime la {@link Collection} dont le nom est passe en parametre.
+	 * Les {@link Photo} contenues dans cette {@link Collection} sont conservees du moment qu'elles ne sont pas explicitement supprimees par {@link #delPhoto(String)}.
+	 * @param key Le nom de la {@link Collection} a supprimer.
+	 */
 	public void delCollection(String key){
 		if(key != null && !key.equalsIgnoreCase("All")){
 			this.collections.remove(key);
@@ -137,6 +184,20 @@ public class User implements Serializable {
 	
 	public Collection getCollection(String key){
 		return this.collections.get(key);
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**

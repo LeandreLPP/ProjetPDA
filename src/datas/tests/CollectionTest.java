@@ -123,21 +123,21 @@ public class CollectionTest {
 		java.util.GregorianCalendar c2 = new java.util.GregorianCalendar();
 		c1.setTime(new java.util.Date());
 		c2.setTime(new java.util.Date());
-		c1.set(2012, 11, 12);
+		c1.set(2012, 10, 12);
 		c2.set(2015, 05, 14);
 		this.pChat.setDate(c1);
 		this.pLapin.setDate(c2);
 		this.collection.setTriDateCroissante();
 		split = this.collection.split();
 		assertEquals(2,split.length);
-		assertEquals("Mercredi 12 décembre 2012",split[0].getTitre());
+		assertEquals("Mercredi 12 novembre 2012",split[0].getTitre());
 		assertEquals("Dimanche 14 juin 2015",split[1].getTitre());
 		// -- Tri par ordre anti-alphabetique de pays --
 		this.collection.setTriDateDecroissante();
 		split = this.collection.split();
 		assertEquals(2,split.length);
 		assertEquals("Dimanche 14 juin 2015",split[0].getTitre());
-		assertEquals("Mercredi 12 décembre 2012",split[1].getTitre());
+		assertEquals("Mercredi 12 novembre 2012",split[1].getTitre());
 	}
 
 	@Test

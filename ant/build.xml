@@ -9,6 +9,7 @@
 	<property name="dist" location="build/distrib"/>
 	<property name="doc" location="build/api"/>
 	<property name="work" location="ww"/>  
+	<property name="test" location="test"/>
   
 	<!-- Définition du chemin d'accès à d'éventuelles librairies -->
 	<path id="lib.classpath">
@@ -38,7 +39,7 @@
 	</target>	       	    
 
 	<!-- Suppression des fichiers du répertoire build/api pour forcer une re-compilation complète de la javaDoc -->
-	<target name="resetAll" depends="resetJavaDoc","resetCompileAll" description="deletes all files of directory build/api" >
+	<target name="resetAll" depends="resetCompileAll" description="deletes all files of directory build/api">
 	  <delete includeEmptyDirs="true">
 	    <fileset dir="./build/api" includes="**/*"/>
 	  </delete>
@@ -51,6 +52,7 @@
 	  <mkdir dir="${class}"/>
 	  <mkdir dir="${dist}"/>
 	  <mkdir dir="${doc}"/>
+	  <mkdir dir="${test}"/>
 	</target>
 
 	<!-- Compilation de l'entièreté du projet -->
@@ -118,5 +120,23 @@
 	    </tarfileset>
 	  </tar>
 	</target>
-
+	
+	<tatget name="compileTest" depends="compileAll">
+		<javac srcdir="${test}"
+			   destdir="${test}
+	</target>
+	
+	<target name="test" depends="compileTest" description="run the tests Junit">
+	  <property name="report" location="reports" />
+	  <property name="reportXML" location="reports/xml" />
+	  <property name="reportHTML" location="reports/html" />
+	  <property name="reportDOC" location="reports/doc" />
+	  <mkdir dir="${report}"/>
+	  <mkdir dir="${reportXML}"/>
+	  <mkdir dir="${reportHTML}"/>
+	  <mkdir dir="${reportDOC}"/>
+	  <junit printsummary="yes" fork="yes" haltonfailure="yes">
+		<test name="
+	  </junit>
+	</target>
 </project>

@@ -10,36 +10,37 @@ import java.util.*;
 import javax.imageio.ImageIO;
 
 /**
- * Classe implémentant les fonctionnalités pour la gestion et la manipulation des photos dans l'application.
- * @author FRETAY Juliette et LE POLLES--POTIN Léandre - Groupe 1C
+ * Classe implementant les fonctionnalites pour la gestion et la manipulation des photograpies dans l'application.
+ * Chaque instance de cette classe est liee a un fichier de type image (jpg, png ou gif) stocke sur le disque.
+ * @author FRETAY Juliette et LE POLLES--POTIN Leandre - Groupe 1C
  */
 public class Photo implements Serializable {
 	private static final long serialVersionUID = 0;
 	
 	/**
-	 * Le chemin d'enregistrement de la photo à laquelle est lié cet objet Photo
-	 * Défini l'emplacement de sauvegarde de {@link #img}
+	 * Le chemin d'enregistrement de la photographie a laquelle est lie cet objet {@link Photo}
+	 * Defini l'emplacement de sauvegarde de {@link #img}
 	 */
 	private String imageURL;
 	
 	/**
-	 * Le titre de cet objet photographie, initialisé par defaut lors de la création de l'objet au nom du fichier image sans son extension
-	 * Par exemple la photographie enregistrée sous le nom "Chat.jpg" sera nommée par defaut "Chat".
+	 * Le titre de cet objet photographie, initialise par defaut lors de la creation de l'objet au nom du fichier de la photographie sans son extension
+	 * Par exemple la photographie enregistree sous le nom "Chat.jpg" sera nommee par defaut "Chat".
 	 */
 	private String titre;
 	
 	/**
-	 * L'auteur de cette photographie, initialisé par defaut à @null.
+	 * L'auteur de cette photographie, initialise par defaut a @null.
 	 */
 	private String auteur;
 	
 	/**
-	 * Le pays de prise de vue de cette photographie, initialisé par defaut à @null.
+	 * Le pays de prise de vue de cette photographie, initialise par defaut a @null.
 	 */
 	private String pays;
 	
 	/**
-	 * Le nom de la collection à laquelle appartient cette photographie.
+	 * Le nom de la collection a laquelle appartient cette photographie.
 	 */
 	private String collection;
 	
@@ -49,13 +50,13 @@ public class Photo implements Serializable {
 	private GregorianCalendar date;
 	
 	/**
-	 * Les mots clés associés à cette photographie.
+	 * Les mots cles associes a cette photographie.
 	 */
 	private String[] keyWords;
 	
 	/**
-	 * Le tag permettant de vérifier l'intégrite de la photographie stockée en memoire.
-	 * Ce tag est généré à l'instanciation de l'objet par la méthode {@link #generateTag()}.
+	 * Le tag permettant de verifier l'integrite de la photographie stockee en memoire.
+	 * Ce tag est genere a l'instanciation de l'objet par la methode {@link #generateTag()}.
 	 */
 	private final int[] tag;
 	
@@ -69,7 +70,7 @@ public class Photo implements Serializable {
 	 * Construit un objet de type Photo
 	 * @param urlOrigine Chemin de l'image de type jpeg, png ou gif utilise pour creer l'objet photo
 	 * @param urlDestination Chemin de sauvegarde de l'image importee
-	 * @throws IOException En cas de problème avec les fichier dont les chemins sont passés en paramètre.
+	 * @throws IOException En cas de probleme avec les fichier dont les chemins sont passes en parametre.
 	 */
 	public Photo(String urlOrigine, String urlDestination) throws IOException{
 		this.imageURL = urlDestination;
@@ -86,10 +87,10 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * Copie l'image dont le chemin est passé en paramètre dans l'emplacement du disque situé à l'adresse {@link #imageURL}.
-	 * Appelle la méthode {@link #enregisterImg()}.
-	 * @param source Le chemin du fichier à copier à l'adresse stockée par {@link #imageURL}.
-	 * @throws IOException En cas de problème de lecture ou d'écriture de la photographie. Par exemple si le chemin passé en paramètre est incorrect.
+	 * Copie l'image dont le chemin est passe en parametre dans l'emplacement du disque situe a l'adresse {@link #imageURL}.
+	 * Appelle la methode {@link #enregisterImg()}.
+	 * @param source Le chemin du fichier a copier a l'adresse stockee par {@link #imageURL}.
+	 * @throws IOException En cas de probleme de lecture ou d'ecriture de la photographie. Par exemple si le chemin passe en parametre est incorrect.
 	 */
 	private void CopierFichier(String source) throws IOException{
 		this.img = ImageIO.read(new File(source));
@@ -98,8 +99,8 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * Enregitre l'image stockée dans {@link #img} à l'emplacement du disque définit par {@link #imageURL}.
-	 * @throws IOException En cas de problème d'écriture de l'image, par exemple si le chemin stocké dans {@link #imageURL} est incorrecte.
+	 * Enregitre l'image stockee dans {@link #img} a l'emplacement du disque definit par {@link #imageURL}.
+	 * @throws IOException En cas de probleme d'ecriture de l'image, par exemple si le chemin stocke dans {@link #imageURL} est incorrecte.
 	 */
 	private void enregisterImg() throws IOException{
 		String extension = this.getExtension();
@@ -113,10 +114,10 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * 
-	 * @throws IOException
+	 * Genere le tag invisible sur l'image associee a cette photo.
+	 * @throws IOException En cas de probleme d'ecriture de l'image, par exemple si le chemin stocke dans {@link #imageURL} est incorrecte.
 	 */
-	public void tagInvisible() throws IOException{
+	private void tagInvisible() throws IOException{
 		int alpha = 0;
 		int r = 0;
 		int g = 0;
@@ -144,7 +145,7 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * Genere le tag de securite de la photo
+	 * Genere le tag de securite de la photo. Utilise le tag invisible calcule par la methode {@link #tagInvisible()}.
 	 */
 	private int[] generateTag(){
 		int width = this.img.getWidth();
@@ -156,9 +157,9 @@ public class Photo implements Serializable {
 
 
 	/**
-	 * Verifie que le tag de securite correspond bien a la photo de l'url 
-	 * @return True si la photo correspond au tag, false sinon.
-	 * @throws IOException 
+	 * Verifie que le tag de securite correspond bien a la photographiede l'url 
+	 * @return True si la photographiecorrespond au tag, false sinon.
+	 * @throws IOException En cas de probleme d'ecriture de l'image, par exemple si le chemin stocke dans {@link #imageURL} est incorrecte.
 	 */
 	public boolean checkTag(){
 		boolean ret = true;
@@ -182,28 +183,15 @@ public class Photo implements Serializable {
 	}
 
 	// --- Comparaison d'images ---
-
-	public double differenceContours(Photo p2){
-		double rep = 0;
-		BufferedImage contourSelf = this.contours();
-		BufferedImage contourP2 = p2.contours();
-		int colMin = Math.min(contourSelf.getWidth(), contourP2.getWidth());
-		int rowMin = Math.min(contourSelf.getHeight(), contourP2.getHeight());
-		int nbPixels = colMin*rowMin;
-		contourSelf = this.redimensionner(contourSelf,colMin,rowMin);
-		contourP2 = this.redimensionner(contourP2,colMin,rowMin);
-		for(int col = 0; col<colMin; col++){
-			for(int row = 0; row<rowMin; row++){
-				if(contourSelf.getRGB(col, row) != contourP2.getRGB(col, row)){
-					rep++;
-				}
-			}
-		}
-		rep = (rep/nbPixels)*100;
-		return rep;
-	}
 	
-	public BufferedImage redimensionner( BufferedImage srcImg, int w, int h ){ 
+	/**
+	 * Redimensionne un {@link BufferedImage} au format demande.
+	 * @param srcImg La {@link BufferedImage} a redimensionner.
+	 * @param w Le nombre de pixels de largeur de l'image finale.
+	 * @param h Le nombre de pixels de hauteur de l'image finale.
+	 * @return Un objet de type {@link BufferedImage} redimensionne au format passe en parametre
+	 */
+	private BufferedImage redimensionner( BufferedImage srcImg, int w, int h ){ 
 		BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB); 
 		Graphics2D g2 = resizedImg.createGraphics(); 
 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR); 
@@ -212,6 +200,10 @@ public class Photo implements Serializable {
 		return resizedImg; 
 	} 
 
+	/**
+	 * Calcule les contours visibles dans la {@link BufferedImage} stockee dans l'attribut {@link #img}.
+	 * @return Un objet de type {@link BufferedImage} du meme format que {@link #img}. Seuls sont traces les pixels des contours.
+	 */
 	public BufferedImage contours(){
 		BufferedImage rep = new BufferedImage(this.img.getWidth(),this.img.getHeight(),this.img.getType());
 		for(int col = 1; col<this.img.getWidth()-1; col++){
@@ -252,6 +244,32 @@ public class Photo implements Serializable {
 	}
 
 	/**
+	 * Calcule et retourne le pourcentage de difference entre les contours de deux images : celle associee a cet objet photo,
+	 * et celle associee a l'objet poto passe en parametre.
+	 * @param p2 L'objet Photo avec lequel la comparaison est effectuee.
+	 * @return Un double entre 0 et 100. 100 signifie qu'aucune similarite entre les contours n'a ete trouvee.
+	 */
+	public double differenceContours(Photo p2){
+		double rep = 0;
+		BufferedImage contourSelf = this.contours();
+		BufferedImage contourP2 = p2.contours();
+		int colMin = Math.min(contourSelf.getWidth(), contourP2.getWidth());
+		int rowMin = Math.min(contourSelf.getHeight(), contourP2.getHeight());
+		int nbPixels = colMin*rowMin;
+		contourSelf = this.redimensionner(contourSelf,colMin,rowMin);
+		contourP2 = this.redimensionner(contourP2,colMin,rowMin);
+		for(int col = 0; col<colMin; col++){
+			for(int row = 0; row<rowMin; row++){
+				if(contourSelf.getRGB(col, row) != contourP2.getRGB(col, row)){
+					rep++;
+				}
+			}
+		}
+		rep = (rep/nbPixels)*100;
+		return rep;
+	}
+
+	/**
 	 * Genere la courbe de couleur sous la forme d'un tableau de 1024 entiers superieurs a 0.
 	 * Un entier pour chacune des 256 nuances de luminosite, de rouge, de vert et de bleu. 
 	 * Chaque entier correspond au nombre de pixels de cette nuance de couleur
@@ -280,10 +298,11 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * Compare les courbes de couleur des deux photographies et en sort un index de difference.
-	 * @param p2 la photo a comparer
-	 * @return Un double demontrant le pourcentage de difference entre 0 et 100. 
-	 * 0 signifie que les courbes de couleurs sont identiques, 100 signifie que les courbes de couleurs sont totalement differentes.
+	 * Compare les courbes de couleur generee par la methode {@link #courbeCouleur()} des deux photographies et en sort un index de difference.
+	 * 
+	 * @see La methode {@link #courbeCouleur()}.
+	 * @param p2 L'objet Photo avec lequel la comparaison est effectuee.
+	 * @return Un double entre 0 et 100. 100 signifie que toutes les valeurs RGB de l'image (y compris les valeurs de luminosite) sont totalement opposées.
 	 */
 	public double differenceCouleur(Photo p2){
 		int[] tab1 = this.courbeCouleur();
@@ -334,9 +353,11 @@ public class Photo implements Serializable {
 	}
 
 	/**
-	 * 
-	 * @param base
-	 * @return
+	 * Utilise les methodes {@link #isIdentique(Photo)}, {@link #differenceContours(Photo)} et {@link #differenceCouleur(Photo)}
+	 * pour calculer la difference entre deux images.
+	 * @param p2 L'objet Photo contenant l'image a comparer avec {@link #img}.
+	 * @return Un double entre 0 et 100. Plus grand est ce double, plus les images sont similaires. 
+	 * Un resultat de 100 signifie que les images sont identiques au pixel pres.
 	 */
 	public double similarite(Photo p2) {
 		double rep = 0;
@@ -350,51 +371,65 @@ public class Photo implements Serializable {
 
 	// --- Getteurs and Setters ---
 	/**
-	 * @return the imageURL
+	 * Accesseur de l'attribut {@link #imageURL}.
+	 * @return Le {@link String} imageURL.
 	 */
 	public String getImageURL() {
 		return this.imageURL;
 	}
+	
 	/**
-	 * @return the keyWords
+	 * Accesseur de l'attribut {@link #keyWords}.
+	 * @return Le tableau de {@link String} keyWords.
 	 */
 	public String[] getKeyWords() {
 		return this.keyWords;
 	}
+	
 	/**
-	 * @return the titre
+	 * Accesseur de l'attribut {@link #titre}.
+	 * @return Le {@link String} titre.
 	 */
 	public String getTitre() {
 		return this.titre;
 	}
+	
 	/**
-	 * @return the auteur
+	 * Accesseur de l'attribut {@link #auteur}.
+	 * @return Le {@link String} auteur.
 	 */
 	public String getAuteur() {
 		return this.auteur;
 	}
+	
 	/**
-	 * @return the pays
+	 * Accesseur de l'attribut {@link #pays}.
+	 * @return Le {@link String} pays.
 	 */
 	public String getPays() {
 		return this.pays;
 	}
+	
 	/**
-	 * @return the date
+	 * Accesseur de l'attribut {@link #date}.
+	 * @return Le {@link GregorianCalendar} date.
 	 */
 	public GregorianCalendar getDate() {
 		return this.date;
 	}
-
+	
 	/**
-	 * @return the img
+	 * Accesseur de l'attribut {@link #img}.
+	 * @return Le {@link BufferedImage} img.
 	 */
 	public BufferedImage getImg(){
 		return this.img;
 	}
 
 	/**
-	 * @return the type of the image
+	 * Accesseur de l'extension de l'image.
+	 * Par exemple "jpg", "png", gif".
+	 * @return Le {@link String} calcule a partir de {@link #imageURL}.
 	 */
 	public String getExtension(){
 		String ext = "";
@@ -407,57 +442,84 @@ public class Photo implements Serializable {
 		} while(c != '.');
 		return ext;
 	}
-
+	
 	/**
-	 * @return the collection
+	 * Accesseur de l'attribut {@link #collection}.
+	 * @return Le {@link String} collection.
 	 */
 	public String getCollection() {
-		return collection;
+		return this.collection;
 	}
 
 	/**
-	 * @param collection the collection to set
+	 * Modificateur de l'attibut {@link #collection} 
+	 * @param collection La collection a laquelle appartient cette photo.
 	 */
 	public void setCollection(String collection) {
 		this.collection = collection;
 	}
 
 	/**
-	 * @param titre the titre to set
+	 * Modificateur de l'attibut {@link #titre} 
+	 * @param titre Le titre de cette photo.
 	 */
 	public void setTitre(String titre) {
 		this.titre = titre;
 	}
+
 	/**
-	 * @param auteur the auteur to set
+	 * Modificateur de l'attibut {@link #auteur} 
+	 * @param auteur L'auteur de cette photo.
 	 */
 	public void setAuteur(String auteur) {
 		this.auteur = auteur;
 	}
+
 	/**
-	 * @param pays the pays to set
+	 * Modificateur de l'attibut {@link #pays} 
+	 * @param pays Le pays de prise de vue de cette photo.
 	 */
 	public void setPays(String pays) {
 		this.pays = pays;
 	}
+
 	/**
-	 * @param date the date to set
+	 * Modificateur de l'attibut {@link #date} 
+	 * @param date La date de prise de vue de cette photo.
 	 */
 	public void setDate(GregorianCalendar date) {
 		this.date = date;
 	}
+
 	/**
-	 * @param keyWords the keyWords to set
+	 * Modificateur de l'attibut {@link #keyWords} 
+	 * @param keyWords Les mots cles associes a cette photo.
 	 */
 	public void setKeyWords(String[] keyWords) {
 		this.keyWords = keyWords;
 	}
 
+	// --- IO methods ---
+	/**
+	 * La methode d'ecriture de cet objet photo.
+	 * La plupart des attribut de cet objet sont enregistres normalement.
+	 * Pour l'attribut {@link #img}, on utilise les methode de {@link ImageIO}.
+	 * @param out Le fichier d'ecriture de cet objet.
+	 * @throws IOException
+	 */
 	private void writeObject(ObjectOutputStream out)throws IOException{
 		out.defaultWriteObject();
 		this.enregisterImg();
 	}
 
+	/**
+	 * La methode de lecture de cet objet photo.
+	 * La plupart des attribut de cet objet sont lus normalement.
+	 * Pour l'attribut {@link #img}, on utilise les methode de {@link ImageIO}.
+	 * @param in Le fichier de lecture de cet objet.
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
 		in.defaultReadObject();
 		this.img = ImageIO.read(new File(this.imageURL));
