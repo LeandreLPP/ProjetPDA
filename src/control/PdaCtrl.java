@@ -6,13 +6,14 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.control;
+package control;
 
-import pda.view.*;
-import pda.datas.*;
+import view.PdaView;
 
 import java.awt.event.*;
 import java.util.ArrayList;
+
+import datas.PdaDatas;
 
 /**
  * The base class of PDA simulator.

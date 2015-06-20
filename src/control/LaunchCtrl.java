@@ -6,15 +6,15 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.control;
+package control;
 
-import pda.view.*;
-import pda.datas.*;
+import view.LaunchView;
 
-import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
-import java.util.*;
+
+import datas.LaunchDatas;
 
 /**
  * The "LaunchCtrl" application that starts all others.

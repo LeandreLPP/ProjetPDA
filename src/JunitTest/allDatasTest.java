@@ -1,4 +1,4 @@
-package datas.tests;
+package JunitTest;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;

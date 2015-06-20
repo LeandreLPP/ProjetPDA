@@ -4,7 +4,7 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.control;
+package control;
 
 import javax.swing.*;
 

@@ -6,14 +6,16 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.view;
+package view;
 
-import pda.control.*;
-import pda.datas.*;
 import java.awt.GridLayout;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
+
+import control.LaunchCtrl;
+import datas.LaunchDatas;
 
 /**
  *  The LaunchView application that starts all others.
@@ -54,7 +56,7 @@ public class LaunchView {
         	engine = theEngine;
         
 		for(int i = 0; i < LaunchDatas.getNbApplications(); i++) {
-            		String apn = engine.appKeyAt(i);
+            		String apn = LaunchDatas.appKeyAt(i);
                 	btn = new JButton(apn, new ImageIcon(engine.getIcon(apn)));
                 	panel.add(btn);
                 	btn.addActionListener(ctrl);

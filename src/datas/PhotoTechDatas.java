@@ -7,12 +7,9 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.datas;
+package datas;
 
 import java.awt.Color;
-
-import datas.Collection;
-import datas.User;
 
 /**
  *  The simplest application in the PDA.
@@ -69,7 +66,6 @@ public class PhotoTechDatas {
 
 	/**
 	 * Initialise PhotoTech datas.
-	 *
 	 */
 	public PhotoTechDatas() {
 		galerie = "Galerie";
@@ -94,84 +90,7 @@ public class PhotoTechDatas {
 		titreCheck = "Verification authenticite Photos";
 		titreNewUser = "Ajouter un utilisateur";
 		titreSuppUser = "Supprimer un utilisateur";
-
-		/*
-		//-------------UTILISATEUR-----------------
-		juliette = new User("Juliette");
-		this.defaultUser = new User("Defaut");
-		
-		//-------------LISTE UTILISATEURS-----------------
-		this.listeUsers = new User[2];
-		listeUsers[0]=this.defaultUser;
-		listeUsers[1]=juliette;
-
-		utilisateurSelect=defaultUser;
-		this.collectionSelect=this.utilisateurSelect.getAllPhotos();
-		*/
 	}
-/*
-	public void chargerUserDefaut(){
-		//-------------UTILISATEUR-----------------
-		
-		this.defaultUser.importerPhoto("data/ar.jpg");
-		this.defaultUser.importerPhoto("data/bbkim.jpg");
-		this.defaultUser.importerPhoto("data/bljblm.jpg");
-		this.defaultUser.importerPhoto("data/p.jpg");
-		this.defaultUser.importerPhoto("data/lalalala.jpg");
-		this.defaultUser.importerPhoto("data/viyvip.jpg");
-		try {
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/ar.jpg").setAuteur("Juliette");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bbkim.jpg").setAuteur("Juliette");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bljblm.jpg").setAuteur("Pierre");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/p.jpg").setAuteur("Emilie");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/lalalala.jpg").setAuteur("Emilie");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/viyvip.jpg").setAuteur("Pierre");
-
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/ar.jpg").setDate(new GregorianCalendar(1996,06,12));
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bbkim.jpg").setDate(new GregorianCalendar(1996,06,12));
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bljblm.jpg").setDate(new GregorianCalendar(2015,10,14));
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/p.jpg").setDate(new GregorianCalendar(2003,02,24));
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/lalalala.jpg").setDate(new GregorianCalendar(2010,04,01));
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/viyvip.jpg").setDate(new GregorianCalendar(2010,04,01));
-
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/ar.jpg").setPays("Hollande");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bbkim.jpg").setPays("France");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/bljblm.jpg").setPays("France");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/p.jpg").setPays("Italie");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/lalalala.jpg").setPays("France");
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/viyvip.jpg").setPays("Espagne");
-
-			String[] keys = {"chien"};
-			this.defaultUser.getAllPhotos().getPhoto(this.defaultUser.getUrlDossier()+"/lalalala.jpg").setKeyWords(keys);
-		} catch (NoPhotoFoundException e) {
-			e.printStackTrace();
-		}
-		this.defaultUser.addCollection("Chat");
-		this.defaultUser.addCollection("Chien");
-		this.defaultUser.addCollection("Lapin");
-		this.defaultUser.movePhoto("ar.jpg", "All", "Chien");
-		this.defaultUser.movePhoto("bbkim.jpg", "All", "Chat");
-		this.defaultUser.movePhoto("bljblm.jpg", "All", "Lapin");
-		this.defaultUser.movePhoto("p.jpg", "All", "Chat");
-		this.defaultUser.movePhoto("lalalala.jpg", "All", "Chien");
-		this.defaultUser.movePhoto("viyvip.jpg", "All", "Chat");
-	}
-
-	public void chargerUserJuliette(){
-		juliette.importerPhoto("data/Girl.jpg");
-		juliette.importerPhoto("data/Lucy.png");
-		juliette.importerPhoto("data/UkyoLove.jpg");
-		juliette.importerPhoto("data/Rose.jpg");
-		juliette.importerPhoto("data/Fleur.jpg");
-		juliette.addCollection("Manga");
-		juliette.addCollection("Fille");
-		juliette.movePhoto("Lucy.png", "All", "Manga");
-		juliette.movePhoto("Girl.jpg", "All", "Manga");
-		juliette.movePhoto("UkyoLove.jpg", "All", "Manga");
-		juliette.movePhoto("Rose.jpg", "All", "Fille");
-		juliette.movePhoto("Fleur.jpg", "All", "Fille");
-	}*/
-	
 	public String getTitreNewUser() {
 		return titreNewUser;
 	}
@@ -295,22 +214,5 @@ public class PhotoTechDatas {
 	public Color getOptionsColor() {
 		return optionsColor;
 	}
-
-	/*
-	public void listerRepertoire(File repertoire){
-
-		String [] listefichiers;
-
-		int i;
-		listefichiers=repertoire.list();
-		for(i=0;i<listefichiers.length;i++){
-			if(listefichiers[i].endsWith(".out")==true){
-
-				System.out.println(listefichiers[i].substring(0,listefichiers[i].length()-5));// on choisit la sous chaine - les 5 derniers caracteres ".java"
-			}
-		}
-	}
-	*/
-
 
 } // ---------------------------------------------------------- Class PhotoTechDatas

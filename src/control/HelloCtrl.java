@@ -6,12 +6,14 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.control;
+package control;
 
-import pda.datas.*;
-import pda.view.*;
+import view.HelloView;
 
 import javax.swing.*;
+
+import datas.HelloDatas;
+
 import java.awt.event.*;
 
 /**

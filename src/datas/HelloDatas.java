@@ -6,7 +6,7 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.datas;
+package datas;
 
 /**
  *  The simplest application in the PDA.

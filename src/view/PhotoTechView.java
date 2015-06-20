@@ -6,7 +6,7 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.view;
+package view;
 
 /**
  * Importation des librairies java et des packages CONTROL et DATAS
@@ -15,12 +15,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Enumeration;
 
-import pda.control.*;
-import pda.datas.*;
+import datas.*;
 
 import javax.swing.*;
 
-import datas.*;
+import control.PhotoTechCtrl;
 
 /**
  * Classe PhotoTechView correspondant a la partie graphique de l'application

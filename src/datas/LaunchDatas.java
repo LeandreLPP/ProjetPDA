@@ -6,10 +6,13 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.datas;
+package datas;
 
-import pda.control.*;
 import java.util.Hashtable;
+
+import control.HelloCtrl;
+import control.IApplication;
+import control.PhotoTechCtrl;
 
 /**
  * The datas of Launch application (that starts all others).
@@ -28,7 +31,7 @@ public class LaunchDatas {
 	 * The CONSTANT array of application names.
 	 * ADD HERE THE UNIQUE NAME OF A RUNNABLE APPLICATION (!! application name must be unique : it's a key !!).
 	 */
-	private static final String[] appArray = { "hello" };
+	private static final String[] appArray = { "hello" ,"PhotoTech"};
 
 
 	/** The list of applications classes that can be launched */
@@ -60,6 +63,9 @@ public class LaunchDatas {
 		// pour les 2 Hashtable "applications" et "icons"
 		applications.put ( appArray[0], HelloCtrl.class ); // !! la classe compilée HelloCtrl.class DOIT EXISTER
 		icons.put ( appArray[0], "hello.png" );
+		
+		applications.put(appArray[1], PhotoTechCtrl.class);
+		icons.put(appArray[1], "app.png");
 
 	} // ------------------------------------------------------- LaunchDatas()
 
@@ -122,7 +128,7 @@ public class LaunchDatas {
 	public String getIcon(String appName) {
 
 		String ret;
-		ret = "../data/img/" + icons.get(appName);
+		ret = "data/img/" + icons.get(appName);
 		return ret;
 	}
 

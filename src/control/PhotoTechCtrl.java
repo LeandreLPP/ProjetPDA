@@ -6,16 +6,16 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.control;
+package control;
 
-import pda.datas.*;
-import pda.view.*;
+import view.PhotoTechView;
 
 import javax.swing.*;
 
 import datas.Collection;
 import datas.NoPhotoFoundException;
 import datas.Photo;
+import datas.PhotoTechDatas;
 import datas.Selection;
 import datas.User;
 

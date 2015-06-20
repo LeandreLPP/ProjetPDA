@@ -1,4 +1,4 @@
-package datas.tests;
+package JunitTest;
 
 import static org.junit.Assert.*;
 

@@ -6,11 +6,11 @@
  *  Copyright 2007-08 © IUT de Vannes
  *  Ce logiciel pédagogique est diffusé sous licence GPL
  */
-package pda.view;
+package view;
 
-import pda.control.*;
-import pda.datas.*;
 import javax.swing.*;
+
+import datas.HelloDatas;
 
 /**
  *  The simplest application in the PDA.
