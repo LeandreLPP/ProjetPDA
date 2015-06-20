@@ -129,6 +129,17 @@ public class PhotoTest{
 	}
 	
 	@Test()
+	public void testWaterMark(){
+		BufferedImage bf;
+		try {
+			bf = this.pChat.waterMark("Test");
+			ImageIO.write(bf, "png", new File("data/testJunit/testWatermark.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test()
 	public void testIsIdentique(){
 		Photo doubleChat = null;
 		try {

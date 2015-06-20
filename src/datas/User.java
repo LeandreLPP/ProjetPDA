@@ -14,22 +14,22 @@ public class User implements Serializable {
 	 * Le nom de l'utilisateur.
 	 */
 	private String nom;
-	
+
 	/**
 	 * Le mot de passe de l'utilisateur.
 	 */
 	private String password;
-	
+
 	/**
 	 * Le chemin du repertoire dans lequel toutes les photographies de cet utilisateur sont stockees.
 	 */
 	private String urlDossier;
-	
+
 	/**
 	 * {@link Collection} contenant toutes les {@link Photo} appartenant a cet utilisateur.
 	 */
 	private Collection allPhotos;
-	
+
 	/**
 	 * {@link Hashtable} contenant toutes les collections crees par cet utilisateur.
 	 */
@@ -88,7 +88,7 @@ public class User implements Serializable {
 			this.collections.put(key,c);
 		}
 	}
-	
+
 	/**
 	 * Supprime la {@link Collection} dont le nom est passe en parametre.
 	 * Les {@link Photo} contenues dans cette {@link Collection} sont conservees du moment qu'elles ne sont pas explicitement supprimees par {@link #delPhoto(String)}.
@@ -165,7 +165,7 @@ public class User implements Serializable {
 	/**
 	 * Importe la photo situe a l'url passe en parametre
 	 * @param url L'url de la photo a importer
-	 * @return true si l'importation s'est bien passee
+	 * @return true si l'importation s'est correctement terminee
 	 */
 	public boolean importerPhoto(String url){
 		boolean ret = true;
@@ -182,70 +182,106 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * @return the nom
+	 * Accesseur de l'attribut {@link #nom}.
+	 * @return {@link #nom}
 	 */
 	public String getNom() {
 		return this.nom;
 	}
 
 	/**
-	 * @return the urlDossier
+	 * Accesseur de l'attribut {@link #urlDossier}.
+	 * @return {@link #urlDossier}
 	 */
 	public String getUrlDossier() {
 		return this.urlDossier;
 	}
 
 	/**
-	 * @return the allPhotos
+	 * Accesseur de l'attribut {@link #allPhotos}.
+	 * @return {@link #allPhotos}
 	 */
 	public Collection getAllPhotos() {
 		return this.allPhotos;
 	}
-	
+
+	/**
+	 * Accesseur renvoyant la {@link Collection} dans {@link #collections} dont le nom est passe en parametre.
+	 * @param key Le nom de la {@link Collection} recherchee.
+	 * @return La {@link Collection} dont le nom correspond au parametre. Renvoie <code>null</code> sinon.
+	 */
 	public Collection getCollection(String key){
 		return this.collections.get(key);
 	}
 
 	/**
-	 * @return the password
+	 * Accesseur de l'attribut {@link #password}.
+	 * @return {@link #password}
 	 */
 	public String getPassword() {
 		return password;
 	}
 
 	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	/**
-	 * @return the collections
+	 * Accesseur renvoyant une {@link Enumeration} de {@link Collection} contenues par {@link #collections}.
+	 * @return Une {@link Enumeration} de {@link Collection} contenues par {@link #collections}.
 	 */
 	public Enumeration<Collection> toutesCollections() {
 		return this.collections.elements();
 	}
 
 	/**
-	 * @param nom the nom to set
+	 * @param password La nouvelle valeur de {@link #password}.
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @param nom La nouvelle valeur de {@link #nom}.
 	 */
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
 
 	/**
-	 * @param urlDossier the urlDossier to set
+	 * @param urlDossier La nouvelle valeur de {@link #urlDossier}.
 	 */
 	public void setUrlDossier(String urlDossier) {
 		this.urlDossier = urlDossier;
 	}
 
 	// --- Sauver et Charger ---
+	/**
+	 * Supprime tout les fichiers lies a cet utilisateur.
+	 * Cela comprends le dossier a l'emplacement {@link #urlDossier} ainsi que toutes les images qu'il contient.
+	 * Le fichier.out correspondant a cet utilisateur est supprime egalement.
+	 */
+	public void delUser(){
+		File delUser = new File(this.urlDossier+".out");
+		delUser.delete();
+		Enumeration<Photo> toutePhotos = this.allPhotos.toutesPhotos();
+		while(toutePhotos.hasMoreElements()){
+			Photo p = toutePhotos.nextElement();
+			String key = p.getNomFichier();
+			this.delPhoto(key);
+		}
+		delUser = new File(this.urlDossier);
+		delUser.delete();
+	}
+
+	/**
+	 * Sauvegarde cet objet {@link User} a l'emplacement par defaut.
+	 * L'emplacement par defaut est un fichier d'extension ".out" situe au meme niveau que le dossier {@link #urlDossier}.
+	 */
 	public void sauver(){
 		this.sauver(this.urlDossier+".out");
 	}
 
+	/**
+	 * Sauvegarde cet objet {@link User} a l'emplacement passe en parametre.
+	 * @param url Chemin de sauvegarde du fichier objet.
+	 */
 	public void sauver(String url){
 		FileOutputStream file;
 		ObjectOutputStream flux;
@@ -259,6 +295,11 @@ public class User implements Serializable {
 		}
 	}
 
+	/**
+	 * Charge et retourne un {@link User}.
+	 * @param url L'emplacement d'ou charger le {@link User}
+	 * @return Un objet de type {@link User}.
+	 */
 	public static User charger(String url){
 		FileInputStream file;
 		ObjectInputStream flux;

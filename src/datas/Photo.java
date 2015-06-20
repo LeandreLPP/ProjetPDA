@@ -1,6 +1,8 @@
 package datas;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -16,50 +18,50 @@ import javax.imageio.ImageIO;
  */
 public class Photo implements Serializable {
 	private static final long serialVersionUID = 0;
-	
+
 	/**
 	 * Le chemin d'enregistrement de la photographie a laquelle est lie cet objet {@link Photo}
 	 * Defini l'emplacement de sauvegarde de {@link #img}
 	 */
 	private String imageURL;
-	
+
 	/**
 	 * Le titre de cet objet photographie, initialise par defaut lors de la creation de l'objet au nom du fichier de la photographie sans son extension
 	 * Par exemple la photographie enregistree sous le nom "Chat.jpg" sera nommee par defaut "Chat".
 	 */
 	private String titre;
-	
+
 	/**
 	 * L'auteur de cette photographie, initialise par defaut a @null.
 	 */
 	private String auteur;
-	
+
 	/**
 	 * Le pays de prise de vue de cette photographie, initialise par defaut a @null.
 	 */
 	private String pays;
-	
+
 	/**
 	 * Le nom de la collection a laquelle appartient cette photographie.
 	 */
 	private String collection;
-	
+
 	/**
 	 * La date de prise de vue de cette photographie.
 	 */
 	private GregorianCalendar date;
-	
+
 	/**
 	 * Les mots cles associes a cette photographie.
 	 */
 	private String[] keyWords;
-	
+
 	/**
 	 * Le tag permettant de verifier l'integrite de la photographie stockee en memoire.
 	 * Ce tag est genere a l'instanciation de l'objet par la methode {@link #generateTag()}.
 	 */
 	private final int[] tag;
-	
+
 	/**
 	 * L'objet de type BufferedImage utilise pour les manipulation de photographie.
 	 * Cet objet "img" est sauvegarde a l'emplacement defini par {@link #imageURL}
@@ -207,8 +209,34 @@ public class Photo implements Serializable {
 		return ret;
 	}
 
+	/**
+	 * Accesseur renvoyant une image dotee d'une watermark personnalisable en bas a droite de l'image
+	 * @param marque La watermark a ajouter a l'image.
+	 * @return La {@link BufferedImage} modifee avec la watermark.
+	 * @throws IOException
+	 */
+	public BufferedImage waterMark(String marque) throws IOException {
+		BufferedImage bfrImg = null;
+		if(marque != null && !marque.equals("")){
+			bfrImg = new BufferedImage( this.img.getWidth(),this.img.getHeight(), BufferedImage.TYPE_INT_RGB);
+			bfrImg.setData(this.img.copyData(null));
+			Graphics2D g2d = (Graphics2D) bfrImg.getGraphics();
+			AlphaComposite alphaChannel = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
+			int nbChar = marque.length();
+			int x = bfrImg.getWidth()-15*nbChar;
+			int y = bfrImg.getHeight() - 20;
+			if(x<0) x = 0;
+			if(y<0) y = 0;
+			g2d.setComposite(alphaChannel);
+			g2d.setColor(Color.GRAY);
+			g2d.setFont(new Font("Serif", Font.BOLD, 15));
+			g2d.drawString(marque,x,y);
+		}
+		return bfrImg;
+	} //
+
 	// --- Comparaison d'images ---
-	
+
 	/**
 	 * Redimensionne un {@link BufferedImage} au format demande.
 	 * @param srcImg La {@link BufferedImage} a redimensionner.
@@ -402,7 +430,7 @@ public class Photo implements Serializable {
 	public String getImageURL() {
 		return this.imageURL;
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #keyWords}.
 	 * @return Le tableau de {@link String} keyWords.
@@ -410,7 +438,7 @@ public class Photo implements Serializable {
 	public String[] getKeyWords() {
 		return this.keyWords;
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #titre}.
 	 * @return Le {@link String} titre.
@@ -418,7 +446,7 @@ public class Photo implements Serializable {
 	public String getTitre() {
 		return this.titre;
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #auteur}.
 	 * @return Le {@link String} auteur.
@@ -426,7 +454,7 @@ public class Photo implements Serializable {
 	public String getAuteur() {
 		return this.auteur;
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #pays}.
 	 * @return Le {@link String} pays.
@@ -434,7 +462,7 @@ public class Photo implements Serializable {
 	public String getPays() {
 		return this.pays;
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #date}.
 	 * @return Le {@link GregorianCalendar} date.
@@ -442,7 +470,7 @@ public class Photo implements Serializable {
 	public GregorianCalendar getDate() {
 		return this.date;
 	}
-	
+
 	/**
 	 * Accesseur de l'attribut {@link #img}.
 	 * @return Le {@link BufferedImage} img.
@@ -467,7 +495,7 @@ public class Photo implements Serializable {
 		} while(c != '.');
 		return ext;
 	}
-	
+
 	public String getNomFichier(){
 		return this.imageURL.split("/")[this.imageURL.split("/").length-1];
 	}

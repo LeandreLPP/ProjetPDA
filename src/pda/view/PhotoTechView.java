@@ -19,7 +19,6 @@ import pda.control.*;
 import pda.datas.*;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 
 import datas.*;
 
@@ -27,7 +26,7 @@ import datas.*;
  * Classe PhotoTechView correspondant a la partie graphique de l'application
  * @author FRETAY Juliette et LE POLLES--POTIN Leandre - Groupe 1C
  * 
- * @version 18/06/15
+ * @version 20/06/15
  *
  */
 public class PhotoTechView {
@@ -47,8 +46,6 @@ public class PhotoTechView {
 	
 	
 	
-	
-	
 
 	/*
 	 * Les composants graphiques de l'application dont nous devons avoir acces pour la partie 
@@ -65,80 +62,54 @@ public class PhotoTechView {
 	private JComboBox<String> comboMois2;
 	private JComboBox<String> comboAnnee2;
 	private JComboBox<String> comboUsers;
+	private JComboBox<String> comboMoisModif;
+	private JComboBox<String> comboJourModif;
+	private JComboBox<String> comboAnneeModif;
+	private JComboBox<String> comboCatModif;
+	private JComboBox<String> comboMoisnew;
+	private JComboBox<String> comboJournew;
+	private JComboBox<String> comboAnneenew;
+	private JComboBox<String> comboCatnew;
+	private JComboBox<String> catG;
 	
 	/* Les JTextField */
 	private JTextField texteTitre;
 	private JTextField texteMots;
 	private JTextField texteAuteur;
 	private JTextField textePays;
+	private JTextField user;
+	private JTextField titreEd;
+	private JTextField auteurEd;
+	private JTextField paysEd;
+	private JTextField motsEd;
+	private JTextField textURL;
+	private JTextField titrenew;
+	private JTextField auteurnew;
+	private JTextField motsnew;
+	private JTextField paysnew;
+	private JTextField textCatEd;
+	private JTextField textnewU;
 	
 	/*Les JButton */
 	private JButton playpause;
+	private JButton boutonURL;
 	
 	/*Les boolean */
 	private boolean lecture;
 	
-	private JComboBox<String> comboMoisModif;
-
-	private JComboBox<String> comboJourModif;
-
-	private JComboBox<String> comboAnneeModif;
-
-	private JTextField user;
-
-	private JTextField titreEd;
-
-	private JTextField auteurEd;
-
-	private JComboBox<String> comboCatModif;
-
-	private JTextField paysEd;
-
-	private JTextField motsEd;
-
-	private JTextField textURL;
-
-	private JButton boutonURL;
-
-	private JTextField titrenew;
-
-	private JTextComponent auteurnew;
-
-	private JTextField motsnew;
-
-	private JComboBox<String> comboMoisnew;
-
-	private JComboBox<String> comboJournew;
-
-	private JComboBox<String> comboAnneenew;
-
-	private JTextField paysnew;
-
-	private JComboBox<String> comboCatnew;
-
-	private JTextField textCatEd;
-
-	private JComboBox<String> catG;
-
+	/*Les JLabel */
 	private JLabel textCheck;
-
-	private JTextField textnewU;
-
-	private JPasswordField mdp;
-
-	private JPasswordField textnewMdp;
-
-	private JPasswordField user2;
-
-	private JPasswordField mdp2;
-
 	private JLabel labelMDP;
-
 	private JLabel labelC;
-
 	private JLabel labelM;
 	
+	/*Les JPasswordField */
+	private JPasswordField mdp;
+	private JPasswordField textnewMdp;
+	private JPasswordField user2;
+	private JPasswordField mdp2;
 
+	
 	
 	
 	
@@ -227,26 +198,6 @@ public class PhotoTechView {
 		panel.add(connexion,BorderLayout.CENTER);
 	}
 	
-	public JLabel getLabelC() {
-		return labelC;
-	}
-
-
-
-
-	public JTextField getMdp() {
-		return mdp;
-	}
-
-
-
-
-	public JTextField getUser() {
-		return user;
-	}
-
-
-
 
 	/**
 	 * Methode publique permettant d'afficher le panel correspondant au menu principal de l'application
@@ -396,113 +347,6 @@ public class PhotoTechView {
 		
 	}
 	
-	/**
-	 * Methode publique permettant d'afficher le panel correspondant a une galerie
-	 * @param lesPhotos Tableau de collections qui sera affiche dans la galerie
-	 */
-	/*public void afficherGalerie(Collection[] lesPhotos){
-		panel.removeAll();
-		JPanel galerie = new JPanel();
-		galerie.setLayout(new BorderLayout(10,10));
-		
-		JLabel titre = new JLabel(this.engine.getTitreGalerie());
-		titre.setHorizontalAlignment(SwingConstants.CENTER);
-		titre.setFont(new Font("Courrier",5,20));
-		titre.setForeground(Color.ORANGE);
-		galerie.add(titre,BorderLayout.NORTH);
-		
-		JPanel galerieC = new JPanel();
-		galerieC.setLayout(new BorderLayout(10,10));
-		
-		JPanel galerieLigne2 = new JPanel();
-		galerieLigne2.setLayout(new BorderLayout(5,5));
-		galerieLigne2.add(new JLabel("Trier par"),BorderLayout.WEST);
-		comboGalerie = new JComboBox<String>();
-		comboGalerie.addItem("Titre Alphabetique");
-		comboGalerie.addItem("Titre Non Alphabetique");
-		comboGalerie.addItem("Categorie Alphabetique");
-		comboGalerie.addItem("Categorie Non Alphabetique");
-		comboGalerie.addItem("Auteur Alphabetique");
-		comboGalerie.addItem("Auteur Non Alphabetique");
-		comboGalerie.addItem("Date Croissante");
-		comboGalerie.addItem("Date Decroissante");
-		comboGalerie.addItem("Pays Alphabetique");
-		comboGalerie.addItem("Pays Non Alphabetique");
-		galerieLigne2.add(comboGalerie,BorderLayout.CENTER);
-		JButton ok = new JButton("OK");
-		ok.addActionListener(ctrl);
-		ok.setActionCommand("OK Tri");
-		galerieLigne2.add(ok,BorderLayout.EAST);
-		galerieC.add(galerieLigne2,BorderLayout.NORTH);
-		JScrollPane galerieLigne3 = new JScrollPane();
-		JPanel panelg = new JPanel();
-		panelg.setLayout(new GridLayout(4,1));
-		
-		
-		panelg.setLayout(new BoxLayout(panelg,BoxLayout.PAGE_AXIS));
-		
-		for(int i=0;i<lesPhotos.length;i++){
-			JLayeredPane layered = new JLayeredPane();
-			layered.setBorder(BorderFactory.createTitledBorder(lesPhotos[i].getTitre()));
-			int nbrPhotos = lesPhotos[i].getListePhotos().size();
-			int nbrLignes = (int) (nbrPhotos/2);
-			if(nbrPhotos%2 == 1){
-				nbrLignes++;
-			}
-			layered.setLayout(new GridLayout(nbrLignes,2,5,5));
-			layered.setPreferredSize(new Dimension(280,nbrLignes*160));
-			for(int y=0;y<lesPhotos[i].getListePhotos().size();y++){
-				int a = lesPhotos[i].getListePhotos().get(y).getImg().getWidth();
-				int b = lesPhotos[i].getListePhotos().get(y).getImg().getHeight();
-				if(a>b){
-					b = b /(a/150);
-					a = 150;		
-				}
-				else{
-					a = a/(b/150);
-					b=150;
-				}
-				ImageIcon limage = new ImageIcon(this.getScaledImage(lesPhotos[i].getListePhotos().get(y).getImg(),a,b));
-				
-				JPanel lepanel = new JPanel();
-				lepanel.setLayout(new BorderLayout());
-				JButton label = new JButton(limage);
-				label.setOpaque(false);
-				label.setContentAreaFilled(false);
-				label.setBorderPainted(false);
-				label.setToolTipText(lesPhotos[i].getListePhotos().get(y).getTitre());
-				label.addActionListener(ctrl);
-				label.setActionCommand("Image"+lesPhotos[i].getListePhotos().get(y).getNomFichier());
-				lepanel.add(label,BorderLayout.CENTER);
-				layered.add(lepanel);
-			}
-			panelg.add(layered);
-		}
-		galerieLigne3.setViewportView(panelg);
-		galerieC.add(galerieLigne3,BorderLayout.CENTER);
-		
-		JPanel galerieLigne9 = new JPanel();
-		galerieLigne9.setLayout(new GridLayout(1,3,10,10));
-		JButton butback = new JButton("Back");
-		butback.addActionListener(ctrl);
-		butback.setActionCommand("Back");
-		galerieLigne9.add(butback);
-		JButton accueil = new JButton("Accueil");
-		accueil.addActionListener(ctrl);
-		accueil.setActionCommand("Bouton Accueil");
-		galerieLigne9.add(accueil);
-		JButton diapo = new JButton("Diaporama");
-		diapo.addActionListener(ctrl);
-		diapo.setActionCommand("Bouton Diaporama");
-		galerieLigne9.add(diapo);
-		galerie.add(galerieLigne9,BorderLayout.SOUTH);
-		galerie.add(galerieC,BorderLayout.CENTER);
-		
-		this.panelPrecedent = this.panelCourant;
-		this.panelCourant = galerie;
-		panel.add(galerie, BorderLayout.CENTER);
-		
-	}*/
 	
 	/**
 	 * Methode publique permettant d'afficher le panel correspondant a la gestion des photographies
@@ -576,6 +420,9 @@ public class PhotoTechView {
 		panel.add(gestion, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a la verification de l'authenticite des photos
+	 */
 	public void afficherCheck(){
 		panel.removeAll();
 		JPanel gestion = new JPanel();
@@ -612,14 +459,10 @@ public class PhotoTechView {
 		panel.add(gestion, BorderLayout.CENTER);
 	}
 	
-	public void setTextCheck(String textCheck) {
-		this.textCheck.setText(textCheck);
-	}
 
-
-
-
-
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a la creation d'un nouvel utilisateur
+	 */
 	public void afficherNouveauUtilisateur(){
 		panel.removeAll();
 		JPanel gestion = new JPanel();
@@ -649,7 +492,7 @@ public class PhotoTechView {
 		pan.setLayout(new GridLayout(1,3));
 		JButton accueil = new JButton("Back");
 		accueil.addActionListener(ctrl);
-		accueil.setActionCommand("Bouton Back connexion");
+		accueil.setActionCommand("Bouton Back Connexion");
 		pan.add(accueil);
 		pan.add(new JPanel());
 		JButton diapo = new JButton("Valider");
@@ -661,48 +504,6 @@ public class PhotoTechView {
 		
 		panel.add(gestion, BorderLayout.CENTER);
 	}
-
-
-	public JLabel getLabelM() {
-		return labelM;
-	}
-
-
-
-
-	public JTextField getTextnewMdp() {
-		return textnewMdp;
-	}
-
-
-
-
-	public JTextField getTextnewU() {
-		return textnewU;
-	}
-
-
-
-
-	public JLabel getTextCheck() {
-		return textCheck;
-	}
-
-
-
-
-	public JComboBox<String> getCatG() {
-		return catG;
-	}
-
-
-
-
-	public JTextField getTextCatEd() {
-		return textCatEd;
-	}
-
-
 
 
 	/**
@@ -1062,6 +863,7 @@ public class PhotoTechView {
 		
 		panel.add(edition, BorderLayout.CENTER);
 	}
+	
 	/**
 	 * Methode publique permettant d'afficher le panel correspondant a la modification d'une photo electionnee
 	 */
@@ -1177,8 +979,10 @@ public class PhotoTechView {
 		
 		panel.add(edition, BorderLayout.CENTER);
 	}
-	
-	
+
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a l'ajout d'une photo
+	 */
 	public void afficherNouvelleImage(){
 		panel.removeAll();
 		JPanel edition = new JPanel();
@@ -1296,6 +1100,9 @@ public class PhotoTechView {
 		panel.add(edition, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a la modification du mot de passe
+	 */
 	public void afficherNouveauMDP(){
 		panel.removeAll();
 		JPanel connexion1 = new JPanel();
@@ -1341,155 +1148,6 @@ public class PhotoTechView {
 		panel.add(connexion1,BorderLayout.CENTER);
 	}
 	
-	
-	
-	public JLabel getLabelMDP() {
-		return labelMDP;
-	}
-
-
-
-
-	public JTextField getUser2() {
-		return user2;
-	}
-
-
-
-
-	public JTextField getMdp2() {
-		return mdp2;
-	}
-
-
-
-
-	public JComboBox<String> getComboCatnew() {
-		return comboCatnew;
-	}
-
-
-
-
-	public JTextField getTitrenew() {
-		return titrenew;
-	}
-
-
-
-
-	public JTextComponent getAuteurnew() {
-		return auteurnew;
-	}
-
-
-
-
-	public JTextField getMotsnew() {
-		return motsnew;
-	}
-
-
-
-
-	public JComboBox<String> getComboMoisnew() {
-		return comboMoisnew;
-	}
-
-
-
-
-	public JComboBox<String> getComboJournew() {
-		return comboJournew;
-	}
-
-
-
-
-	public JComboBox<String> getComboAnneenew() {
-		return comboAnneenew;
-	}
-
-
-
-
-	public JTextField getPaysnew() {
-		return paysnew;
-	}
-
-
-
-
-	public JTextField getTextURL() {
-		return textURL;
-	}
-
-
-
-
-	public JButton getBoutonURL() {
-		return boutonURL;
-	}
-
-
-
-
-	public JComboBox<String> getComboMoisModif() {
-		return comboMoisModif;
-	}
-
-
-
-
-	public JComboBox<String> getComboJourModif() {
-		return comboJourModif;
-	}
-
-
-
-
-	public JComboBox<String> getComboAnneeModif() {
-		return comboAnneeModif;
-	}
-
-
-
-
-	public JTextField getTitreEd() {
-		return titreEd;
-	}
-
-
-
-
-	public JTextField getAuteurEd() {
-		return auteurEd;
-	}
-
-
-
-
-	public JComboBox<String> getComboCatModif() {
-		return comboCatModif;
-	}
-
-
-
-
-	public JTextField getPaysEd() {
-		return paysEd;
-	}
-
-
-
-
-	public JTextField getMotsEd() {
-		return motsEd;
-	}
-
-
-
-
 	/**
 	 * Methode publique permettant d'afficher le panel correspondant au diaporama de la galerie courante
 	 * @param laPhoto Photo a afficher en premier dans le diaporama
@@ -1802,6 +1460,254 @@ public class PhotoTechView {
 		return texteMots;
 	}
 	
+	/**
+	 * Modificateur permettant de changer le text du label de la verification de l'authenticite des photos
+	 * @param textCheck Le JLabel Check
+	 */
+	public void setTextCheck(String textCheck) {
+		this.textCheck.setText(textCheck);
+	}
+
+	/**
+	 * Accesseur renvoyant le JLabel de Connexion
+	 * @return Le JLabel de connexion
+	 */
+	public JLabel getLabelC() {
+		return labelC;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField du mot de passe
+	 * @return le JTextField mot de passe
+	 */
+	public JTextField getMdp() {
+		return mdp;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField user
+	 * @return le JTextField user
+	 */
+	public JTextField getUser() {
+		return user;
+	}
+
+	/**
+	 * Accesseur renvoyant le JLabel de Nouveau mdp 1
+	 * @return Le JLabel de nouveau mdp 1
+	 */
+	public JLabel getLabelM() {
+		return labelM;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField de Nouveau mdp 2
+	 * @return le JTextField de Nouveau mdp 2
+	 */
+	public JTextField getTextnewMdp() {
+		return textnewMdp;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField new user
+	 * @return le JTextField new user
+	 */
+	public JTextField getTextnewU() {
+		return textnewU;
+	}
+
+	/**
+	 * Accesseur renvoyant le JLabel de check
+	 * @return Le JLabel de check
+	 */
+	public JLabel getTextCheck() {
+		return textCheck;
+	}
+
+	/**
+	 * Accesseur renvoyant le JComboBox des categorie gestion
+	 * @return Le JComboBox des categorie gestion
+	 */
+	public JComboBox<String> getCatG() {
+		return catG;
+	}
+
+	/**
+	 * Accesseur renvoyant le JComboBox des categorie new
+	 * @return Le JComboBox des categorie new
+	 */
+	public JComboBox<String> getComboCatnew() {
+		return comboCatnew;
+	}
+	
+	/**
+	 * Accesseur renvoyant le JComboBox des mois new
+	 * @return Le JComboBox des mois new
+	 */
+	public JComboBox<String> getComboMoisnew() {
+		return comboMoisnew;
+	}
+
+	/**
+	 * Accesseur renvoyant le JComboBox des jours new
+	 * @return Le JComboBox des jours new
+	 */
+	public JComboBox<String> getComboJournew() {
+		return comboJournew;
+	}
+
+	/**
+	 * Accesseur renvoyant le JComboBox des annees new
+	 * @return Le JComboBox des annees new
+	 */
+	public JComboBox<String> getComboAnneenew() {
+		return comboAnneenew;
+	}
+	
+	/**
+	 * Accesseur renvoyant le JComboBox des mois modif
+	 * @return Le JComboBox des mois modif
+	 */
+	public JComboBox<String> getComboMoisModif() {
+		return comboMoisModif;
+	}
+
+	/**
+	 * Accesseur renvoyant le JComboBox des jours modif
+	 * @return Le JComboBox des jours modif
+	 */
+	public JComboBox<String> getComboJourModif() {
+		return comboJourModif;
+	}
+
+	/**
+	 * Accesseur renvoyant le JComboBox des annees new
+	 * @return Le JComboBox des annees new
+	 */
+	public JComboBox<String> getComboAnneeModif() {
+		return comboAnneeModif;
+	}
+	
+	/**
+	 * Accesseur renvoyant le JComboBox des cat modif
+	 * @return Le JComboBox des cat modif
+	 */
+	public JComboBox<String> getComboCatModif() {
+		return comboCatModif;
+	}
+
+	/**
+	 * Accesseur renvoyant le JLabel mdp
+	 * @return le JLabel mdp
+	 */
+	public JLabel getLabelMDP() {
+		return labelMDP;
+	}
+
+	/**
+	 * Accesseur renvoyant le JPasswordField user 2
+	 * @return le JPasswordField user 2
+	 */
+	public JPasswordField getUser2() {
+		return user2;
+	}
+
+	/**
+	 * Accesseur renvoyant le JPassordField mdp 2
+	 * @return le JPasswordField user 2
+	 */
+	public JPasswordField getMdp2() {
+		return mdp2;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField categorie edition
+	 * @return le JTextField categorie edition
+	 */
+	public JTextField getTextCatEd() {
+		return textCatEd;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField titre new
+	 * @return le JTextField titre new
+	 */
+	public JTextField getTitrenew() {
+		return titrenew;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField auteur new
+	 * @return le JTextField auteur new
+	 */
+	public JTextField getAuteurnew() {
+		return auteurnew;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField mots new
+	 * @return le JTextField mots new
+	 */
+	public JTextField getMotsnew() {
+		return motsnew;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField pays new
+	 * @return le JTextField pays new
+	 */
+	public JTextField getPaysnew() {
+		return paysnew;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField text url
+	 * @return le JTextField text url
+	 */
+	public JTextField getTextURL() {
+		return textURL;
+	}
+
+	/**
+	 * Accesseur renvoyant le JButton url
+	 * @return le JButton url
+	 */
+	public JButton getBoutonURL() {
+		return boutonURL;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField titre edition
+	 * @return le JTextField titre edition
+	 */
+	public JTextField getTitreEd() {
+		return titreEd;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField auteur edition
+	 * @return le JTextField auteur edition
+	 */
+	public JTextField getAuteurEd() {
+		return auteurEd;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField pays edition
+	 * @return le JTextField pays edition
+	 */
+	public JTextField getPaysEd() {
+		return paysEd;
+	}
+
+	/**
+	 * Accesseur renvoyant le JTextField mots edition
+	 * @return le JTextField mots edition
+	 */
+	public JTextField getMotsEd() {
+		return motsEd;
+	}
+	
 	/** 
 	 *  Get the main panel
 	 * @return the main panel of the application
@@ -1813,9 +1719,13 @@ public class PhotoTechView {
 
 	
 	
+	
+	
 	/*
 	 *  Private methods ------------------------------------------------------------------
 	 */
+	
+	
 	
 	/**
 	 * Methode privee permettant de redimensionner une image
@@ -1832,7 +1742,12 @@ public class PhotoTechView {
 	    g2.dispose();
 	    return resizedImg;
 	}
-	
+
+	/**
+	 * Methode permettant d'afficher une date sous forme d'une chaine de caractere
+	 * @param p La photo dont on veut afficher la date
+	 * @return La date sous forme d'une chaine de caractere
+	 */
 	private String dateToString(Photo p){
 		String rep = "";
 		java.util.GregorianCalendar d = p.getDate();
@@ -1842,4 +1757,6 @@ public class PhotoTechView {
 		rep = Character.toUpperCase(rep.charAt(0))+rep.substring(1);
 		return rep;
 	}
+	
+	
 } // ------------------------------------------------------------- Class PhotoTechView
