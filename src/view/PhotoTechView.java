@@ -108,6 +108,12 @@ public class PhotoTechView {
 	private JPasswordField user2;
 	private JPasswordField mdp2;
 
+	private JTextField water;
+
+	private JLabel textwater;
+
+	private JTextField urlWater;
+
 	
 	
 	
@@ -158,7 +164,6 @@ public class PhotoTechView {
 		label.setForeground(Color.orange);
 		connexion.add(label);
 		
-		connexion.add(new JPanel());
 		
 		JLabel co = new JLabel("Se connecter:");
 		co.setHorizontalAlignment(SwingConstants.CENTER);
@@ -186,13 +191,15 @@ public class PhotoTechView {
 		
 		connexion.add(new JPanel());
 		
-		JPanel panel2 = new JPanel();
-		panel2.setLayout(new GridLayout(1,1,5,5));
+		
 		JButton add = new JButton("Creer un utilisateur");
 		add.addActionListener(ctrl);
 		add.setActionCommand("Ajouter Utilisateur");
-		panel2.add(add);
-		connexion.add(panel2);
+		connexion.add(add);
+		JButton sup = new JButton("Supprimer cet utilisateur");
+		sup.addActionListener(ctrl);
+		sup.setActionCommand("Supprimer Utilisateur");
+		connexion.add(sup);
 		
 		panel.add(connexion,BorderLayout.CENTER);
 	}
@@ -740,7 +747,7 @@ public class PhotoTechView {
 		titre.setForeground(Color.ORANGE);
 		edition.add(titre,BorderLayout.NORTH);		
 		JPanel editionC = new JPanel();
-		editionC.setLayout(new GridLayout(6,1,10,10));
+		editionC.setLayout(new GridLayout(7,1,5,5));
 		
 		JPanel editionLigne2 = new JPanel();
 		editionLigne2.setLayout(new GridLayout(1,2));
@@ -828,10 +835,13 @@ public class PhotoTechView {
 			mots+="Pas de mot cle entre.";
 		}
 		editionC.add(new JLabel(mots));
-		
+		JButton boutWater = new JButton("Creer une image avec une Watermark.");
+		boutWater.addActionListener(ctrl);
+		boutWater.setActionCommand("Bouton Watermark");
+		editionC.add(boutWater);
 		JPanel editionLigne7 = new JPanel();
 		editionLigne7.setLayout(new GridLayout(1,2,10,10));
-		JButton simil = new JButton("Recherche par similarite");
+		JButton simil = new JButton("Recherche similarite");
 		simil.addActionListener(ctrl);
 		simil.setActionCommand("Similarite");
 		editionLigne7.add(simil);
@@ -1189,24 +1199,12 @@ public class PhotoTechView {
 		diaporamaC.add(pan,BorderLayout.CENTER);
 		
 		JPanel diaporamaCBout = new JPanel();
-		diaporamaCBout.setLayout(new GridLayout(1,3,10,10));
+		diaporamaCBout.setLayout(new GridLayout(1,2,10,10));
 		JButton previous = new JButton("Previous");
 		previous.addActionListener(ctrl);
 		previous.setActionCommand("Bouton Previous");
 		diaporamaCBout.add(previous);
-		JPanel diaporamaCBout2 = new JPanel();
-		diaporamaCBout2.setLayout(new GridLayout(2,1,5,5));
-		if(this.lecture == true){
-			playpause = new JButton("Play");
-		}
-		else{
-			playpause= new JButton("Pause");
-		}
-		playpause.addActionListener(ctrl);
-		playpause.setActionCommand("Bouton Play Pause");
-		diaporamaCBout2.add(playpause);
-		diaporamaCBout2.add(new JButton("Aleatoire"));
-		diaporamaCBout.add(diaporamaCBout2);
+		
 		JButton next = new JButton("Next");
 		next.addActionListener(ctrl);
 		next.setActionCommand("Bouton Next");
@@ -1336,9 +1334,77 @@ public class PhotoTechView {
 		panel.add(aPropos, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Methode publique permettant d'afficher le panel correspondant a la watermark
+	 */
+	public void afficherWatermark(){
+		panel.removeAll();
+		JPanel connexion1 = new JPanel();
+		connexion1.setLayout(new BorderLayout(5,5));
+		JPanel connexion = new JPanel();
+		connexion.setLayout(new GridLayout(8,1,5,5));
+		
+		JLabel label = new JLabel("Watermark");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setFont(new Font("Courrier",5,20));
+		label.setForeground(Color.orange);
+		connexion.add(label);
+		
+		connexion.add(new JPanel());
+		
+		JPanel connexion2 = new JPanel();
+		connexion2.add(new JLabel("Choisissez le dossier de destination :"));
+		JButton dossier = new JButton("Parcourir");
+		dossier.addActionListener(ctrl);
+		dossier.setActionCommand("Parcourir");
+		connexion2.add(dossier);
+		connexion.add(connexion2);
+		urlWater = new JTextField();
+		connexion.add(urlWater);
+		connexion.add(new JLabel("Entrez votre watermark"));
+		water = new JTextField();
+		connexion.add(water);
+		textwater = new JLabel();
+		connexion.add(textwater);
+		connexion.add(new JPanel());
+		JPanel editionLigne9 = new JPanel();
+		editionLigne9.setLayout(new GridLayout(1,3,10,10));
+		JButton butback = new JButton("Back");
+		butback.addActionListener(ctrl);
+		butback.setActionCommand("Back de Modification");
+		editionLigne9.add(butback);
+		JButton accueil = new JButton("Accueil");
+		accueil.addActionListener(ctrl);
+		accueil.setActionCommand("Bouton Accueil");
+		editionLigne9.add(accueil);
+		JButton valmodif = new JButton("Valider");
+		valmodif.addActionListener(ctrl);
+		valmodif.setActionCommand("Valider Water");
+		editionLigne9.add(valmodif);
+		connexion1.add(editionLigne9,BorderLayout.SOUTH);
+		
+		connexion1.add(connexion,BorderLayout.CENTER);
+		
+		panel.add(connexion1,BorderLayout.CENTER);
+	}
+	
 	/* =========Les accesseurs permettant de recuperer les elements graphiques utiles a la classe control de l'application=========*/
 	
 	
+	public JTextField getWater() {
+		return water;
+	}
+
+
+
+
+	public JTextField getUrlWater() {
+		return urlWater;
+	}
+
+
+
+
 	/**
 	 * Accesseur renvoyant le JComboBox des themes
 	 * @return Le JComboBox des themes

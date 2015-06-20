@@ -10,6 +10,7 @@ package control;
 
 import view.PhotoTechView;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import datas.Collection;
@@ -20,6 +21,8 @@ import datas.Selection;
 import datas.User;
 
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 
@@ -436,6 +439,26 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 			this.view.afficherNouveauUtilisateur();
 		}
 		//-------------------------------------------------------------
+		else if(source.getActionCommand() == "Supprimer Utilisateur"){
+			String nomUser = this.view.getUser().getText();
+			try{
+				String pathFile = "saves/"+nomUser+".out";
+				this.engine.setUtilisateurSelect(User.charger(pathFile));
+				if(this.view.getMdp().getText().equals(this.engine.getUtilisateurSelect().getPassword())){
+					this.engine.getUtilisateurSelect().delUser();
+					this.view.getLabelC().setText("Utilisateur supprime !");
+				}
+				else{
+					this.view.getLabelC().setText("Mot de passe incorrect");
+					this.view.getMdp().setText("");
+				}
+				
+			}
+			catch(java.lang.Exception p){
+				this.view.getLabelC().setText("Cet utilisateur n'existe pas");
+			}
+		}
+		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Similarite"){
 			this.engine.getCollectionSelect().setTriSimilarite(this.engine.getCollectionSelect().getIndexSelect());
 			this.view.afficherGalerie(this.engine.getCollectionSelect());
@@ -527,6 +550,7 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 				e1.printStackTrace();
 			}
 			this.engine.getUtilisateurSelect().delPhoto(laPhoto.getNomFichier());
+			this.engine.getUtilisateurSelect().sauver();
 			this.view.afficherGalerie(this.engine.getCollectionSelect());
 		}
 		//-------------------------------------------------------------
@@ -585,7 +609,7 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 				if(laPhoto.checkTag() == false){
 					check = false;
 					String tmp = this.view.getTextCheck().getText();
-					this.view.setTextCheck(tmp+"La photo "+laPhoto.getTitre()+" est corrompue ! \n");
+					this.view.setTextCheck("<html><body>"+tmp+"La photo "+laPhoto.getTitre()+" est corrompue ! <br></body></html>");
 				}
 			}
 			if(check == true){
@@ -633,6 +657,31 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 			}
 			else{
 				this.view.getLabelMDP().setText("Mot de passe incorrect");
+			}
+		}
+		//-------------------------------------------------------------
+		else if(source.getActionCommand() == "Bouton Watermark"){
+			this.view.afficherWatermark();
+		}
+		//-------------------------------------------------------------
+		else if(source.getActionCommand() == "Valider Water"){
+			File fichier = new File(this.replaceAllString(this.view.getUrlWater().getText(), "\\", "/"));
+			try {
+				ImageIO.write(this.engine.getCollectionSelect().getPhotoSelect().waterMark(this.view.getWater().getText()), this.engine.getCollectionSelect().getPhotoSelect().getExtension(), fichier);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (NoPhotoFoundException e1) {
+				e1.printStackTrace();
+			}
+		}
+		//-------------------------------------------------------------
+		else if(source.getActionCommand() == "Parcourir"){
+			JFileChooser chooser = new JFileChooser();
+			chooser.setDialogTitle("Selectionnez un dossier");
+			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			int returnVal = chooser.showOpenDialog(null);
+			if(returnVal == JFileChooser.APPROVE_OPTION) {
+				this.view.getUrlWater().setText(chooser.getSelectedFile().getAbsolutePath().toString());
 			}
 		}
 
