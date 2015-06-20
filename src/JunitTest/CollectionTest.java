@@ -34,10 +34,9 @@ public class CollectionTest {
 		this.pChat = null;
 		this.pLapin = null;
 		this.collection = null;
-		File f = new File("data/testJunit/chat.jpg");
-		f.delete();
-		f = new File("data/testJunit/lapin.jpg");
-		f.delete();
+		allDatasTest.deleteDirectory("data/testJunit");
+		File f = new File("data/testJunit");
+		f.mkdir();
 	}
 
 	@Test
@@ -130,14 +129,14 @@ public class CollectionTest {
 		this.collection.setTriDateCroissante();
 		split = this.collection.split();
 		assertEquals(2,split.length);
-		assertEquals("Mercredi 12 novembre 2012",split[0].getTitre());
+		assertEquals("Lundi 12 novembre 2012",split[0].getTitre());
 		assertEquals("Dimanche 14 juin 2015",split[1].getTitre());
 		// -- Tri par ordre anti-alphabetique de pays --
 		this.collection.setTriDateDecroissante();
 		split = this.collection.split();
 		assertEquals(2,split.length);
 		assertEquals("Dimanche 14 juin 2015",split[0].getTitre());
-		assertEquals("Mercredi 12 novembre 2012",split[1].getTitre());
+		assertEquals("Lundi 12 novembre 2012",split[1].getTitre());
 	}
 
 	@Test

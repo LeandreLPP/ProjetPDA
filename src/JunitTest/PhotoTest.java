@@ -21,33 +21,31 @@ public class PhotoTest{
 	
 	@Before()
 	public void setUp() throws Exception{
-		this.pChat = new Photo("../data/chat.jpg","../data/testJunit/chat.jpg");
-		this.pLapin = new Photo("../data/lapin.jpg","../data/testJunit/lapin.jpg");
+		this.pChat = new Photo("data/chat.jpg","data/testJunit/chat.jpg");
+		this.pLapin = new Photo("data/lapin.jpg","data/testJunit/lapin.jpg");
 	}
 	
 	@After()
 	public void tearDown() throws Exception{
 		this.pChat = null;
 		this.pLapin = null;
-		File f = new File("../data/testJunit/chat.jpg");
-		f.delete();
-		f = new File("../data/testJunit/lapin.jpg");
-		f.delete();
+		allDatasTest.deleteDirectory("data/testJunit");
+		File f = new File("data/testJunit");
+		f.mkdir();
 	}
-
 	@Test()
 	public void testConstructeur() {
 		Assert.assertNotNull(pChat);
 		Assert.assertNotNull(pLapin);
 		BufferedImage img = null;
-		File f = new File("../data/testJunit/chat.jpg");
+		File f = new File("data/testJunit/chat.jpg");
 		try {
 			img = ImageIO.read(f);
 		} catch (IOException e) {
 			fail("L'image chat n'a pas ete cree correctement");
 		}
 		Assert.assertNotNull(img);
-		f = new File("../data/testJunit/lapin.jpg");
+		f = new File("data/testJunit/lapin.jpg");
 		try {
 			img = ImageIO.read(f);
 		} catch (IOException e) {
@@ -77,10 +75,10 @@ public class PhotoTest{
 		Photo noir = null;
 		Photo blanc = null;
 		try {
-			doubleChat = new Photo("../data/chat.jpg","../data/testJunit/doubleChat.jpg");
-			chatTag = new Photo("../data/chatTag.jpg","../data/testJunit/chatTag.jpg");
-			noir = new Photo("../data/noir.jpg","../data/testJunit/noir.jpg");
-			blanc = new Photo("../data/blanc.jpg","../data/testJunit/blanc.jpg");
+			doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
+			chatTag = new Photo("data/chatTag.jpg","data/testJunit/chatTag.jpg");
+			noir = new Photo("data/noir.jpg","data/testJunit/noir.jpg");
+			blanc = new Photo("data/blanc.jpg","data/testJunit/blanc.jpg");
 		} catch (IOException e) {
 			fail();
 		}
@@ -93,7 +91,7 @@ public class PhotoTest{
 		Assert.assertTrue(diffForte>=0 && diffForte<=100);
 		Assert.assertTrue(diffForte>diffFaible);
 		Assert.assertEquals(75, diffTotale, 1);
-		File f = new File("../data/testJunit/doubleChat.jpg");
+		File f = new File("data/testJunit/doubleChat.jpg");
 		f.delete();
 	}
 	
@@ -104,10 +102,10 @@ public class PhotoTest{
 		Photo noir = null;
 		Photo blanc = null;
 		try {
-			doubleChat = new Photo("../data/chat.jpg","../data/testJunit/doubleChat.jpg");
-			chatTag = new Photo("../data/chatTag.jpg","../data/testJunit/chatTag.jpg");
-			noir = new Photo("../data/noir.jpg","../data/testJunit/noir.jpg");
-			blanc = new Photo("../data/blanc.jpg","../data/testJunit/blanc.jpg");
+			doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
+			chatTag = new Photo("data/chatTag.jpg","data/testJunit/chatTag.jpg");
+			noir = new Photo("data/noir.jpg","data/testJunit/noir.jpg");
+			blanc = new Photo("data/blanc.jpg","data/testJunit/blanc.jpg");
 		} catch (IOException e) {
 			fail();
 		}
@@ -120,7 +118,7 @@ public class PhotoTest{
 		Assert.assertTrue(diffForte>=0 && diffForte<=100);
 		Assert.assertTrue(diffForte>diffFaible);
 		Assert.assertEquals(0, diffTotale, 1);
-		File f = new File("../data/testJunit/doubleChat.jpg");
+		File f = new File("data/testJunit/doubleChat.jpg");
 		f.delete();
 	}
 	
@@ -129,7 +127,7 @@ public class PhotoTest{
 		BufferedImage bf;
 		try {
 			bf = this.pChat.waterMark("Test");
-			ImageIO.write(bf, "png", new File("../data/testJunit/testWatermark.jpg"));
+			ImageIO.write(bf, "png", new File("data/testJunit/testWatermark.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -139,13 +137,13 @@ public class PhotoTest{
 	public void testIsIdentique(){
 		Photo doubleChat = null;
 		try {
-			doubleChat = new Photo("../data/chat.jpg","../data/testJunit/doubleChat.jpg");
+			doubleChat = new Photo("data/chat.jpg","data/testJunit/doubleChat.jpg");
 		} catch (IOException e) {
 			fail();
 		}
 		Assert.assertTrue(doubleChat.isIdentique(this.pChat));
 		Assert.assertFalse(doubleChat.isIdentique(this.pLapin));
-		File f = new File("../data/testJunit/doubleChat.jpg");
+		File f = new File("data/testJunit/doubleChat.jpg");
 		f.delete();
 	}
 }

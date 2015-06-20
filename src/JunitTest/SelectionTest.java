@@ -40,16 +40,9 @@ public class SelectionTest {
 		this.p3=null;
 		this.p4=null;
 		this.p5=null;
-		File f = new File("data/testJunit/p1.jpg");
-		f.delete();
-		f = new File("data/testJunit/p2.jpg");
-		f.delete();
-		f = new File("data/testJunit/p3.jpg");
-		f.delete();
-		f = new File("data/testJunit/p4.jpg");
-		f.delete();
-		f = new File("data/testJunit/p5.jpg");
-		f.delete();
+		allDatasTest.deleteDirectory("data/testJunit");
+		File f = new File("data/testJunit");
+		f.mkdir();
 	}
 
 	@Test
@@ -67,7 +60,10 @@ public class SelectionTest {
 		String[] auteur = {"A"};
 		this.selection.setAuteur(auteur);
 		Collection resultatAuteur = this.selection.rechercher();
-		assertArrayEquals(rechercheAuteur,resultatAuteur.getListePhotos().toArray());
+		for(Photo p : rechercheAuteur){
+			assertTrue(resultatAuteur.getListePhotos().contains(p));
+		}
+		assertEquals(rechercheAuteur.length,resultatAuteur.getListePhotos().size());
 		
 		//--- Recherche par titre ---
 		Photo[] rechercheTitre = {this.p4,this.p3};
@@ -79,10 +75,13 @@ public class SelectionTest {
 		this.selection.setAuteur(auteur);
 		this.selection.setTitre(titre);
 		Collection resultatTitre = this.selection.rechercher();
-		assertArrayEquals(rechercheTitre,resultatTitre.getListePhotos().toArray());
+		for(Photo p : rechercheTitre){
+			assertTrue(resultatTitre.getListePhotos().contains(p));
+		}
+		assertEquals(rechercheTitre.length,resultatTitre.getListePhotos().size());
 		
 		//--- Recherche par pays ---
-		Photo[] recherchePays = {this.p5,this.p2,this.p1,this.p3};
+		Photo[] recherchePays = {this.p2,this.p1,this.p3,this.p5};
 		for(Photo p : recherchePays){
 			p.setAuteur("");
 			p.setTitre("");
@@ -93,10 +92,13 @@ public class SelectionTest {
 		this.selection.setTitre(titre);
 		this.selection.setPays(pays);
 		Collection resultatPays = this.selection.rechercher();
-		assertArrayEquals(recherchePays,resultatPays.getListePhotos().toArray());
+		for(Photo p : recherchePays){
+			assertTrue(resultatPays.getListePhotos().contains(p));
+		}
+		assertEquals(recherchePays.length,resultatPays.getListePhotos().size());
 		
 		//--- Recherche par date ---
-		Photo[] rechercheDate = {this.p5,this.p2,this.p1,this.p3};
+		Photo[] rechercheDate = {this.p2,this.p1,this.p5,this.p3};
 		for(Photo p : rechercheDate){
 			p.setAuteur("");
 			p.setTitre("");
@@ -107,7 +109,10 @@ public class SelectionTest {
 		this.selection.setPays(pays);
 		this.selection.setDateFin(new java.util.GregorianCalendar(2013,4,10));
 		Collection resultatDate = this.selection.rechercher();
-		assertArrayEquals(rechercheDate,resultatDate.getListePhotos().toArray());
+		for(Photo p : rechercheDate){
+			assertTrue(resultatDate.getListePhotos().contains(p));
+		}
+		assertEquals(rechercheDate.length,resultatDate.getListePhotos().size());
 
 		//--- Recherche par date ---
 		Photo[] rechercheKey = {this.p5,this.p2,this.p1,this.p3};
@@ -120,7 +125,10 @@ public class SelectionTest {
 		String[] key = {"A","B"};
 		this.selection.setKeyWords(key);
 		Collection resultatKey = this.selection.rechercher();
-		assertArrayEquals(rechercheKey,resultatKey.getListePhotos().toArray());
+		for(Photo p : rechercheKey){
+			assertTrue(resultatKey.getListePhotos().contains(p));
+		}
+		assertEquals(rechercheKey.length,resultatKey.getListePhotos().size());
 	}
 
 	@Test
@@ -176,7 +184,7 @@ public class SelectionTest {
 		java.util.GregorianCalendar calendar = new java.util.GregorianCalendar(2010,6,6);
 		this.selection.setDateDebut(calendar);
 		assertEquals(calendar,this.selection.getDateDebut());
-		java.util.GregorianCalendar calendar2 = new java.util.GregorianCalendar(2040,7,7);
+		java.util.GregorianCalendar calendar2 = new java.util.GregorianCalendar(4000,7,7);
 		this.selection.setDateDebut(calendar2);
 		assertEquals(calendar,this.selection.getDateDebut());
 	}
@@ -186,7 +194,7 @@ public class SelectionTest {
 		java.util.GregorianCalendar calendar2 = new java.util.GregorianCalendar(2020, 10, 10);
 		this.selection.setDateFin(calendar2);
 		assertEquals(calendar2,this.selection.getDateFin());
-		java.util.GregorianCalendar calendar = new java.util.GregorianCalendar(1900,5,5);
+		java.util.GregorianCalendar calendar = new java.util.GregorianCalendar(1000,5,5);
 		this.selection.setDateFin(calendar);
 		assertEquals(calendar2,this.selection.getDateFin());
 	}

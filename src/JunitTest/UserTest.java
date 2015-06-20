@@ -29,12 +29,11 @@ public class UserTest {
 
 	@After
 	public void tearDown() throws Exception {
-		for(Photo p : this.listePhotos){
-			File f = new File(p.getImageURL());
-			f.delete();
-		}
 		this.listePhotos = null;
 		this.user = null;
+		allDatasTest.deleteDirectory("data/testJunit");
+		File f = new File("data/testJunit");
+		f.mkdir();
 	}
 
 	@Test
@@ -138,9 +137,9 @@ public class UserTest {
 		this.user.importerPhoto("data/gif.gif");
 		this.user.importerPhoto("data/png.png");
 		try {
-			assertNotNull(this.user.getAllPhotos().getPhoto("data/testJunit/saves/User/chat.jpg"));
-			assertNotNull(this.user.getAllPhotos().getPhoto("data/testJunit/saves/User/gif.gif"));
-			assertNotNull(this.user.getAllPhotos().getPhoto("data/testJunit/saves/User/png.png"));
+			assertNotNull(this.user.getAllPhotos().getPhoto("chat.jpg"));
+			assertNotNull(this.user.getAllPhotos().getPhoto("gif.gif"));
+			assertNotNull(this.user.getAllPhotos().getPhoto("png.png"));
 		} catch (NoPhotoFoundException e) {
 			e.printStackTrace();
 		}
