@@ -288,11 +288,6 @@ public class Photo implements Serializable {
 				}
 			}
 		}
-		try {
-			ImageIO.write(rep, "png", new File("data/test/"+this.titre+"."+this.getExtension()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		return rep;
 	}
 
@@ -355,7 +350,7 @@ public class Photo implements Serializable {
 	 * 
 	 * @see La methode {@link #courbeCouleur()}.
 	 * @param p2 L'objet Photo avec lequel la comparaison est effectuee.
-	 * @return Un double entre 0 et 100. 100 signifie que toutes les valeurs RGB de l'image (y compris les valeurs de luminosite) sont totalement opposées.
+	 * @return Un double entre 0 et 100. 100 signifie que toutes les valeurs RGB de l'image (y compris les valeurs de luminosite) sont totalement opposees.
 	 */
 	public double differenceCouleur(Photo p2){
 		int[] tab1 = this.courbeCouleur();

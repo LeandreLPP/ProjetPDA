@@ -57,6 +57,15 @@
 
 	<!-- Compilation de l'entièreté du projet -->
 	<target name="compileAll" description="compiles all the sources" >
+	  <mkdir dir="${work}/data" />
+	  <mkdir dir="${work}/data/img" />
+	  <mkdir dir="${work}/saves" />
+	  <copy todir="${work}/data/img">
+		<fileset dir="${data}/img"/>
+	  </copy>
+	  <copy todir="${work}/saves">
+		<fileset dir="saves"/>
+	  </copy>
 	  <javac destdir="${class}" debug="true" verbose="false" encoding="UTF-8">
 	    <compilerarg value="-Xlint"/>
 	    <classpath refid="myCLASSPATH"/>
@@ -66,7 +75,7 @@
 
 	<!-- Exécution de l'application -->
 	<target name="run" depends="compileAll" description="executes the PDA application" >
-	  <java classname="pda.control.PdaCtrl" fork="true" dir="${work}">
+	  <java classname="control.PdaCtrl" fork="true" dir="${work}">
 	    <jvmarg value="-Djava.net.preferIPv4Stack=true"/>
 	    <classpath refid="myCLASSPATH"/>
 	  </java>
@@ -74,14 +83,23 @@
 
 	<!-- Fabrication d'une archive exécutable -->
 	<target name="jar" depends="compileAll" description="creates PDA jar" >
-	  <jar destfile="${dist}/pda.jar">
+	  <mkdir dir="${dist}/data" />
+	  <mkdir dir="${dist}/data/img" />
+	  <mkdir dir="${dist}/saves" />
+	  <copy todir="${dist}/data/img">
+		<fileset dir="${data}/img"/>
+	  </copy>
+	  <copy todir="${dist}/saves">
+		<fileset dir="saves"/>
+	  </copy>
+	  <jar destfile="${dist}/PhotoTech.jar">
 	    <manifest>
-              <attribute name="Built-By" value="IUT Vannes | M.Cornic, D.Deveaux, C.Guerin, F.Merciol"/>
-	      <attribute name="Created-By" value="IUT Vannes | M.Cornic, D.Deveaux, C.Guerin, F.Merciol"/>
-              <attribute name="Main-Class" value="pda.control.PdaCtrl"/>
+              <attribute name="Built-By" value="IUT Vannes | FRETAY Juliette et LE POLLES--POTIN Leandre - Groupe 1C"/>
+	      <attribute name="Created-By" value="IUT Vannes | FRETAY Juliette et LE POLLES--POTIN Leandre - Groupe 1C"/>
+              <attribute name="Main-Class" value="control.PdaCtrl"/>
 	    </manifest>
 	    <fileset dir="${class}">
-              <include name="pda/**/*.class"/>
+              <include name="**/*.class"/>
 	    </fileset>
 	    <fileset dir="${data}">
               <include name="**/*.gif"/>
@@ -100,16 +118,14 @@
               <exclude name="**/*.wav"/>
               <exclude name="**/TODO"/>
 	    </fileset>
-	    <doctitle><![CDATA[<h1>Test</h1>]]></doctitle>
-	    <bottom><![CDATA[<i>Copyright &#169; 2007 UBS/IUT/Fran&ccedil;ois Merciol. All Rights Reserved.</i>]]></bottom>
 	  </javadoc>
 	</target>
 
 	<!-- Génération de l'archive finale client -->
 	<target name="distrib" depends="jar" description="creates distribution archive" >
-	  <tar tarfile="${dist}/pda.tgz" compression="gzip">
+	  <tar tarfile="${dist}/PhotoTech.tgz" compression="gzip">
 	    <tarfileset prefix="pda/jar" dir="${dist}">
-	      <include name="pda.jar"/>
+	      <include name="PhotoTech.jar"/>
 	    </tarfileset>
 	    <tarfileset prefix="pda/" dir=".">
 	      <include name="ant/**"/>
@@ -121,22 +137,35 @@
 	  </tar>
 	</target>
 	
-	<tatget name="compileTest" depends="compileAll">
-		<javac srcdir="${test}"
-			   destdir="${test}
+	<target name="compileTest" depends="compileAll">
+		<mkdir dir="${test}/class" />
+		<mkdir dir="${test}/data" />
+		<mkdir dir="${test}/data/testJunit" />
+		<javac srcdir="${src}/JunitTest"
+			   destdir="${test}/class"
+			   debug="on">
+			<classpath refid="myCLASSPATH"/>
+			<src path="${src}"/>
+		</javac>
 	</target>
 	
 	<target name="test" depends="compileTest" description="run the tests Junit">
-	  <property name="report" location="reports" />
-	  <property name="reportXML" location="reports/xml" />
-	  <property name="reportHTML" location="reports/html" />
-	  <property name="reportDOC" location="reports/doc" />
+	  <property name="report" location="${test}/reports" />
+	  <property name="reportXML" location="${test}/reports/xml" />
+	  <property name="reportHTML" location="${test}/reports/html" />
+	  <property name="reportDOC" location="${test}/reports/doc" />
 	  <mkdir dir="${report}"/>
 	  <mkdir dir="${reportXML}"/>
 	  <mkdir dir="${reportHTML}"/>
 	  <mkdir dir="${reportDOC}"/>
-	  <junit printsummary="yes" fork="yes" haltonfailure="yes">
-		<test name="
+	  <junit printsummary="yes" fork="yes" haltonfailure="no">
+		<assertions>
+			<enable />
+		</assertions>
+		<classpath refid="myCLASSPATH"/>
+		<formatter type="plain" />
+		<formatter type="xml" />
+		<test name="JunitTest.allDatasTests" todir="${reportDOC}" />
 	  </junit>
 	</target>
 </project>
