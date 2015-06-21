@@ -75,7 +75,7 @@ public class Photo implements Serializable {
 	 * @throws IOException En cas de probleme avec les fichier dont les chemins sont passes en parametre.
 	 */
 	public Photo(String urlOrigine, String urlDestination) throws IOException{
-		this.imageURL = this.checkURL(urlDestination);
+		this.imageURL = checkURL(urlDestination);
 		this.titre = this.imageURL.split("/")[this.imageURL.split("/").length-1];
 		this.titre = this.titre.substring(0,this.titre.length()-(this.getExtension().length()+1));
 		this.auteur = null;
@@ -93,7 +93,7 @@ public class Photo implements Serializable {
 	 * @param urlDestination L'url a verifier.
 	 * @return Une url modifiee si besoin est.
 	 */
-	private String checkURL(String urlDestination) {
+	public static String checkURL(String urlDestination) {
 		String url = urlDestination;
 		File fileChecker = new File(url);
 		if(fileChecker.exists()){
@@ -218,7 +218,7 @@ public class Photo implements Serializable {
 	public BufferedImage waterMark(String marque) throws IOException {
 		BufferedImage bfrImg = null;
 		if(marque != null && !marque.equals("")){
-			bfrImg = new BufferedImage( this.img.getWidth(),this.img.getHeight(), BufferedImage.TYPE_INT_RGB);
+			bfrImg = new BufferedImage( this.img.getWidth(),this.img.getHeight(), this.img.getType());
 			bfrImg.setData(this.img.copyData(null));
 			Graphics2D g2d = (Graphics2D) bfrImg.getGraphics();
 			AlphaComposite alphaChannel = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);

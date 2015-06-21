@@ -141,9 +141,7 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 		else if(source.getActionCommand() == "Bouton Diaporama"){
 			try {
 				this.view.afficherDiaporama(this.engine.getCollectionSelect().getPhotoSelect());
-			} catch (NoPhotoFoundException e1) {
-				e1.printStackTrace();
-			}
+			} catch (NoPhotoFoundException e1) {}
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Bouton Accueil"){
@@ -151,27 +149,25 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Faire Recherche"){
+			// -- Titre --
 			String[] titre;
 			if(this.view.getTexteTitre().getText().trim().equals("")==false && this.view.getTexteTitre() != null){
 				titre = this.view.getTexteTitre().getText().split(";");
-			}
-			else{
-				titre = null;
-			}
+			} else titre = null;
+			
+			// -- Categorie --
 			String categorie;
 			if(this.view.getComboCat().getSelectedItem().equals("-")){
 				categorie =null;
-			}
-			else{
-				categorie = this.view.getComboCat().getItemAt(this.view.getComboCat().getSelectedIndex());
-			}
+			} else categorie = this.view.getComboCat().getItemAt(this.view.getComboCat().getSelectedIndex());
+			
+			// -- Auteur --
 			String[] auteur;
 			if(this.view.getTexteAuteur().getText().trim().equals("") == false && this.view.getTexteAuteur() != null ){
 				auteur = this.view.getTexteAuteur().getText().split(";");
-			}
-			else{
-				auteur = null;
-			}
+			} else auteur = null;
+			
+			// -- Dates --
 			int jour1 = -1;
 			if(this.view.getComboJour().getItemAt(this.view.getComboJour().getSelectedIndex()).equals("-") == false){
 				jour1 = Integer.parseInt(this.view.getComboJour().getItemAt(this.view.getComboJour().getSelectedIndex()));
@@ -190,6 +186,8 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 			if(this.view.getComboAnnee2().getItemAt(this.view.getComboAnnee2().getSelectedIndex()).equals("-") == false){
 				annee2 = Integer.parseInt(this.view.getComboAnnee2().getItemAt(this.view.getComboAnnee2().getSelectedIndex()));
 			}
+			
+			// -- Pays --
 			String[] localisation;
 			if(this.view.getTextePays().getText().trim().equals("")==false && this.view.getTextePays() != null){
 				localisation = this.view.getTextePays().getText().split(";");
@@ -197,13 +195,13 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 			else{
 				localisation = null;
 			}
+			
+			// -- KeyWords -- 
 			String[] motsCles;
-			if(this.view.getTexteMots().getText().trim().equals("")== false && this.view.getTexteMots() != null){
+			if(this.view.getTexteMots().getText().trim().equals("Entrez ici vos mots cles (separes par des ; ).")== false && this.view.getTexteMots() != null
+					&& !this.view.getTexteMots().getText().trim().equals("")){
 				motsCles = this.view.getTexteMots().getText().split(";");
-			}
-			else{
-				motsCles = new String[0];
-			}
+			} else motsCles = new String[0];
 			
 			
 			Selection laSelection;
@@ -502,13 +500,18 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 			if(this.view.getMotsEd().getText() != null && this.view.getMotsEd().getText() != "" && !this.view.getMotsEd().getText().equals("Nouveaux mots cles de la photo (separes par des ; ).")){
 				laPhoto.setKeyWords(this.view.getMotsEd().getText().split(";"));
 			}
+			this.engine.getUtilisateurSelect().sauver();
 			this.view.afficherEdition();
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Sans User"){
 			
-			this.engine.setUtilisateurSelect(User.charger("saves/Defaut.out"));
-			this.view.afficherMenu();
+			try {
+				this.engine.setUtilisateurSelect(User.charger("saves/Defaut.out"));
+				this.view.afficherMenu();
+			} catch (ClassNotFoundException | IOException e1) {
+				this.view.getLabelC().setText("Fichier corrompu, creez un nouvel utilisateur");
+			}
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Connexion"){
@@ -532,6 +535,7 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Retour Connexion"){
+			this.engine.getUtilisateurSelect().sauver();
 			this.view.getUser().setText("Entrez votre nom");
 			this.view.afficherConnexion();
 		}
@@ -567,24 +571,23 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Valider Ajout"){
 			String titre = this.view.getTitrenew().getText();
+			if(titre.equals("Entrez un titre")) titre = "";
 			String auteur = this.view.getAuteurnew().getText();
+			if(auteur.equals("Entrez un auteur")) auteur="";
 			String collection = "All";
 			if(this.view.getComboCatnew().getSelectedItem() != null){
 				collection = this.view.getComboCatnew().getSelectedItem().toString();
 			}
 			String pays = this.view.getPaysnew().getText();
+			if(pays.equals("Entrez un nouveau Pays")) pays="";
 			int annee = this.view.getComboAnneenew().getSelectedIndex()+1990;
 			int mois = this.view.getComboMoisnew().getSelectedIndex();
 			int jour = this.view.getComboMoisnew().getSelectedIndex()+3;
 			String[] keyWords = this.view.getMotsnew().getText().split(";");
-			if(titre!=null && !titre.equals("Entrez un titre") 
-					&& auteur!=null && !auteur.equals("Entrez un auteur") 
-					&& pays!=null && !pays.equals("Entrez un nouveau Pays") 
-					&& keyWords!=null && !keyWords[0].equals("Les mots cles de la photo (separes par des ")){
-				String nom = this.replaceAllString(this.view.getTextURL().getText(), "\\", "/");
-				this.engine.getUtilisateurSelect().importerPhoto(nom);
-				String[] nomF = nom.split("/");
-				String nomFinal = nomF[nomF.length-1];
+			if(keyWords[0].equals("Les mots cles de la photo (separes par des ")) keyWords=new String[0];
+			String nom = this.replaceAllString(view.getTextURL().getText(), "\\", "/");
+			if(titre!=null && auteur!=null && pays!=null && keyWords!=null && nom!=null && !nom.equals("")){
+				String nomFinal = this.engine.getUtilisateurSelect().importerPhoto(nom);
 				try {
 					Photo laPhoto = this.engine.getUtilisateurSelect().getAllPhotos().getPhoto(nomFinal);
 					laPhoto.setTitre(titre);
@@ -596,6 +599,8 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 				} catch (NoPhotoFoundException e1) {
 					e1.printStackTrace();
 				}
+				this.engine.getUtilisateurSelect().sauver();
+				this.view.afficherGestion();
 			}
 		}
 		//-------------------------------------------------------------
@@ -644,9 +649,10 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Valider MDP"){
-			if(this.view.getUser2().getText().equals(this.engine.getUtilisateurSelect().getPassword())){
-				if(this.view.getMdp2().getText() != null && !this.view.getMdp2().getText().equals("Entrez votre nouveau mot de passe") && !this.view.getMdp2().getText().equals("")){
-					this.engine.getUtilisateurSelect().setPassword(this.view.getMdp2().getText());
+			String mdp = new String(this.view.getUser2().getPassword());
+			if(mdp.equals(this.engine.getUtilisateurSelect().getPassword())){
+				if(mdp != null && !mdp.equals("Entrez votre nouveau mot de passe") && !mdp.equals("")){
+					this.engine.getUtilisateurSelect().setPassword(mdp);
 					this.engine.getUtilisateurSelect().sauver();
 					this.view.afficherOptions();
 				}
@@ -665,20 +671,40 @@ public class PhotoTechCtrl implements IApplication, ActionListener {
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Valider Water"){
-			File fichier = new File(this.replaceAllString(this.view.getUrlWater().getText(), "\\", "/"));
-			try {
-				ImageIO.write(this.engine.getCollectionSelect().getPhotoSelect().waterMark(this.view.getWater().getText()), this.engine.getCollectionSelect().getPhotoSelect().getExtension(), fichier);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (NoPhotoFoundException e1) {
-				e1.printStackTrace();
+			String url = this.view.getUrlWater().getText();
+			File fUrl = new File(url);
+			String textWater = this.view.getWater().getText();
+			if(url == null || url.equals("")){
+				this.view.getTextWater().setText("Selectionnez un fichier");
+			} else if (textWater == null || textWater.equals("")){
+				this.view.getTextWater().setText("Entrez une watermark");
+			} else if (fUrl.exists() && !fUrl.canWrite()){
+				this.view.getTextWater().setText("Fichier non accessible");
+			} else {
+				try {
+					Photo p = this.engine.getCollectionSelect().getPhotoSelect();
+					ImageIO.write(p.waterMark(textWater), p.getExtension(), fUrl);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (NoPhotoFoundException e1) {
+					e1.printStackTrace();
+				}
+				this.view.afficherEdition();
 			}
 		}
 		//-------------------------------------------------------------
 		else if(source.getActionCommand() == "Parcourir"){
 			JFileChooser chooser = new JFileChooser();
 			chooser.setDialogTitle("Selectionnez un dossier");
-			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			chooser.setApproveButtonText("Valider");
+		    File f = null;
+			try {
+				f = new File(new File(this.engine.getCollectionSelect().getPhotoSelect().getNomFichier()).getCanonicalPath());
+			} catch (IOException | NoPhotoFoundException e1) {
+				e1.printStackTrace();
+			}
+		    chooser.setSelectedFile(f);
 			int returnVal = chooser.showOpenDialog(null);
 			if(returnVal == JFileChooser.APPROVE_OPTION) {
 				this.view.getUrlWater().setText(chooser.getSelectedFile().getAbsolutePath().toString());

@@ -3,6 +3,7 @@ package JunitTest;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import datas.*;
 
@@ -168,7 +169,12 @@ public class UserTest {
 	@Test
 	public void testSauver() {
 		this.user.sauver();
-		User testSauver = User.charger("data/testJunit/saves/User.out");
+		User testSauver = null;
+		try {
+			testSauver = User.charger("data/testJunit/saves/User.out");
+		} catch (ClassNotFoundException | IOException e1) {
+			e1.printStackTrace();
+		}
 		assertNotNull(testSauver);
 		try {
 			assertNotNull(testSauver.getAllPhotos().getPhoto(0).getImg());
@@ -181,7 +187,12 @@ public class UserTest {
 	public void testSauverString() {
 		String url = "data/testJunit/User.out";
 		this.user.sauver(url);
-		User testSauver = User.charger(url);
+		User testSauver = null;
+		try {
+			testSauver = User.charger(url);
+		} catch (ClassNotFoundException | IOException e1) {
+			e1.printStackTrace();
+		}
 		assertNotNull(testSauver);
 		try {
 			assertNotNull(testSauver.getAllPhotos().getPhoto(0).getImg());

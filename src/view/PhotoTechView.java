@@ -1353,7 +1353,7 @@ public class PhotoTechView {
 		connexion.add(new JPanel());
 		
 		JPanel connexion2 = new JPanel();
-		connexion2.add(new JLabel("Choisissez le dossier de destination :"));
+		connexion2.add(new JLabel("Choisissez le fichier de destination :"));
 		JButton dossier = new JButton("Parcourir");
 		dossier.addActionListener(ctrl);
 		dossier.setActionCommand("Parcourir");
@@ -1390,13 +1390,14 @@ public class PhotoTechView {
 	
 	/* =========Les accesseurs permettant de recuperer les elements graphiques utiles a la classe control de l'application=========*/
 	
+
+	public JLabel getTextWater() {
+		return this.textwater;
+	}
 	
 	public JTextField getWater() {
 		return water;
 	}
-
-
-
 
 	public JTextField getUrlWater() {
 		return urlWater;

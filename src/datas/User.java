@@ -165,18 +165,19 @@ public class User implements Serializable {
 	/**
 	 * Importe la photo situe a l'url passe en parametre
 	 * @param url L'url de la photo a importer
-	 * @return true si l'importation s'est correctement terminee
+	 * @return Le nom de la photo
 	 */
-	public boolean importerPhoto(String url){
-		boolean ret = true;
+	public String importerPhoto(String url){
+		String ret = "";
 		String nom = url.split("/")[url.split("/").length-1];
 		String newUrl = this.urlDossier+"/"+nom;
 		Photo p;
 		try {
 			p = new Photo(url,newUrl);
 			this.allPhotos.addPhoto(p);
+			ret = p.getNomFichier();
 		} catch (IOException e) {
-			ret = false;
+			e.printStackTrace();
 		}
 		return ret;
 	}
@@ -299,19 +300,17 @@ public class User implements Serializable {
 	 * Charge et retourne un {@link User}.
 	 * @param url L'emplacement d'ou charger le {@link User}
 	 * @return Un objet de type {@link User}.
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static User charger(String url){
+	public static User charger(String url) throws IOException, ClassNotFoundException{
 		FileInputStream file;
 		ObjectInputStream flux;
 		User ret = null;
-		try {
-			file = new FileInputStream(url);
-			flux = new ObjectInputStream(file);
-			ret = (User) flux.readObject();
-			flux.close();
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		} 
+		file = new FileInputStream(url);
+		flux = new ObjectInputStream(file);
+		ret = (User) flux.readObject();
+		flux.close();
 		return ret;
 	}
 }
